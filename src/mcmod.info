@@ -1,0 +1,17 @@
+[
+{
+  "modid": "EntrophicFurnace",
+  "name": "Entrophic Furnace",
+  "description": "Convert stuff to stuff.",
+  "version": "1.4.7_8",
+  "mcversion": "1.4.7",
+  "logoFile": "/furnace.png",
+  "url": "http://127.0.0.1/",
+  "updateUrl": "",
+  "authors": ["Tachyony"],
+  "credits": "Tachyony",
+  "parent": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
