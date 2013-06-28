@@ -19,16 +19,6 @@ public class ItemIngotTin extends Item
         super(id);
         this.setMaxStackSize(64);
         this.setCreativeTab(CreativeTabs.tabMisc);
-        this.setIconIndex(TextureIds.ingotTin);
-        this.setItemName("ingotTin");
-    }
-
-    /**
-	 *
-	 */
-    @Override
-    public String getTextureFile()
-    {
-        return CommonProxy.BLOCK_PNG;
+        this.setUnlocalizedName("ingotTin");
     }
 }

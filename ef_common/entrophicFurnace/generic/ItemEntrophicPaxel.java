@@ -2,6 +2,7 @@ package entrophicFurnace.generic;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 /**
  * @author tachyony
  */
-public class ItemQuantumPaxel extends ItemTool
+public class ItemEntrophicPaxel extends ItemTool
 {
     private static final Block[] blocksEffectiveAgainst = new Block[] {
         Block.grass, Block.dirt, Block.sand, Block.gravel,
@@ -28,7 +29,7 @@ public class ItemQuantumPaxel extends ItemTool
         Block.slowSand, Block.mycelium, Block.planks, Block.bookShelf,
         Block.wood, Block.chest, Block.stoneDoubleSlab, Block.stoneSingleSlab,
         Block.pumpkin, Block.pumpkinLantern, Block.cobblestone, Block.stone,
-        Block.sandStone, Block.cobblestoneMossy, Block.oreIron, Block.blockSteel,
+        Block.sandStone, Block.cobblestoneMossy, Block.oreIron, Block.blockIron,
         Block.oreCoal, Block.blockGold, Block.oreGold, Block.oreDiamond,
         Block.blockDiamond, Block.ice, Block.netherrack, Block.oreLapis,
         Block.blockLapis, Block.oreRedstone, Block.oreRedstoneGlowing, Block.rail,
@@ -36,12 +37,14 @@ public class ItemQuantumPaxel extends ItemTool
 
     private int weaponDamage;
 
-    protected ItemQuantumPaxel(int ID, EnumToolMaterial material, int tex, String name)
+    protected ItemEntrophicPaxel(int ID, EnumToolMaterial material, int tex, String name)
     {
         super(ID, 3, material, blocksEffectiveAgainst);
         this.weaponDamage = 4 + this.toolMaterial.getDamageVsEntity();
-        this.setIconIndex(tex);
-        this.setItemName(name);
+        this.setUnlocalizedName(name);
+        this.maxStackSize = 1;
+        this.setMaxDamage(material.getMaxUses());
+        this.setCreativeTab(CreativeTabs.tabTools);
     }
 
     @Override
@@ -175,7 +178,7 @@ public class ItemQuantumPaxel extends ItemTool
     {
         return 72000;
     }
-
+    
     /**
      * @return ToString
      */
@@ -183,15 +186,6 @@ public class ItemQuantumPaxel extends ItemTool
     public String getToolMaterialName()
     {
         return this.toolMaterial.toString();
-    }
-
-    /**
-    *
-    */
-    @Override
-    public String getTextureFile()
-    {
-        return CommonProxy.BLOCK_PNG;
     }
 
     // Allows for repair in an anvil
@@ -227,17 +221,22 @@ public class ItemQuantumPaxel extends ItemTool
         {
             return false;
         }
+        
         if (event.getResult() == Result.ALLOW)
         {
             par1ItemStack.damageItem(1, par2EntityPlayer);
             return true;
         }
-        int var11 = par3World.getBlockId(par4, par5, par6);
-        int var12 = par3World.getBlockId(par4, par5 + 1, par6);
-        if ((par7 == 0 || var12 != 0 || var11 != Block.grass.blockID) && var11 != Block.dirt.blockID)
+        
+        int i1 = par3World.getBlockId(par4, par5, par6);
+        boolean air = par3World.isAirBlock(par4, par5 + 1, par6);
+        
+        //Forge: Change 0 to air, also BugFix: parens mismatch causing you to be able to hoe dirt under dirt/grass
+        if (par7 == 0 || !air || (i1 != Block.grass.blockID && i1 != Block.dirt.blockID))
         {
             return false;
         }
+        
         Block var13 = Block.tilledField;
         par3World.playSoundEffect(par4 + 0.5F, par5 + 0.5F, par6 + 0.5F, var13.stepSound.getStepSound(),
                 (var13.stepSound.getVolume() + 1.0F) / 2.0F, var13.stepSound.getPitch() * 0.8F);
@@ -245,7 +244,8 @@ public class ItemQuantumPaxel extends ItemTool
         {
             return true;
         }
-        par3World.setBlockWithNotify(par4, par5, par6, var13.blockID);
+        
+        par3World.setBlock(par4, par5, par6, var13.blockID);
         par1ItemStack.damageItem(1, par2EntityPlayer);
         return true;
     }

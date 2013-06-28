@@ -11,7 +11,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.components.common.block.BlockBasicMachine;
 import universalelectricity.prefab.implement.IRedstoneProvider;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import cpw.mods.fml.relauncher.Side;
@@ -34,12 +33,6 @@ public class BlockEntrophicFurnace3 extends BlockBasicMachine
         this.blockIndexInTexture = textureIndex;
         this.setStepSound(soundMetalFootstep);
         this.setRequiresSelfNotify();
-    }
-
-    @Override
-    public String getTextureFile()
-    {
-        return CommonProxy.BLOCK_PNG;
     }
 
     /**

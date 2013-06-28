@@ -11,7 +11,6 @@ import cpw.mods.fml.common.network.IGuiHandler;
  */
 public class CommonProxy implements IGuiHandler
 {
-    /* public static String ITEMS_PNG = "/entrophicFurnace/generic/items.png"; */
     /**
      *
      */
@@ -32,7 +31,7 @@ public class CommonProxy implements IGuiHandler
             switch (ID)
             {
                 case 0:
-                    return new ContainerEntrophicFurnace(player.inventory, ((TileEntityEntrophicFurnace) tileEntity));
+                    return null;//new ContainerEntrophicFurnace(player.inventory, ((TileEntityEntrophicFurnace) tileEntity));
                 default:
                     break;
             }

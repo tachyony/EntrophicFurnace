@@ -14,13 +14,6 @@ public class ItemEntrophicOre1 extends Item
         super(id);
         this.setMaxStackSize(64);
         this.setCreativeTab(CreativeTabs.tabMisc);
-        this.setIconIndex(TextureIds.genericOre);
-        this.setItemName("entrophicOre");
-    }
-
-    @Override
-    public String getTextureFile()
-    {
-        return CommonProxy.BLOCK_PNG;
+        this.setUnlocalizedName("entrophicOre1");
     }
 }

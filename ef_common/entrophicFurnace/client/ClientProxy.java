@@ -1,11 +1,9 @@
 package entrophicFurnace.client;
 
 import entrophicFurnace.generic.CommonProxy;
-import entrophicFurnace.generic.TileEntityEntrophicFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.client.MinecraftForgeClient;
 
 /**
  * @author tachyony
@@ -22,7 +20,6 @@ public class ClientProxy extends CommonProxy
     @Override
     public void init()
     {
-        MinecraftForgeClient.preloadTexture(CommonProxy.BLOCK_PNG);
     }
 
     @Override
@@ -34,7 +31,7 @@ public class ClientProxy extends CommonProxy
             switch (ID)
             {
                 case 0:
-                    return new GUIContainerEntrophicFurnace(player.inventory, ((TileEntityEntrophicFurnace) tileEntity));
+                    return null;//new GUIContainerEntrophicFurnace(player.inventory, ((TileEntityEntrophicFurnace) tileEntity));
                 default:
                     break;
             }

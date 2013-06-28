@@ -32,8 +32,8 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
  * @author Tachyony
  *
  */
-@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.4.7_8", dependencies = "after:BasicComponents", useMetadata = true)
-@NetworkMod(channels = BlockIds.channel, clientSideRequired = true, serverSideRequired = false, connectionHandler = universalelectricity.prefab.network.ConnectionHandler.class, packetHandler = universalelectricity.prefab.network.PacketManager.class)
+@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.5.2_1", dependencies = "after:BasicComponents", useMetadata = true, certificateFingerprint="", acceptedMinecraftVersions="")
+@NetworkMod(channels = BlockIds.channel, clientSideRequired = true, serverSideRequired = false, /*connectionHandler = universalelectricity.prefab.network.ConnectionHandler.class,*/ packetHandler = universalelectricity.prefab.network.PacketManager.class)
 public class EntrophicFurnace
 {
     /**
@@ -117,7 +117,7 @@ public class EntrophicFurnace
     /**
      * Material for quantum paxel
      */
-    public static final EnumToolMaterial entrophicMaterial = EnumHelper.addToolMaterial("Entrophic", 3, 5000, 60.0F, 20, 500);
+    public static final EnumToolMaterial entrophicMaterial = EnumHelper.addToolMaterial("Entrophic", 3, 4000, 24.0F, 6, 22);
 
     /**
      *
@@ -144,7 +144,7 @@ public class EntrophicFurnace
         int inTin = EntrophicFurnace.CONFIGURATION.getItem("ingotTin", BlockIds.ingotTin).getInt();
         int inPaxel = EntrophicFurnace.CONFIGURATION.getItem("EntrophicPaxel", BlockIds.entrophicPaxel).getInt();
 
-        entrophicFurnace1 = (new BlockEntrophicFurnace1(410, TextureIds.blockEntrophicFurnace))
+        /*entrophicFurnace1 = (new BlockEntrophicFurnace1(410, TextureIds.blockEntrophicFurnace))
                 .setHardness(0.1F).setStepSound(Block.soundWoodFootstep).setBlockName("EntrophicFurnace1")
                 .setCreativeTab(CreativeTabs.tabMaterials);
         entrophicFurnace2 = (new BlockEntrophicFurnace2(411, TextureIds.blockEntrophicFurnace2))
@@ -152,8 +152,8 @@ public class EntrophicFurnace
                 .setCreativeTab(CreativeTabs.tabMaterials);
         entrophicFurnace3 = (new BlockEntrophicFurnace3(412, TextureIds.blockEntrophicFurnace3))
                 .setHardness(0.1F).setStepSound(Block.soundWoodFootstep).setBlockName("EntrophicFurnace3")
-                .setCreativeTab(CreativeTabs.tabMaterials);
-        entrophicPaxel = new ItemQuantumPaxel(413, entrophicMaterial,
+                .setCreativeTab(CreativeTabs.tabMaterials);*/
+        entrophicPaxel = new ItemEntrophicPaxel(413, entrophicMaterial,
                 TextureIds.itemEntrophicPaxel, "entrophicPaxel");
         entrophicOre = (new ItemEntrophicOre(414));
         entrophicOre1 = (new ItemEntrophicOre1(415));
@@ -169,7 +169,7 @@ public class EntrophicFurnace
             System.out.println("Basic Components NOT detected! Basic Components is REQUIRED for survival crafting and gameplay!");
         }
 
-        GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace1, "EntrophicFurnace1");
+        /*GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace1, "EntrophicFurnace1");
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace2, "EntrophicFurnace2");
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace3, "EntrophicFurnace3");
         GameRegistry.registerTileEntity(TileEntityEntrophicFurnace.class, "EntrophicFurnace1");
@@ -178,7 +178,7 @@ public class EntrophicFurnace
 
         LanguageRegistry.addName(EntrophicFurnace.entrophicFurnace1, "Entrophic Furnace 1");
         LanguageRegistry.addName(EntrophicFurnace.entrophicFurnace2, "Entrophic Furnace 2");
-        LanguageRegistry.addName(EntrophicFurnace.entrophicFurnace3, "Entrophic Furnace 3");
+        LanguageRegistry.addName(EntrophicFurnace.entrophicFurnace3, "Entrophic Furnace 3");*/
         LanguageRegistry.addName(EntrophicFurnace.entrophicOre, "Entrophic Ore");
         LanguageRegistry.addName(EntrophicFurnace.entrophicOre1, "Entrophic Ore 1");
         LanguageRegistry.addName(EntrophicFurnace.entrophicOre2, "Entrophic Ore 2");
@@ -208,7 +208,7 @@ public class EntrophicFurnace
         OreDictionary.registerOre("quantumOre3", new ItemStack(entrophicOre3));
         OreDictionary.registerOre("quantumOre4", new ItemStack(entrophicOre4));
         OreDictionary.registerOre("quantumOre5", new ItemStack(entrophicOre5));
-        OreDictionary.registerOre("EntrophicFurnace1", new ItemStack(EntrophicFurnace.entrophicFurnace1));
+        /*OreDictionary.registerOre("EntrophicFurnace1", new ItemStack(EntrophicFurnace.entrophicFurnace1));
         OreDictionary.registerOre("EntrophicFurnace2", new ItemStack(EntrophicFurnace.entrophicFurnace2));
         OreDictionary.registerOre("EntrophicFurnace3", new ItemStack(EntrophicFurnace.entrophicFurnace3));
         GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicFurnace1, new Object[] {
@@ -218,7 +218,7 @@ public class EntrophicFurnace
         GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicFurnace2, new Object[] {
         		"I I", " F ", "I I", 'I', EntrophicFurnace.entrophicFurnace1, 'F', Block.blockGold }));
         GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicFurnace3, new Object[] {
-        		"I I", " F ", "I I", 'I', EntrophicFurnace.entrophicFurnace2, 'F', Item.netherStar }));
+        		"I I", " F ", "I I", 'I', EntrophicFurnace.entrophicFurnace2, 'F', Item.netherStar }));*/
         GameRegistry.addRecipe(new ItemStack(EntrophicFurnace.entrophicPaxel, 1), new Object[] {
         		"A", "X", "X", 'A', Block.blockDiamond, 'X', EntrophicFurnace.entrophicOre4 });
 
@@ -283,7 +283,7 @@ public class EntrophicFurnace
                 'o', EntrophicFurnace.entrophicOre }));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.netherStalkSeeds, 1, 3), new Object[] { "   ",
                 " o ", "   ", 'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.stoneOvenIdle, new Object[] { " o ", "   ", "   ", 'o',
+        GameRegistry.addRecipe(new ShapedOreRecipe(Block.furnaceIdle, new Object[] { " o ", "   ", "   ", 'o',
                 EntrophicFurnace.entrophicOre2 }));
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.coal, 1, 0), new Object[] { "   ", " o ", "  o",

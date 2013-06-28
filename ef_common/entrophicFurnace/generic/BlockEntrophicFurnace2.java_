@@ -1,5 +1,7 @@
 package entrophicFurnace.generic;
 
+import java.util.Random;
+
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -9,7 +11,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.components.common.block.BlockBasicMachine;
 import universalelectricity.prefab.implement.IRedstoneProvider;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import cpw.mods.fml.relauncher.Side;
@@ -19,29 +20,28 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author tachyony
  *
  */
-public class BlockEntrophicFurnace1 extends BlockBasicMachine
+public class BlockEntrophicFurnace2 extends BlockBasicMachine
 {
     /**
      * @param id
      * @param textureIndex
      */
-    public BlockEntrophicFurnace1(int id, int textureIndex)
+    public BlockEntrophicFurnace2(int id, int textureIndex)
     {
         super(id, textureIndex);
-        this.setBlockName("EntrophicFurnace1");
+        this.setBlockName("EntrophicFurnace2");
         this.blockIndexInTexture = textureIndex;
         this.setStepSound(soundMetalFootstep);
         this.setRequiresSelfNotify();
     }
 
     /**
-     * 
-     * @return
-     */
+	 *
+	 */
     @Override
-    public String getTextureFile()
+    public void randomDisplayTick(World par1World, int x, int y, int z, Random par5Random)
     {
-        return CommonProxy.BLOCK_PNG;
+        //
     }
 
     /**
@@ -53,8 +53,8 @@ public class BlockEntrophicFurnace1 extends BlockBasicMachine
     {
         if (side == 0 || side == 1)
         {
-            return this.blockIndexInTexture; // Top and bottom always look the
-                                             // same
+            return this.blockIndexInTexture; // Top and bottom always look
+                                             // the same
         }
 
         switch (metadata)
@@ -139,19 +139,6 @@ public class BlockEntrophicFurnace1 extends BlockBasicMachine
         world.setBlockMetadataWithNotify(x, y, z, metadata);
     }
 
-    /**
-     * 
-     * @param par1World
-     * @param x
-     * @param y
-     * @param z
-     * @param par5EntityPlayer
-     * @param side
-     * @param hitX
-     * @param hitY
-     * @param hitZ
-     * @return
-     */
     @Override
     public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side,
             float hitX, float hitY, float hitZ)
@@ -202,13 +189,13 @@ public class BlockEntrophicFurnace1 extends BlockBasicMachine
     @Override
     public TileEntity createNewTileEntity(World world, int metadata)
     {
-        return new TileEntityEntrophicFurnace(0, this.blockID);
+        return new TileEntityEntrophicFurnace(1, this.blockID);
     }
 
     @Override
     public TileEntity createNewTileEntity(World world)
     {
-        return new TileEntityEntrophicFurnace(0, this.blockID);
+        return new TileEntityEntrophicFurnace(1, this.blockID);
     }
 
     @Override
