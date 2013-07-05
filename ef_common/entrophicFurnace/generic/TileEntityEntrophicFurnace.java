@@ -14,17 +14,15 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.UniversalElectricity;
-import universalelectricity.core.electricity.ElectricityNetwork;
+import universalelectricity.core.block.IEnergyStorage;
 import universalelectricity.core.electricity.ElectricityNetworkHelper;
-import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.electricity.IElectricityNetwork;
 import universalelectricity.core.item.ElectricItemHelper;
-import universalelectricity.core.item.IItemElectric;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
+import universalelectricity.prefab.tile.TileEntityElectricalStorage;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -34,7 +32,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Tachyony
  */
 @SuppressWarnings("unused")
-public class TileEntityEntrophicFurnace extends TileEntityElectricityStorage implements IElectricityStorage, IPacketReceiver, ISidedInventory
+public class TileEntityEntrophicFurnace extends TileEntityElectricalStorage implements IEnergyStorage, IPacketReceiver, ISidedInventory
 {
     /**
      * Max charge level
@@ -152,8 +150,7 @@ public class TileEntityEntrophicFurnace extends TileEntityElectricityStorage imp
      * @param slot
      * @return multiplier
      */
-    @SuppressWarnings("hiding")
-    public long getWatts(int slot)
+    public long getWattValue(int slot)
     {
         long watts = 0;
         if (this.containingItems[slot].isItemEqual(new ItemStack(Block.cobblestone))
@@ -319,7 +316,7 @@ public class TileEntityEntrophicFurnace extends TileEntityElectricityStorage imp
             this.joules += this.addWatts;
             if (this.containingItems[0] != null)
             {
-                long burn = this.getWatts(0);
+                long burn = this.getWattValue(0);
                 if ((burn > 0) && ((this.joules + burn) <= TileEntityEntrophicFurnace.MAX_CHARGE))
                 {
                     this.joules += burn;
@@ -350,7 +347,7 @@ public class TileEntityEntrophicFurnace extends TileEntityElectricityStorage imp
                      */
                     this.smeltingTicks = TileEntityEntrophicFurnace.SMELTING_TIME_REQUIRED;
                     /* } */
-                    this.watts = this.getWatts(1);
+                    this.watts = this.getWattValue(1);
                     this.smeltId = this.containingItems[1].itemID;
                 }
 
@@ -388,13 +385,13 @@ public class TileEntityEntrophicFurnace extends TileEntityElectricityStorage imp
             {
                 /**
                  * Recharges electric item.
-                 */
-                this.setJoules(this.getJoules() - ElectricItemHelper.chargeItem(this.containingItems[1], this.getJoules(), this.getVoltage()));
+                 *
+                this.setJoules(this.joules - ElectricItemHelper.chargeItem(this.containingItems[1], this.joules, this.getVoltage()));
 
                 /**
                  * Decharge electric item.
-                 */
-                this.setJoules(this.getJoules() + ElectricItemHelper.dechargeItem(this.containingItems[0], this.getMaxJoules() - this.getJoules(), this.getVoltage()));
+                 *
+                this.setJoules(this.joules + ElectricItemHelper.dechargeItem(this.containingItems[0], this.getMaxJoules() - this.joules, this.getVoltage()));*/
 
                 TileEntity inputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.UP);
                 TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.DOWN);
@@ -404,27 +401,27 @@ public class TileEntityEntrophicFurnace extends TileEntityElectricityStorage imp
                 
                 if ((outputNetwork != null) && (inputNetwork != outputNetwork))
                 {
-                    double outputWatts = Math.min(outputNetwork.getRequest(this).getWatts(), Math.min(this.getJoules(), 10000));
+                    /*double outputWatts = Math.min(outputNetwork.getRequest(this).getWatts(), Math.min(this.joules, 10000));
 
-                    if ((this.getJoules() > 0) && (outputWatts > 0))
+                    if ((this.joules > 0) && (outputWatts > 0))
                     {
                         outputNetwork.startProducing(this, outputWatts / this.getVoltage(), this.getVoltage());
-                        this.setJoules(this.getJoules() - outputWatts);
+                        this.joules = this.joules - outputWatts;
                     }
                     else
                     {
                         outputNetwork.stopProducing(this);
-                    }
+                    }*/
                 }
             }
         }
     }
 
-    @Override
+    /*@Override
     protected EnumSet<ForgeDirection> getConsumingSides()
     {
         return EnumSet.of(ForgeDirection.UP);
-    }
+    }*/
 
     /**
      * Get packet
@@ -435,8 +432,7 @@ public class TileEntityEntrophicFurnace extends TileEntityElectricityStorage imp
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketManager.getPacket(BlockIds.channel, this, this.smeltingTicks, this.disabledTicks, this.getJoules(),
-                this.addWatts);
+        return PacketManager.getPacket(BlockIds.channel, this, this.smeltingTicks, this.disabledTicks, this.joules, this.addWatts);
     }
 
     /**
@@ -587,7 +583,7 @@ public class TileEntityEntrophicFurnace extends TileEntityElectricityStorage imp
 
     /**
 	 *
-	 */
+	 *
     @Override
     public int getStartInventorySide(ForgeDirection side)
     {
@@ -601,12 +597,12 @@ public class TileEntityEntrophicFurnace extends TileEntityElectricityStorage imp
 
     /**
 	 *
-	 */
+	 *
     @Override
     public int getSizeInventorySide(ForgeDirection side)
     {
         return 1;
-    }
+    }*/
 
     /**
 	 *
@@ -717,19 +713,33 @@ public class TileEntityEntrophicFurnace extends TileEntityElectricityStorage imp
                 : par1EntityPlayer.getDistanceSq(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64.0D;
     }
 
-    /**
-     * 
-     * @return Max Joules
-     */
     @Override
-    public double getMaxJoules()
-    {
-        return MAX_CHARGE;
+    public boolean isInvNameLocalized() {
+        return false;
     }
-    
+
     @Override
-    public boolean canConnect(ForgeDirection direction)
-    {
-        return (direction == ForgeDirection.UP) || (direction == ForgeDirection.DOWN);
+    public boolean isStackValidForSlot(int i, ItemStack itemstack) {
+        return false;
+    }
+
+    @Override
+    public int[] getAccessibleSlotsFromSide(int var1) {
+        return null;
+    }
+
+    @Override
+    public boolean canInsertItem(int i, ItemStack itemstack, int j) {
+        return false;
+    }
+
+    @Override
+    public boolean canExtractItem(int i, ItemStack itemstack, int j) {
+        return false;
+    }
+
+    @Override
+    public float getMaxEnergyStored() {
+        return 0;
     }
 }

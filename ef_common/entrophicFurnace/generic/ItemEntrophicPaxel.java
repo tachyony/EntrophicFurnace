@@ -37,7 +37,7 @@ public class ItemEntrophicPaxel extends ItemTool
 
     private int weaponDamage;
 
-    protected ItemEntrophicPaxel(int ID, EnumToolMaterial material, int tex, String name)
+    protected ItemEntrophicPaxel(int ID, EnumToolMaterial material, String name)
     {
         super(ID, 3, material, blocksEffectiveAgainst);
         this.weaponDamage = 4 + this.toolMaterial.getDamageVsEntity();

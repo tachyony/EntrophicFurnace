@@ -128,6 +128,7 @@ public class EntrophicFurnace
     {
         NetworkRegistry.instance().registerGuiHandler(this, EntrophicFurnace.proxy);
         EntrophicFurnace.CONFIGURATION.load();
+        boolean hardMode = EntrophicFurnace.CONFIGURATION.get("Config", "HardMode", false).getBoolean(false);
         int qfurnace1 = EntrophicFurnace.CONFIGURATION.getItem("EntrophicFurnace1", BlockIds.entrophicFurnace1)
                 .getInt();
         int qfurnace2 = EntrophicFurnace.CONFIGURATION.getItem("EntrophicFurnace2", BlockIds.entrophicFurnace2)
@@ -144,17 +145,13 @@ public class EntrophicFurnace
         int inTin = EntrophicFurnace.CONFIGURATION.getItem("ingotTin", BlockIds.ingotTin).getInt();
         int inPaxel = EntrophicFurnace.CONFIGURATION.getItem("EntrophicPaxel", BlockIds.entrophicPaxel).getInt();
 
-        /*entrophicFurnace1 = (new BlockEntrophicFurnace1(410, TextureIds.blockEntrophicFurnace))
-                .setHardness(0.1F).setStepSound(Block.soundWoodFootstep).setBlockName("EntrophicFurnace1")
-                .setCreativeTab(CreativeTabs.tabMaterials);
-        entrophicFurnace2 = (new BlockEntrophicFurnace2(411, TextureIds.blockEntrophicFurnace2))
-                .setHardness(0.1F).setStepSound(Block.soundWoodFootstep).setBlockName("EntrophicFurnace2")
-                .setCreativeTab(CreativeTabs.tabMaterials);
-        entrophicFurnace3 = (new BlockEntrophicFurnace3(412, TextureIds.blockEntrophicFurnace3))
-                .setHardness(0.1F).setStepSound(Block.soundWoodFootstep).setBlockName("EntrophicFurnace3")
-                .setCreativeTab(CreativeTabs.tabMaterials);*/
-        entrophicPaxel = new ItemEntrophicPaxel(413, entrophicMaterial,
-                TextureIds.itemEntrophicPaxel, "entrophicPaxel");
+        entrophicFurnace1 = (new BlockEntrophicFurnace1(410, UniversalElectricity.machine))
+                .setHardness(0.1F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabMaterials);
+        entrophicFurnace2 = (new BlockEntrophicFurnace2(411, UniversalElectricity.machine))
+                .setHardness(0.1F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabMaterials);
+        entrophicFurnace3 = (new BlockEntrophicFurnace3(412, UniversalElectricity.machine))
+                .setHardness(0.1F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabMaterials);
+        entrophicPaxel = new ItemEntrophicPaxel(413, entrophicMaterial, "entrophicPaxel");
         entrophicOre = (new ItemEntrophicOre(414));
         entrophicOre1 = (new ItemEntrophicOre1(415));
         entrophicOre2 = (new ItemEntrophicOre2(416));
@@ -164,12 +161,8 @@ public class EntrophicFurnace
         ingotCopper = (new ItemIngotCopper(420));
         ingotTin = (new ItemIngotTin(421));
         EntrophicFurnace.CONFIGURATION.save();
-        if (!Loader.isModLoaded("BasicComponents"))
-        {
-            System.out.println("Basic Components NOT detected! Basic Components is REQUIRED for survival crafting and gameplay!");
-        }
 
-        /*GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace1, "EntrophicFurnace1");
+        GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace1, "EntrophicFurnace1");
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace2, "EntrophicFurnace2");
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace3, "EntrophicFurnace3");
         GameRegistry.registerTileEntity(TileEntityEntrophicFurnace.class, "EntrophicFurnace1");
@@ -178,7 +171,7 @@ public class EntrophicFurnace
 
         LanguageRegistry.addName(EntrophicFurnace.entrophicFurnace1, "Entrophic Furnace 1");
         LanguageRegistry.addName(EntrophicFurnace.entrophicFurnace2, "Entrophic Furnace 2");
-        LanguageRegistry.addName(EntrophicFurnace.entrophicFurnace3, "Entrophic Furnace 3");*/
+        LanguageRegistry.addName(EntrophicFurnace.entrophicFurnace3, "Entrophic Furnace 3");
         LanguageRegistry.addName(EntrophicFurnace.entrophicOre, "Entrophic Ore");
         LanguageRegistry.addName(EntrophicFurnace.entrophicOre1, "Entrophic Ore 1");
         LanguageRegistry.addName(EntrophicFurnace.entrophicOre2, "Entrophic Ore 2");
@@ -208,7 +201,7 @@ public class EntrophicFurnace
         OreDictionary.registerOre("quantumOre3", new ItemStack(entrophicOre3));
         OreDictionary.registerOre("quantumOre4", new ItemStack(entrophicOre4));
         OreDictionary.registerOre("quantumOre5", new ItemStack(entrophicOre5));
-        /*OreDictionary.registerOre("EntrophicFurnace1", new ItemStack(EntrophicFurnace.entrophicFurnace1));
+        OreDictionary.registerOre("EntrophicFurnace1", new ItemStack(EntrophicFurnace.entrophicFurnace1));
         OreDictionary.registerOre("EntrophicFurnace2", new ItemStack(EntrophicFurnace.entrophicFurnace2));
         OreDictionary.registerOre("EntrophicFurnace3", new ItemStack(EntrophicFurnace.entrophicFurnace3));
         GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicFurnace1, new Object[] {
@@ -218,7 +211,7 @@ public class EntrophicFurnace
         GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicFurnace2, new Object[] {
         		"I I", " F ", "I I", 'I', EntrophicFurnace.entrophicFurnace1, 'F', Block.blockGold }));
         GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicFurnace3, new Object[] {
-        		"I I", " F ", "I I", 'I', EntrophicFurnace.entrophicFurnace2, 'F', Item.netherStar }));*/
+        		"I I", " F ", "I I", 'I', EntrophicFurnace.entrophicFurnace2, 'F', Item.netherStar }));
         GameRegistry.addRecipe(new ItemStack(EntrophicFurnace.entrophicPaxel, 1), new Object[] {
         		"A", "X", "X", 'A', Block.blockDiamond, 'X', EntrophicFurnace.entrophicOre4 });
 

@@ -41,11 +41,11 @@ public class GUIContainerEntrophicFurnace extends GuiContainer
         this.fontRenderer.drawString("Quantum Furnace", 60, 6, 4210752);
         this.fontRenderer.drawString("Smelting:", 10, 28, 4210752);
         this.fontRenderer.drawString("Battery:", 10, 53, 4210752);
-        this.fontRenderer
+        /*this.fontRenderer
                 .drawString(
                         String.format("Charge: %s",
-                                (int) (this.tileEntity.getInternalCharge() / 120/*this.tileEntity.getVoltage()*/)), 82, 45,
-                        4210752);
+                                (int) (this.tileEntity.getInternalCharge() / this.tileEntity.getVoltage())), 82, 45,
+                        4210752);*/
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2,
                 4210752);
     }
@@ -57,9 +57,7 @@ public class GUIContainerEntrophicFurnace extends GuiContainer
     @Override
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
-        int var4 = this.mc.renderEngine.getTexture("/entrophicFurnace/generic/furnace.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        //this.mc.renderEngine.bindTexture(var4);
         this.containerWidth = (this.width - this.xSize) / 2;
         this.containerHeight = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(this.containerWidth, this.containerHeight, 0, 0, this.xSize, this.ySize);

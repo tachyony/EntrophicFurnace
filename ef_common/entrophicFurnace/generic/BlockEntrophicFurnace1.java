@@ -1,5 +1,6 @@
 package entrophicFurnace.generic;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -9,6 +10,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.prefab.block.BlockRotatable;
 import universalelectricity.prefab.implement.IRedstoneProvider;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import cpw.mods.fml.relauncher.Side;
@@ -18,24 +20,22 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author tachyony
  *
  */
-public class BlockEntrophicFurnace1 extends BlockBasicMachine
+public class BlockEntrophicFurnace1 extends BlockRotatable
 {
     /**
      * @param id
      * @param textureIndex
      */
-    public BlockEntrophicFurnace1(int id, int textureIndex)
+    public BlockEntrophicFurnace1(int id, Material material)
     {
-        super(id, textureIndex);
-        this.setBlockName("EntrophicFurnace1");
-        this.blockIndexInTexture = textureIndex;
+        super(id, material);
+        this.setUnlocalizedName("EntrophicFurnace1");
         this.setStepSound(soundMetalFootstep);
-        this.setRequiresSelfNotify();
     }
 
     /**
 	 *
-	 */
+	 *
     @SideOnly(Side.CLIENT)
     @Override
     public int getBlockTextureFromSideAndMetadata(int side, int metadata)
@@ -93,7 +93,7 @@ public class BlockEntrophicFurnace1 extends BlockBasicMachine
         }
 
         return this.blockIndexInTexture; // Fall back if meta is out of range
-    }
+    }*/
 
     /**
      * Called when the block is placed in the world.
@@ -188,11 +188,11 @@ public class BlockEntrophicFurnace1 extends BlockBasicMachine
         return true;
     }
 
-    @Override
+    /*@Override
     public TileEntity createNewTileEntity(World world, int metadata)
     {
         return new TileEntityEntrophicFurnace(0, this.blockID);
-    }
+    }*/
 
     @Override
     public TileEntity createNewTileEntity(World world)
@@ -240,29 +240,29 @@ public class BlockEntrophicFurnace1 extends BlockBasicMachine
      * Is this block powering the block on the specified side
      */
     @Override
-    public boolean isProvidingStrongPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
+    public int isProvidingStrongPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
     {
         TileEntity tileEntity = par1IBlockAccess.getBlockTileEntity(x, y, z);
-        if (tileEntity instanceof IRedstoneProvider)
+        /*if (tileEntity instanceof IRedstoneProvider)
         {
             return ((IRedstoneProvider) tileEntity).isPoweringTo(ForgeDirection.getOrientation(side));
-        }
+        }*/
 
-        return false;
+        return 0/*false*/;
     }
 
     /**
      * Is this block indirectly powering the block on the specified side
      */
     @Override
-    public boolean isProvidingWeakPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
+    public int isProvidingWeakPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
     {
         TileEntity tileEntity = par1IBlockAccess.getBlockTileEntity(x, y, z);
-        if (tileEntity instanceof IRedstoneProvider)
+        /*if (tileEntity instanceof IRedstoneProvider)
         {
             return ((IRedstoneProvider) tileEntity).isIndirectlyPoweringTo(ForgeDirection.getOrientation(side));
-        }
+        }*/
 
-        return false;
+        return 0/*false*/;
     }
 }
