@@ -9,14 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.block.BlockRotatable;
-import universalelectricity.prefab.implement.IRedstoneProvider;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author tachyony
@@ -110,10 +105,10 @@ public class BlockEntrophicFurnace2 extends BlockRotatable
      * Called when the block is placed in the world.
      */
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving)
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entityLiving, ItemStack itemStack)
     {
         int metadata = world.getBlockMetadata(x, y, z);
-        int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int angle = MathHelper.floor_double((entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         if (metadata == 0)
         {
             switch (angle)
@@ -136,7 +131,7 @@ public class BlockEntrophicFurnace2 extends BlockRotatable
             }
         }
 
-        world.setBlockMetadataWithNotify(x, y, z, metadata);
+        world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
     }
 
     @Override
@@ -163,7 +158,7 @@ public class BlockEntrophicFurnace2 extends BlockRotatable
                 break;
         }
 
-        par1World.setBlockMetadata(x, y, z, change);
+        par1World.setBlockMetadataWithNotify(x, y, z, change, 2);
         ((TileEntityAdvanced) par1World.getBlockTileEntity(x, y, z)).initiate();
         return true;
     }

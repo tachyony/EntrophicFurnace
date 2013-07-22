@@ -13,8 +13,6 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.block.BlockRotatable;
 import universalelectricity.prefab.implement.IRedstoneProvider;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author tachyony
@@ -99,10 +97,10 @@ public class BlockEntrophicFurnace1 extends BlockRotatable
      * Called when the block is placed in the world.
      */
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving)
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entityLiving, ItemStack itemStack)
     {
         int metadata = world.getBlockMetadata(x, y, z);
-        int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int angle = MathHelper.floor_double((entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         if (metadata == 0)
         {
             switch (angle)
@@ -125,7 +123,7 @@ public class BlockEntrophicFurnace1 extends BlockRotatable
             }
         }
 
-        world.setBlockMetadataWithNotify(x, y, z, metadata);
+        world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
     }
 
     /**
@@ -165,7 +163,7 @@ public class BlockEntrophicFurnace1 extends BlockRotatable
                 break;
         }
 
-        par1World.setBlockMetadata(x, y, z, change);
+        par1World.setBlockMetadataWithNotify(x, y, z, change, 2);
         ((TileEntityAdvanced) par1World.getBlockTileEntity(x, y, z)).initiate();
         return true;
     }
@@ -243,12 +241,12 @@ public class BlockEntrophicFurnace1 extends BlockRotatable
     public int isProvidingStrongPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
     {
         TileEntity tileEntity = par1IBlockAccess.getBlockTileEntity(x, y, z);
-        /*if (tileEntity instanceof IRedstoneProvider)
+        if (tileEntity instanceof IRedstoneProvider)
         {
-            return ((IRedstoneProvider) tileEntity).isPoweringTo(ForgeDirection.getOrientation(side));
-        }*/
+            return ((IRedstoneProvider)tileEntity).isPoweringTo(ForgeDirection.getOrientation(side)) ? 1 : 0;
+        }
 
-        return 0/*false*/;
+        return 0;
     }
 
     /**
@@ -258,11 +256,11 @@ public class BlockEntrophicFurnace1 extends BlockRotatable
     public int isProvidingWeakPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
     {
         TileEntity tileEntity = par1IBlockAccess.getBlockTileEntity(x, y, z);
-        /*if (tileEntity instanceof IRedstoneProvider)
+        if (tileEntity instanceof IRedstoneProvider)
         {
-            return ((IRedstoneProvider) tileEntity).isIndirectlyPoweringTo(ForgeDirection.getOrientation(side));
-        }*/
+            return ((IRedstoneProvider)tileEntity).isIndirectlyPoweringTo(ForgeDirection.getOrientation(side)) ? 1 : 0;
+        }
 
-        return 0/*false*/;
+        return 0;
     }
 }
