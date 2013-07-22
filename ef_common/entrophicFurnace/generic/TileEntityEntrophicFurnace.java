@@ -416,13 +416,7 @@ public class TileEntityEntrophicFurnace extends TileEntityElectricalStorage impl
             }
         }
     }
-
-    /*@Override
-    protected EnumSet<ForgeDirection> getConsumingSides()
-    {
-        return EnumSet.of(ForgeDirection.UP);
-    }*/
-
+    
     /**
      * Get packet
      *
@@ -580,29 +574,6 @@ public class TileEntityEntrophicFurnace extends TileEntityElectricalStorage impl
 
         par1NBTTagCompound.setTag("Items", var2);
     }
-
-    /**
-	 *
-	 *
-    @Override
-    public int getStartInventorySide(ForgeDirection side)
-    {
-        if (side == ForgeDirection.DOWN || side == ForgeDirection.UP)
-        {
-            return side.ordinal();
-        }
-
-        return 2;
-    }
-
-    /**
-	 *
-	 *
-    @Override
-    public int getSizeInventorySide(ForgeDirection side)
-    {
-        return 1;
-    }*/
 
     /**
 	 *
