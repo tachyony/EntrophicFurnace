@@ -137,7 +137,7 @@ public class BlockEntrophicFurnace1 extends BlockRotatable
      * @param hitX
      * @param hitY
      * @param hitZ
-     * @return
+     * @return Used wrench
      */
     @Override
     public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side,

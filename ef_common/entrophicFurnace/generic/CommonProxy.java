@@ -31,7 +31,7 @@ public class CommonProxy implements IGuiHandler
             switch (ID)
             {
                 case 0:
-                    return null;//new ContainerEntrophicFurnace(player.inventory, ((TileEntityEntrophicFurnace) tileEntity));
+                    return new ContainerEntrophicFurnace(player.inventory, ((TileEntityEntrophicFurnace) tileEntity));
                 default:
                     break;
             }

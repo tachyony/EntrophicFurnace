@@ -66,7 +66,17 @@ public class BlockIds
 	 *
 	 */
     public static final int entrophicPaxel = ingotTin + 1;
+    
+    /**
+    *
+    */
+    public static final int entrophicSeed = entrophicPaxel + 1;
 
+    /**
+    *
+    */
+    public static final int entrophicCrop = entrophicSeed + 1;
+    
     /**
 	 *
 	 */

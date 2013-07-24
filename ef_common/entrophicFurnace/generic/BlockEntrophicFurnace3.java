@@ -190,7 +190,7 @@ public class BlockEntrophicFurnace3 extends BlockRotatable
     /**
      * 
      * @param world
-     * @return
+     * @return Tile entity
      */
     @Override
     public TileEntity createNewTileEntity(World world)
