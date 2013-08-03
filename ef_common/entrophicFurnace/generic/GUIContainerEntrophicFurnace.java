@@ -1,4 +1,4 @@
-package entrophicFurnace.client;
+package entrophicFurnace.generic;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -6,15 +6,15 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import entrophicFurnace.generic.ContainerEntrophicFurnace;
-import entrophicFurnace.generic.TileEntityEntrophicFurnace;
+import entrophicFurnace.tileentity.TileEntrophicFurnace;
+
 
 /**
  * @author tachyony
  */
 public class GUIContainerEntrophicFurnace extends GuiContainer
 {
-    private TileEntityEntrophicFurnace tileEntity;
+    private TileEntrophicFurnace tileEntity;
 
     private int containerWidth;
 
@@ -24,7 +24,7 @@ public class GUIContainerEntrophicFurnace extends GuiContainer
      * @param par1InventoryPlayer
      * @param tileEntity
      */
-    public GUIContainerEntrophicFurnace(InventoryPlayer par1InventoryPlayer, TileEntityEntrophicFurnace tileEntity)
+    public GUIContainerEntrophicFurnace(InventoryPlayer par1InventoryPlayer, TileEntrophicFurnace tileEntity)
     {
         super(new ContainerEntrophicFurnace(par1InventoryPlayer, tileEntity));
         this.tileEntity = tileEntity;
@@ -62,7 +62,7 @@ public class GUIContainerEntrophicFurnace extends GuiContainer
         this.drawTexturedModalRect(this.containerWidth, this.containerHeight, 0, 0, this.xSize, this.ySize);
         if (this.tileEntity.smeltingTicks > 0)
         {
-            int scale = (int) (((double) this.tileEntity.smeltingTicks / (double) TileEntityEntrophicFurnace.SMELTING_TIME_REQUIRED) * 23);
+            int scale = (int) (((double) this.tileEntity.smeltingTicks / (double) TileEntrophicFurnace.SMELTING_TIME_REQUIRED) * 23);
             this.drawTexturedModalRect(this.containerWidth + 77, this.containerHeight + 24, 176, 0, 23 - scale, 20);
         }
     }

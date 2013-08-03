@@ -1,4 +1,4 @@
-package entrophicFurnace.generic;
+package entrophicFurnace;
 
 import java.io.File;
 
@@ -27,6 +27,22 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import entrophicFurmace.block.BlockEntrophicCrop;
+import entrophicFurmace.block.BlockEntrophicFurnace1;
+import entrophicFurmace.block.BlockEntrophicFurnace2;
+import entrophicFurmace.block.BlockEntrophicFurnace3;
+import entrophicFurnace.generic.BlockIds;
+import entrophicFurnace.generic.CommonProxy;
+import entrophicFurnace.item.ItemEntrophicOre;
+import entrophicFurnace.item.ItemEntrophicOre1;
+import entrophicFurnace.item.ItemEntrophicOre2;
+import entrophicFurnace.item.ItemEntrophicOre3;
+import entrophicFurnace.item.ItemEntrophicOre4;
+import entrophicFurnace.item.ItemEntrophicOre5;
+import entrophicFurnace.item.ItemEntrophicPaxel;
+import entrophicFurnace.item.ItemIngotCopper;
+import entrophicFurnace.item.ItemIngotTin;
+import entrophicFurnace.tileentity.TileEntrophicFurnace;
 
 /**
  *
@@ -128,7 +144,7 @@ public class EntrophicFurnace
     /**
      * Hard mode
      */
-    public boolean hardMode;
+    private boolean hardMode;
     
     /**
      * Material for quantum paxel
@@ -164,21 +180,21 @@ public class EntrophicFurnace
         int seedEntrophic = EntrophicFurnace.CONFIGURATION.getItem("EntrophicSeed", BlockIds.entrophicSeed).getInt();
         int cropEntrophic = EntrophicFurnace.CONFIGURATION.getItem("EntrophicCrop", BlockIds.entrophicCrop).getInt();
         
-        entrophicFurnace1 = (new BlockEntrophicFurnace1(410, UniversalElectricity.machine))
+        entrophicFurnace1 = new BlockEntrophicFurnace1(410, UniversalElectricity.machine)
                 .setHardness(0.5F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabMaterials);
-        entrophicFurnace2 = (new BlockEntrophicFurnace2(411, UniversalElectricity.machine))
+        entrophicFurnace2 = new BlockEntrophicFurnace2(411, UniversalElectricity.machine)
                 .setHardness(0.5F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabMaterials);
-        entrophicFurnace3 = (new BlockEntrophicFurnace3(412, UniversalElectricity.machine))
+        entrophicFurnace3 = new BlockEntrophicFurnace3(412, UniversalElectricity.machine)
                 .setHardness(0.5F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabMaterials);
         entrophicPaxel = new ItemEntrophicPaxel(413, entrophicMaterial, "entrophicPaxel");
-        entrophicOre = (new ItemEntrophicOre(414));
-        entrophicOre1 = (new ItemEntrophicOre1(415));
-        entrophicOre2 = (new ItemEntrophicOre2(416));
-        entrophicOre3 = (new ItemEntrophicOre3(417));
-        entrophicOre4 = (new ItemEntrophicOre4(418));
-        entrophicOre5 = (new ItemEntrophicOre5(419));
-        ingotCopper = (new ItemIngotCopper(420));
-        ingotTin = (new ItemIngotTin(421));
+        entrophicOre = new ItemEntrophicOre(414);
+        entrophicOre1 = new ItemEntrophicOre1(415);
+        entrophicOre2 = new ItemEntrophicOre2(416);
+        entrophicOre3 = new ItemEntrophicOre3(417);
+        entrophicOre4 = new ItemEntrophicOre4(418);
+        entrophicOre5 = new ItemEntrophicOre5(419);
+        ingotCopper = new ItemIngotCopper(420);
+        ingotTin = new ItemIngotTin(421);
         entrophicCrop = new BlockEntrophicCrop(423);
         entrophicSeed = new ItemSeeds(422, EntrophicFurnace.entrophicCrop.blockID, Block.tilledField.blockID).setUnlocalizedName("entrophicSeed").setMaxStackSize(64);
         EntrophicFurnace.CONFIGURATION.save();
@@ -187,9 +203,9 @@ public class EntrophicFurnace
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace2, "EntrophicFurnace2");
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace3, "EntrophicFurnace3");
         GameRegistry.registerBlock(EntrophicFurnace.entrophicCrop, "EntrophicCrop");
-        GameRegistry.registerTileEntity(TileEntityEntrophicFurnace.class, "EntrophicFurnace1");
-        GameRegistry.registerTileEntity(TileEntityEntrophicFurnace.class, "EntrophicFurnace2");
-        GameRegistry.registerTileEntity(TileEntityEntrophicFurnace.class, "EntrophicFurnace3");
+        GameRegistry.registerTileEntity(TileEntrophicFurnace.class, "EntrophicFurnace1");
+        GameRegistry.registerTileEntity(TileEntrophicFurnace.class, "EntrophicFurnace2");
+        GameRegistry.registerTileEntity(TileEntrophicFurnace.class, "EntrophicFurnace3");
 
         LanguageRegistry.addName(EntrophicFurnace.entrophicFurnace1, "Entrophic Furnace 1");
         LanguageRegistry.addName(EntrophicFurnace.entrophicFurnace2, "Entrophic Furnace 2");

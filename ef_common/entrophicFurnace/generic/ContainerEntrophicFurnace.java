@@ -1,5 +1,6 @@
 package entrophicFurnace.generic;
 
+import entrophicFurnace.tileentity.TileEntrophicFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -13,13 +14,13 @@ import net.minecraft.item.crafting.FurnaceRecipes;
  */
 public class ContainerEntrophicFurnace extends Container
 {
-    private TileEntityEntrophicFurnace tileEntity;
+    private TileEntrophicFurnace tileEntity;
 
     /**
      * @param par1InventoryPlayer
      * @param tileEntity
      */
-    public ContainerEntrophicFurnace(InventoryPlayer par1InventoryPlayer, TileEntityEntrophicFurnace tileEntity)
+    public ContainerEntrophicFurnace(InventoryPlayer par1InventoryPlayer, TileEntrophicFurnace tileEntity)
     {
         this.tileEntity = tileEntity;
         this.addSlotToContainer(new Slot(tileEntity, 0, 55, 49));

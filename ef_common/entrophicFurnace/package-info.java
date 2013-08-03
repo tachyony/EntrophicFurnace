@@ -1,8 +1,0 @@
-/**
- * 
- */
-/**
- * @author Tachyony
- *
- */
-package entrophicFurnace;

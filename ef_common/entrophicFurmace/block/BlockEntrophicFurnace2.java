@@ -1,6 +1,9 @@
-package entrophicFurnace.generic;
+package entrophicFurmace.block;
 
 import java.util.Random;
+
+import entrophicFurnace.EntrophicFurnace;
+import entrophicFurnace.tileentity.TileEntrophicFurnace;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -190,7 +193,7 @@ public class BlockEntrophicFurnace2 extends BlockRotatable
     @Override
     public TileEntity createNewTileEntity(World world)
     {
-        return new TileEntityEntrophicFurnace(1, this.blockID);
+        return new TileEntrophicFurnace(1, this.blockID);
     }
 
     @Override

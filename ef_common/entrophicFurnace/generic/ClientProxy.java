@@ -1,10 +1,9 @@
-package entrophicFurnace.client;
+package entrophicFurnace.generic;
 
+import entrophicFurnace.tileentity.TileEntrophicFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import entrophicFurnace.generic.CommonProxy;
-import entrophicFurnace.generic.TileEntityEntrophicFurnace;
 
 /**
  * @author tachyony
@@ -33,7 +32,7 @@ public class ClientProxy extends CommonProxy
             switch (ID)
             {
                 case 0:
-                    return new GUIContainerEntrophicFurnace(player.inventory, ((TileEntityEntrophicFurnace) tileEntity));
+                    return new GUIContainerEntrophicFurnace(player.inventory, ((TileEntrophicFurnace) tileEntity));
                 default:
                     break;
             }

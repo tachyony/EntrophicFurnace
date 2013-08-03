@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
+import entrophicFurnace.tileentity.TileEntrophicFurnace;
 
 /**
  * @author tachyony
@@ -31,7 +32,7 @@ public class CommonProxy implements IGuiHandler
             switch (ID)
             {
                 case 0:
-                    return new ContainerEntrophicFurnace(player.inventory, ((TileEntityEntrophicFurnace) tileEntity));
+                    return new ContainerEntrophicFurnace(player.inventory, ((TileEntrophicFurnace) tileEntity));
                 default:
                     break;
             }

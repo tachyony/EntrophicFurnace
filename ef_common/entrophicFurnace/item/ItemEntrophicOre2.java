@@ -1,4 +1,4 @@
-package entrophicFurnace.generic;
+package entrophicFurnace.item;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -7,13 +7,13 @@ import net.minecraft.item.Item;
  * @author tachyony
  *
  */
-public class ItemEntrophicOre3 extends Item
+public class ItemEntrophicOre2 extends Item
 {
-    protected ItemEntrophicOre3(int id)
+    public ItemEntrophicOre2(int id)
     {
         super(id);
         this.setMaxStackSize(64);
         this.setCreativeTab(CreativeTabs.tabMisc);
-        this.setUnlocalizedName("entrophicOre3");
+        this.setUnlocalizedName("entrophicOre2");
     }
 }

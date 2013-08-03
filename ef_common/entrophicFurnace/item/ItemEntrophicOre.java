@@ -1,4 +1,4 @@
-package entrophicFurnace.generic;
+package entrophicFurnace.item;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -9,7 +9,7 @@ import net.minecraft.item.Item;
  */
 public class ItemEntrophicOre extends Item
 {
-    protected ItemEntrophicOre(int id)
+    public ItemEntrophicOre(int id)
     {
         super(id);
         this.setMaxStackSize(64);

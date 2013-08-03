@@ -1,4 +1,4 @@
-package entrophicFurnace.generic;
+package entrophicFurnace.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -17,6 +17,7 @@ import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import entrophicFurnace.EntrophicFurnace;
 
 /**
  * @author tachyony
@@ -37,7 +38,7 @@ public class ItemEntrophicPaxel extends ItemTool
 
     private int weaponDamage;
 
-    protected ItemEntrophicPaxel(int ID, EnumToolMaterial material, String name)
+    public ItemEntrophicPaxel(int ID, EnumToolMaterial material, String name)
     {
         super(ID, 3, material, blocksEffectiveAgainst);
         this.weaponDamage = 4 + this.toolMaterial.getDamageVsEntity();

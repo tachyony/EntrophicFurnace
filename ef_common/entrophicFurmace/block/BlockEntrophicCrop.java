@@ -1,7 +1,8 @@
-package entrophicFurnace.generic;
+package entrophicFurmace.block;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import entrophicFurnace.EntrophicFurnace;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
@@ -64,8 +65,7 @@ public class BlockEntrophicCrop extends BlockCrops {
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.iconArray = new Icon[8];
-
+        this.iconArray = new Icon[16];
         for (int i = 0; i < this.iconArray.length; ++i)
         {
             this.iconArray[i] = par1IconRegister.registerIcon("entrophicCrop_" + i);

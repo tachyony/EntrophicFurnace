@@ -1,7 +1,7 @@
-package entrophicFurnace.generic;
+package entrophicFurmace.block;
 
-import java.util.Random;
-
+import entrophicFurnace.EntrophicFurnace;
+import entrophicFurnace.tileentity.TileEntrophicFurnace;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,34 +9,28 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.block.BlockRotatable;
+import universalelectricity.prefab.implement.IRedstoneProvider;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 /**
  * @author tachyony
  *
  */
-public class BlockEntrophicFurnace3 extends BlockRotatable
+public class BlockEntrophicFurnace1 extends BlockRotatable
 {
     /**
      * @param id
      * @param textureIndex
      */
-    public BlockEntrophicFurnace3(int id, Material material)
+    public BlockEntrophicFurnace1(int id, Material material)
     {
         super(id, material);
-        this.setUnlocalizedName("EntrophicFurnace3");
+        this.setUnlocalizedName("EntrophicFurnace1");
         this.setStepSound(soundMetalFootstep);
-    }
-
-    /**
-	 *
-	 */
-    @Override
-    public void randomDisplayTick(World par1World, int x, int y, int z, Random par5Random)
-    {
-        //
     }
 
     /**
@@ -48,8 +42,8 @@ public class BlockEntrophicFurnace3 extends BlockRotatable
     {
         if (side == 0 || side == 1)
         {
-            return this.blockIndexInTexture; // Top and bottom always look
-                                             // the same
+            return this.blockIndexInTexture; // Top and bottom always look the
+                                             // same
         }
 
         switch (metadata)
@@ -134,6 +128,19 @@ public class BlockEntrophicFurnace3 extends BlockRotatable
         world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
     }
 
+    /**
+     * 
+     * @param par1World
+     * @param x
+     * @param y
+     * @param z
+     * @param par5EntityPlayer
+     * @param side
+     * @param hitX
+     * @param hitY
+     * @param hitZ
+     * @return Used wrench
+     */
     @Override
     public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side,
             float hitX, float hitY, float hitZ)
@@ -184,18 +191,13 @@ public class BlockEntrophicFurnace3 extends BlockRotatable
     /*@Override
     public TileEntity createNewTileEntity(World world, int metadata)
     {
-        return new TileEntityEntrophicFurnace(2, this.blockID);
+        return new TileEntityEntrophicFurnace(0, this.blockID);
     }*/
 
-    /**
-     * 
-     * @param world
-     * @return Tile entity
-     */
     @Override
     public TileEntity createNewTileEntity(World world)
     {
-        return new TileEntityEntrophicFurnace(2, this.blockID);
+        return new TileEntrophicFurnace(0, this.blockID);
     }
 
     @Override
@@ -236,31 +238,31 @@ public class BlockEntrophicFurnace3 extends BlockRotatable
 
     /**
      * Is this block powering the block on the specified side
-     *
+     */
     @Override
-    public boolean isProvidingStrongPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
+    public int isProvidingStrongPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
     {
         TileEntity tileEntity = par1IBlockAccess.getBlockTileEntity(x, y, z);
         if (tileEntity instanceof IRedstoneProvider)
         {
-            return ((IRedstoneProvider) tileEntity).isPoweringTo(ForgeDirection.getOrientation(side));
+            return ((IRedstoneProvider)tileEntity).isPoweringTo(ForgeDirection.getOrientation(side)) ? 1 : 0;
         }
 
-        return false;
+        return 0;
     }
 
     /**
      * Is this block indirectly powering the block on the specified side
-     *
+     */
     @Override
-    public boolean isProvidingWeakPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
+    public int isProvidingWeakPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
     {
         TileEntity tileEntity = par1IBlockAccess.getBlockTileEntity(x, y, z);
         if (tileEntity instanceof IRedstoneProvider)
         {
-            return ((IRedstoneProvider) tileEntity).isIndirectlyPoweringTo(ForgeDirection.getOrientation(side));
+            return ((IRedstoneProvider)tileEntity).isIndirectlyPoweringTo(ForgeDirection.getOrientation(side)) ? 1 : 0;
         }
 
-        return false;
-    }*/
+        return 0;
+    }
 }
