@@ -49,7 +49,7 @@ import entrophicFurnace.tileentity.TileEntrophicFurnace;
  * @author Tachyony
  *
  */
-@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.5.2_1", dependencies = "after:BasicComponents", useMetadata = true, certificateFingerprint="", acceptedMinecraftVersions="")
+@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.5.2_1", useMetadata = true, certificateFingerprint="")
 @NetworkMod(channels = BlockIds.channel, clientSideRequired = true, serverSideRequired = false, packetHandler = universalelectricity.prefab.network.PacketManager.class)
 public class EntrophicFurnace
 {
@@ -62,7 +62,7 @@ public class EntrophicFurnace
     /**
 	 *
 	 */
-    @SidedProxy(clientSide = "entrophicFurnace.client.ClientProxy", serverSide = "entrophicFurnace.generic.CommonProxy")
+    @SidedProxy(clientSide = "entrophicFurnace.generic.ClientProxy", serverSide = "entrophicFurnace.generic.CommonProxy")
     public static CommonProxy proxy;
 
     /**
@@ -258,11 +258,26 @@ public class EntrophicFurnace
         GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicOre5, new Object[] { "ooo", "ooo", "oo ",
                 'o', EntrophicFurnace.entrophicOre4 }));
         
+        GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicOre, new Object[] { "   ", "   ", "o  ",
+                'o', EntrophicFurnace.entrophicOre1 }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(EntrophicFurnace.entrophicOre, 8), new Object[] { "o  ", "   ", "   ",
+                'o', EntrophicFurnace.entrophicOre2 }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(EntrophicFurnace.entrophicOre2, 8), new Object[] { "o  ", "   ", "   ",
+                'o', EntrophicFurnace.entrophicOre3 }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(EntrophicFurnace.entrophicOre3, 8), new Object[] { "o  ", "   ", "   ",
+                'o', EntrophicFurnace.entrophicOre4 }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(EntrophicFurnace.entrophicOre4, 8), new Object[] { "o  ", "   ", "   ",
+                'o', EntrophicFurnace.entrophicOre5 }));
+        
         if (this.hardMode)
         {
             // Hard mode recipes, inspired by GregTech to make your life difficult.
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(EntrophicFurnace.entrophicSeed, 9), new Object[] {
                     "III", "IFI", "III", 'I', Block.wood, 'F', Block.workbench }));
+            
+            // Add in the entrophic furnaces
+            GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicFurnace1, new Object[] {
+                    "TCT", "CEC", "TCT", 'T', EntrophicFurnace.ingotTin, 'C', EntrophicFurnace.ingotCopper, 'E', EntrophicFurnace.entrophicOre2 }));
         }
         else
         {
@@ -308,8 +323,8 @@ public class EntrophicFurnace
                 EntrophicFurnace.entrophicOre }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Block.cobblestoneMossy, new Object[] { "   ", "   ", " o ", 'o',
                 EntrophicFurnace.entrophicOre1 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.silk, new Object[] { "   ", "   ", "o  ", 'o',
-                EntrophicFurnace.entrophicOre1 }));
+        /*GameRegistry.addRecipe(new ShapedOreRecipe(Item.silk, new Object[] { "   ", "   ", "o  ", 'o',
+                EntrophicFurnace.entrophicOre1 }));*/
         GameRegistry.addRecipe(new ShapedOreRecipe(Block.netherrack, new Object[] { "   ", "o  ", "   ", 'o',
                 EntrophicFurnace.entrophicOre1 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Block.slowSand, new Object[] { "   ", " o ", "   ", 'o',
