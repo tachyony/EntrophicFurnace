@@ -1,8 +1,7 @@
 package entrophicFurmace.block;
 
-import entrophicFurnace.EntrophicFurnace;
-import entrophicFurnace.tileentity.TileEntrophicFurnace;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,6 +14,10 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.block.BlockRotatable;
 import universalelectricity.prefab.implement.IRedstoneProvider;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import entrophicFurnace.EntrophicFurnace;
+import entrophicFurnace.tileentity.TileEntrophicFurnace;
 
 /**
  * @author tachyony
@@ -29,71 +32,9 @@ public class BlockEntrophicFurnace1 extends BlockRotatable
     public BlockEntrophicFurnace1(int id, Material material)
     {
         super(id, material);
-        this.setUnlocalizedName("EntrophicFurnace1");
+        this.setUnlocalizedName("entrophicFurnace1");
         this.setStepSound(soundMetalFootstep);
     }
-
-    /**
-	 *
-	 *
-    @SideOnly(Side.CLIENT)
-    @Override
-    public int getBlockTextureFromSideAndMetadata(int side, int metadata)
-    {
-        if (side == 0 || side == 1)
-        {
-            return this.blockIndexInTexture; // Top and bottom always look the
-                                             // same
-        }
-
-        switch (metadata)
-        {
-            case 0: // North Facing Block
-                if (side == 2)
-                    return this.blockIndexInTexture - 1; // North Side of Block
-                if (side == 3)
-                    return this.blockIndexInTexture; // South Side of Block
-                if (side == 4)
-                    return this.blockIndexInTexture; // West Side of Block
-                if (side == 5)
-                    return this.blockIndexInTexture; // East Side of Block
-                break;
-            case 1: // East Facing Block
-                if (side == 2)
-                    return this.blockIndexInTexture; // North Side of Block
-                if (side == 3)
-                    return this.blockIndexInTexture; // South Side of Block
-                if (side == 4)
-                    return this.blockIndexInTexture; // West Side of Block
-                if (side == 5)
-                    return this.blockIndexInTexture - 1; // East Side of Block
-                break;
-            case 2: // South Facing Block
-                if (side == 2)
-                    return this.blockIndexInTexture; // North Side of Block
-                if (side == 3)
-                    return this.blockIndexInTexture - 1; // South Side of Block
-                if (side == 4)
-                    return this.blockIndexInTexture; // West Side of Block
-                if (side == 5)
-                    return this.blockIndexInTexture; // East Side of Block
-                break;
-            case 3: // West Facing Block
-                if (side == 2)
-                    return this.blockIndexInTexture;// North Side of Block
-                if (side == 3)
-                    return this.blockIndexInTexture; // South Side of Block
-                if (side == 4)
-                    return this.blockIndexInTexture - 1; // West Side of Block
-                if (side == 5)
-                    return this.blockIndexInTexture; // East Side of Block
-                break;
-            default:
-                return this.blockIndexInTexture;
-        }
-
-        return this.blockIndexInTexture; // Fall back if meta is out of range
-    }*/
 
     /**
      * Called when the block is placed in the world.
@@ -264,5 +205,12 @@ public class BlockEntrophicFurnace1 extends BlockRotatable
         }
 
         return 0;
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister iconRegister) {
+
+        this.blockIcon = iconRegister.registerIcon(this.getUnlocalizedName2());
     }
 }

@@ -1,11 +1,9 @@
 package entrophicFurmace.block;
 
-import java.util.Random;
-
-import entrophicFurnace.EntrophicFurnace;
-import entrophicFurnace.tileentity.TileEntrophicFurnace;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,6 +13,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import universalelectricity.prefab.block.BlockRotatable;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import entrophicFurnace.EntrophicFurnace;
+import entrophicFurnace.tileentity.TileEntrophicFurnace;
 
 /**
  * @author tachyony
@@ -29,80 +29,9 @@ public class BlockEntrophicFurnace2 extends BlockRotatable
     public BlockEntrophicFurnace2(int id, Material material)
     {
         super(id, material);
-        this.setUnlocalizedName("EntrophicFurnace2");
+        this.setUnlocalizedName("entrophicFurnace2");
         this.setStepSound(soundMetalFootstep);
     }
-
-    /**
-	 *
-	 */
-    @Override
-    public void randomDisplayTick(World par1World, int x, int y, int z, Random par5Random)
-    {
-        //
-    }
-
-    /**
-	 *
-	 *
-    @SideOnly(Side.CLIENT)
-    @Override
-    public int getBlockTextureFromSideAndMetadata(int side, int metadata)
-    {
-        if (side == 0 || side == 1)
-        {
-            return this.blockIndexInTexture; // Top and bottom always look
-                                             // the same
-        }
-
-        switch (metadata)
-        {
-            case 0: // North Facing Block
-                if (side == 2)
-                    return this.blockIndexInTexture - 1; // North Side of Block
-                if (side == 3)
-                    return this.blockIndexInTexture; // South Side of Block
-                if (side == 4)
-                    return this.blockIndexInTexture; // West Side of Block
-                if (side == 5)
-                    return this.blockIndexInTexture; // East Side of Block
-                break;
-            case 1: // East Facing Block
-                if (side == 2)
-                    return this.blockIndexInTexture; // North Side of Block
-                if (side == 3)
-                    return this.blockIndexInTexture; // South Side of Block
-                if (side == 4)
-                    return this.blockIndexInTexture; // West Side of Block
-                if (side == 5)
-                    return this.blockIndexInTexture - 1; // East Side of Block
-                break;
-            case 2: // South Facing Block
-                if (side == 2)
-                    return this.blockIndexInTexture; // North Side of Block
-                if (side == 3)
-                    return this.blockIndexInTexture - 1; // South Side of Block
-                if (side == 4)
-                    return this.blockIndexInTexture; // West Side of Block
-                if (side == 5)
-                    return this.blockIndexInTexture; // East Side of Block
-                break;
-            case 3: // West Facing Block
-                if (side == 2)
-                    return this.blockIndexInTexture;// North Side of Block
-                if (side == 3)
-                    return this.blockIndexInTexture; // South Side of Block
-                if (side == 4)
-                    return this.blockIndexInTexture - 1; // West Side of Block
-                if (side == 5)
-                    return this.blockIndexInTexture; // East Side of Block
-                break;
-            default:
-                return this.blockIndexInTexture;
-        }
-
-        return this.blockIndexInTexture; // Fall back if meta is out of range
-    }*/
 
     /**
      * Called when the block is placed in the world.
@@ -231,34 +160,11 @@ public class BlockEntrophicFurnace2 extends BlockRotatable
 
         return true;
     }
-
-    /**
-     * Is this block powering the block on the specified side
-     *
+    
     @Override
-    public boolean isProvidingStrongPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
-    {
-        TileEntity tileEntity = par1IBlockAccess.getBlockTileEntity(x, y, z);
-        if (tileEntity instanceof IRedstoneProvider)
-        {
-            return ((IRedstoneProvider) tileEntity).isPoweringTo(ForgeDirection.getOrientation(side));
-        }
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister iconRegister) {
 
-        return false;
+        this.blockIcon = iconRegister.registerIcon(this.getUnlocalizedName2());
     }
-
-    /**
-     * Is this block indirectly powering the block on the specified side
-     *
-    @Override
-    public boolean isProvidingWeakPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
-    {
-        TileEntity tileEntity = par1IBlockAccess.getBlockTileEntity(x, y, z);
-        if (tileEntity instanceof IRedstoneProvider)
-        {
-            return ((IRedstoneProvider) tileEntity).isIndirectlyPoweringTo(ForgeDirection.getOrientation(side));
-        }
-
-        return false;
-    }*/
 }
