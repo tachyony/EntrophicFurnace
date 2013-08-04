@@ -278,6 +278,8 @@ public class EntrophicFurnace
             // Add in the entrophic furnaces
             GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicFurnace1, new Object[] {
                     "TCT", "CEC", "TCT", 'T', EntrophicFurnace.ingotTin, 'C', EntrophicFurnace.ingotCopper, 'E', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicFurnace2, new Object[] {
+                    "IOI", "OFO", "IOI", 'I', EntrophicFurnace.entrophicFurnace1, 'F', Block.blockDiamond, 'O', Block.obsidian }));
         }
         else
         {
