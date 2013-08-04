@@ -716,4 +716,13 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
     public float getMaxEnergyStored() {
         return 0;
     }
+
+    /**
+     * 
+     * @return voltage
+     */
+    @SuppressWarnings("static-method")
+    public double getVoltage() {
+        return WATTS_MULTIPLE;
+    }
 }
