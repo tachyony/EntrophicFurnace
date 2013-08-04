@@ -1,4 +1,4 @@
-package entrophicFurmace.block;
+package entrophicFurnace.block;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -20,16 +20,16 @@ import entrophicFurnace.tileentity.TileEntrophicFurnace;
  * @author tachyony
  *
  */
-public class BlockEntrophicFurnace3 extends BlockRotatable
+public class BlockEntrophicFurnace2 extends BlockRotatable
 {
     /**
      * @param id
      * @param textureIndex
      */
-    public BlockEntrophicFurnace3(int id, Material material)
+    public BlockEntrophicFurnace2(int id, Material material)
     {
         super(id, material);
-        this.setUnlocalizedName("entrophicFurnace3");
+        this.setUnlocalizedName("entrophicFurnace2");
         this.setStepSound(soundMetalFootstep);
     }
 
@@ -116,18 +116,13 @@ public class BlockEntrophicFurnace3 extends BlockRotatable
     /*@Override
     public TileEntity createNewTileEntity(World world, int metadata)
     {
-        return new TileEntityEntrophicFurnace(2, this.blockID);
+        return new TileEntityEntrophicFurnace(1, this.blockID);
     }*/
 
-    /**
-     * 
-     * @param world
-     * @return Tile entity
-     */
     @Override
     public TileEntity createNewTileEntity(World world)
     {
-        return new TileEntrophicFurnace(2, this.blockID);
+        return new TileEntrophicFurnace(1, this.blockID);
     }
 
     @Override

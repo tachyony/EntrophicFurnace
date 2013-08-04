@@ -1,4 +1,4 @@
-package entrophicFurmace.block;
+package entrophicFurnace.block;
 
 import java.util.ArrayList;
 import java.util.Random;
