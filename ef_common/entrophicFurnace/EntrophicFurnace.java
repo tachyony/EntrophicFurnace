@@ -319,12 +319,12 @@ public class EntrophicFurnace
                 EntrophicFurnace.entrophicOre }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Block.stone, new Object[] { "   ", "o  ", "   ", 'o',
                 EntrophicFurnace.entrophicOre }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.glass, new Object[] { "   ", " o ", "   ", 'o',
-                EntrophicFurnace.entrophicOre }));
+        /*GameRegistry.addRecipe(new ShapedOreRecipe(Block.glass, new Object[] { "   ", " o ", "   ", 'o',
+                EntrophicFurnace.entrophicOre }));*/
         GameRegistry.addRecipe(new ShapedOreRecipe(Block.cobblestoneMossy, new Object[] { "   ", "   ", " o ", 'o',
                 EntrophicFurnace.entrophicOre1 }));
-        /*GameRegistry.addRecipe(new ShapedOreRecipe(Item.silk, new Object[] { "   ", "   ", "o  ", 'o',
-                EntrophicFurnace.entrophicOre1 }));*/
+        GameRegistry.addRecipe(new ShapedOreRecipe(Item.silk, new Object[] { "   ", " o ", "   ", 'o',
+                EntrophicFurnace.entrophicOre1 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Block.netherrack, new Object[] { "   ", "o  ", "   ", 'o',
                 EntrophicFurnace.entrophicOre1 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Block.slowSand, new Object[] { "   ", " o ", "   ", 'o',

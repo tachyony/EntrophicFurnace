@@ -34,6 +34,7 @@ public class GUIContainerEntrophicFurnace extends GuiContainer
      * Draw the foreground layer for the GuiContainer (everything in front of
      * the items)
      */
+    @SuppressWarnings("boxing")
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
