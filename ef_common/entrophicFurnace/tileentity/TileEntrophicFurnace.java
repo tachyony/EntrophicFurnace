@@ -1,11 +1,9 @@
 package entrophicFurnace.tileentity;
 
-import java.util.EnumSet;
+import java.util.Map;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -17,7 +15,6 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.block.IEnergyStorage;
 import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.IElectricityNetwork;
-import universalelectricity.core.item.ElectricItemHelper;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
@@ -153,158 +150,19 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
      * @param slot
      * @return multiplier
      */
+    @SuppressWarnings("boxing")
     public long getWattValue(int slot)
     {
-        long requiredWatts = 0;
-        if (this.containingItems[slot].isItemEqual(new ItemStack(Block.cobblestone))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.dirt))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.sand))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.stone))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.stoneBrick))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.glass))
-                || this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicOre))
-                || this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicOre1))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.silk))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.netherrack))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.slowSand))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.mycelium))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.grass))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.cobblestoneMossy)))
+        ItemStack sourceStack = this.containingItems[slot];
+        for (Map.Entry<ItemStack, Integer> stackEntry : EntrophicFurnace.itemValues.itemStacks.entrySet())
         {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 0))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 1))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 2))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 3))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 4))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 5))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 6))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 7))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 8))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 9))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 10))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 11))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 12))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 13))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 14))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.cloth, 1, 15))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.gravel))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.flint))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.sandStone))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.netherBrick)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 4;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(Item.feather, 1, 3)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 5;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(Item.egg))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.chickenRaw))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.chickenCooked))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.porkRaw))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.porkCooked)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 6;
-	    } else if (this.containingItems[slot].isItemEqual(new ItemStack(Item.netherStalkSeeds, 1, 3))
-	            || this.containingItems[slot].isItemEqual(new ItemStack(Block.furnaceIdle))
-	            || this.containingItems[slot].isItemEqual(new ItemStack(Item.clay))
-	            || this.containingItems[slot].isItemEqual(new ItemStack(Item.brick))
-	            || this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicOre2)))
-	    {
-	        requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 8;
-	    } else if (this.containingItems[slot].isItemEqual(new ItemStack(Block.melon))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.pumpkin))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.cactus))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.seeds))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.wheat))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.reed))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.carrot))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.potato))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.wood, 1, 0))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.wood, 1, 1))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.wood, 1, 2))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.wood, 1, 3))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.coal, 1, 0))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.coal, 1, 1))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.leather)))
-        {
-	        requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 16;
-        } 
-	    else if (this.containingItems[slot].isItemEqual(new ItemStack(Item.gunpowder)))
-	    {
-	        requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 24;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(Block.blockClay))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Block.brick))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.obsidian))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.waterlily))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.enderPearl)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 32;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(Block.sapling, 1, 0))
-            || this.containingItems[slot].isItemEqual(new ItemStack(Block.sapling, 1, 1))
-            || this.containingItems[slot].isItemEqual(new ItemStack(Block.sapling, 1, 2))
-            || this.containingItems[slot].isItemEqual(new ItemStack(Block.sapling, 1, 3)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 40;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicFurnace1, 1, 0))
-                || this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicFurnace1, 1, 1))
-                || this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicFurnace1, 1, 2))
-                || this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicFurnace1, 1, 3)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 48;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(Item.ingotIron))
-                || this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.ingotCopper))
-                || this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.ingotTin))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.redstone))
-                || this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicOre3)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 64;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(Item.blazeRod))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Item.slimeBall))
-                || this.containingItems[slot].isItemEqual(new ItemStack(Block.glowStone)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 128;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(Item.ingotGold))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Item.emerald)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 256;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicOre4)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 512;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(Item.diamond)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 1024;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(Block.blockGold)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 2304;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicFurnace2, 1, 0))
-                || this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicFurnace2, 1, 1))
-                || this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicFurnace2, 1, 2))
-                || this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicFurnace2, 1, 3)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 2496;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicOre5)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 4096;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(Block.blockDiamond))
-        		|| this.containingItems[slot].isItemEqual(new ItemStack(Item.netherStar)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 8192;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicPaxel)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 9216;
-        } else if (this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicFurnace3, 1, 0))
-                || this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicFurnace3, 1, 1))
-                || this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicFurnace3, 1, 2))
-                || this.containingItems[slot].isItemEqual(new ItemStack(EntrophicFurnace.entrophicFurnace3, 1, 3)))
-        {
-            requiredWatts = TileEntrophicFurnace.WATTS_MULTIPLE * 18176;
-        } else
-        {
-            // Something we can not smelt
-            requiredWatts = 0;
+            if (sourceStack.isItemEqual(stackEntry.getKey()))
+            {
+                return stackEntry.getValue() * TileEntrophicFurnace.WATTS_MULTIPLE * SMELTING_TIME_REQUIRED;
+            }
         }
-
-        return requiredWatts * SMELTING_TIME_REQUIRED;
+        
+        return 0;
     }
 
     /**

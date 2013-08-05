@@ -33,6 +33,7 @@ import entrophicFurnace.block.BlockEntrophicFurnace2;
 import entrophicFurnace.block.BlockEntrophicFurnace3;
 import entrophicFurnace.generic.BlockIds;
 import entrophicFurnace.generic.CommonProxy;
+import entrophicFurnace.generic.ItemStackValues;
 import entrophicFurnace.item.ItemEntrophicOre;
 import entrophicFurnace.item.ItemEntrophicOre1;
 import entrophicFurnace.item.ItemEntrophicOre2;
@@ -144,13 +145,18 @@ public class EntrophicFurnace
     /**
      * Hard mode
      */
-    private boolean hardMode;
+    public boolean hardMode;
     
     /**
      * Material for quantum paxel
      */
     public static final EnumToolMaterial entrophicMaterial = EnumHelper.addToolMaterial("Entrophic", 3, 4000, 24.0F, 6, 22);
 
+    /**
+     * Values of stuff
+     */
+    public static ItemStackValues itemValues;
+    
     /**
      * Pre init
      * @param event
@@ -424,6 +430,9 @@ public class EntrophicFurnace
                 EntrophicFurnace.entrophicOre3 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Item.diamond, new Object[] { "   ", " o ", " o ", 'o',
                 EntrophicFurnace.entrophicOre4 }));
+        
+        // Get the values of stuff
+        itemValues = new ItemStackValues(this.hardMode);
     }
 
     /**
