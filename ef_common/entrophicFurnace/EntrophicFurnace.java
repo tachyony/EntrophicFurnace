@@ -4,10 +4,12 @@ import java.io.File;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
@@ -274,7 +276,11 @@ public class EntrophicFurnace
                 'o', EntrophicFurnace.entrophicOre4 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(EntrophicFurnace.entrophicOre4, 8), new Object[] { "o  ", "   ", "   ",
                 'o', EntrophicFurnace.entrophicOre5 }));
-        
+        ItemStack paxelStack = new ItemStack(EntrophicFurnace.entrophicPaxel, 1);
+        paxelStack.addEnchantment(Enchantment.silkTouch, 1);
+        paxelStack.addEnchantment(Enchantment.unbreaking, 3);
+        paxelStack.addEnchantment(Enchantment.fortune, 3);
+        paxelStack.addEnchantment(Enchantment.efficiency, 5);
         if (this.hardMode)
         {
             // Hard mode recipes, inspired by GregTech to make your life difficult.
@@ -288,6 +294,10 @@ public class EntrophicFurnace
                     "IOI", "OFO", "IOI", 'I', EntrophicFurnace.entrophicFurnace1, 'F', Block.blockDiamond, 'O', Block.obsidian }));
             GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicFurnace3, new Object[] {
                     "IOI", "OFO", "IOI", 'I', EntrophicFurnace.entrophicFurnace2, 'F', Item.netherStar, 'O', Item.diamond }));
+            
+            // Add the UBer paxel, because every mod has to have a bad ass weapon/ tool
+            GameRegistry.addRecipe(paxelStack, new Object[] {
+                    "A", "X", "X", 'A', Item.netherStar, 'X', EntrophicFurnace.entrophicOre5 });
         }
         else
         {
@@ -305,7 +315,7 @@ public class EntrophicFurnace
             		"I I", " F ", "I I", 'I', EntrophicFurnace.entrophicFurnace2, 'F', Item.netherStar }));
             
             // Add the UBer paxel, because every mod has to have a bad ass weapon/ tool
-            GameRegistry.addRecipe(new ItemStack(EntrophicFurnace.entrophicPaxel, 1), new Object[] {
+            GameRegistry.addRecipe(paxelStack, new Object[] {
             		"A", "X", "X", 'A', Block.blockDiamond, 'X', EntrophicFurnace.entrophicOre4 });
             
             // Add alternate recipes for those (un)lucky enough to be using GregTech.
@@ -432,6 +442,9 @@ public class EntrophicFurnace
                 EntrophicFurnace.entrophicOre3 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Item.diamond, new Object[] { "   ", " o ", " o ", 'o',
                 EntrophicFurnace.entrophicOre4 }));
+        
+        GameRegistry.addRecipe(new ShapedOreRecipe(Item.netherStar, new Object[] {
+                "DDD", "DGD", "DDD", 'G', Item.ingotGold, 'D', Item.diamond }));
         
         // Get the values of stuff
         itemValues = new ItemStackValues(this.hardMode);
