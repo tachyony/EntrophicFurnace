@@ -129,12 +129,11 @@ public class BlockEntrophicFurnace1 extends BlockRotatable
         return true;
     }
 
-    /*@Override
-    public TileEntity createNewTileEntity(World world, int metadata)
-    {
-        return new TileEntityEntrophicFurnace(0, this.blockID);
-    }*/
-
+    /**
+     * 
+     * @param world
+     * @return Tile entity
+     */
     @Override
     public TileEntity createNewTileEntity(World world)
     {

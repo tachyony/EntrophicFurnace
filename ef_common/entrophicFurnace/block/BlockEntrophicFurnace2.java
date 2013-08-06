@@ -1,7 +1,5 @@
 package entrophicFurnace.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLiving;
@@ -10,9 +8,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.block.BlockRotatable;
+import universalelectricity.prefab.implement.IRedstoneProvider;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import entrophicFurnace.EntrophicFurnace;
 import entrophicFurnace.tileentity.TileEntrophicFurnace;
 
@@ -66,6 +69,19 @@ public class BlockEntrophicFurnace2 extends BlockRotatable
         world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
     }
 
+    /**
+     * 
+     * @param par1World
+     * @param x
+     * @param y
+     * @param z
+     * @param par5EntityPlayer
+     * @param side
+     * @param hitX
+     * @param hitY
+     * @param hitZ
+     * @return Used wrench
+     */
     @Override
     public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side,
             float hitX, float hitY, float hitZ)
@@ -113,12 +129,11 @@ public class BlockEntrophicFurnace2 extends BlockRotatable
         return true;
     }
 
-    /*@Override
-    public TileEntity createNewTileEntity(World world, int metadata)
-    {
-        return new TileEntityEntrophicFurnace(1, this.blockID);
-    }*/
-
+    /**
+     * 
+     * @param world
+     * @return Tile entity
+     */
     @Override
     public TileEntity createNewTileEntity(World world)
     {
@@ -159,6 +174,36 @@ public class BlockEntrophicFurnace2 extends BlockRotatable
         }
 
         return true;
+    }
+
+    /**
+     * Is this block powering the block on the specified side
+     */
+    @Override
+    public int isProvidingStrongPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
+    {
+        TileEntity tileEntity = par1IBlockAccess.getBlockTileEntity(x, y, z);
+        if (tileEntity instanceof IRedstoneProvider)
+        {
+            return ((IRedstoneProvider)tileEntity).isPoweringTo(ForgeDirection.getOrientation(side)) ? 1 : 0;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Is this block indirectly powering the block on the specified side
+     */
+    @Override
+    public int isProvidingWeakPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
+    {
+        TileEntity tileEntity = par1IBlockAccess.getBlockTileEntity(x, y, z);
+        if (tileEntity instanceof IRedstoneProvider)
+        {
+            return ((IRedstoneProvider)tileEntity).isIndirectlyPoweringTo(ForgeDirection.getOrientation(side)) ? 1 : 0;
+        }
+
+        return 0;
     }
     
     @Override

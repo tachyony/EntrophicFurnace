@@ -107,12 +107,6 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
     private boolean isFull = false;
 
     /**
-     * Is a high tier furnace
-     *
-     * private boolean isSuperFurnace = false;
-     */
-
-    /**
      * Constructor
      */
     public TileEntrophicFurnace()
@@ -131,15 +125,12 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
         if (level == 0)
         {
             this.addWatts = WATTS_PER_TICK;
-            // this.isSuperFurnace = false;
         } else if (level == 1)
         {
             this.addWatts = WATTS_PER_TICK * 4;
-            // this.isSuperFurnace = false;
         } else if (level == 2)
         {
             this.addWatts = WATTS_PER_TICK * 16;
-            // this.isSuperFurnace = true;
         }
 
         this.blockId = blockId;
@@ -202,12 +193,7 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
 
                 if ((this.containingItems[1] != null) && this.canSmelt() && (this.smeltingTicks == 0))
                 {
-                    /*
-                     * if (this.isSuperFurnace) { this.smeltingTicks =
-                     * this.SMELTING_TIME_REQUIRED_OP; } else {
-                     */
                     this.smeltingTicks = TileEntrophicFurnace.SMELTING_TIME_REQUIRED;
-                    /* } */
                     this.watts = this.getWattValue(1);
                     this.smeltId = this.containingItems[1].itemID;
                 }
@@ -393,8 +379,6 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
         this.joules = par1NBTTagCompound.getDouble("internalCharge");
         this.addWatts = par1NBTTagCompound.getLong("addWatts");
         this.smeltingTicks = par1NBTTagCompound.getInteger("smeltingTicks");
-        // this.isSuperFurnace =
-        // par1NBTTagCompound.getBoolean("isSuperFurnace");
         this.blockId = par1NBTTagCompound.getInteger("blockID");
         NBTTagList var2 = par1NBTTagCompound.getTagList("Items");
         this.containingItems = new ItemStack[this.getSizeInventory()];
@@ -419,7 +403,6 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
         par1NBTTagCompound.setDouble("internalCharge", this.joules);
         par1NBTTagCompound.setLong("addWatts", this.addWatts);
         par1NBTTagCompound.setInteger("smeltingTicks", this.smeltingTicks);
-        // par1NBTTagCompound.setBoolean("isSuperFurnace", this.isSuperFurnace);
         par1NBTTagCompound.setInteger("blockId", this.blockId);
         NBTTagList var2 = new NBTTagList();
         for (int var3 = 0; var3 < this.containingItems.length; ++var3)

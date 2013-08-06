@@ -286,6 +286,8 @@ public class EntrophicFurnace
                     "TCT", "CEC", "TCT", 'T', EntrophicFurnace.ingotTin, 'C', EntrophicFurnace.ingotCopper, 'E', EntrophicFurnace.entrophicOre2 }));
             GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicFurnace2, new Object[] {
                     "IOI", "OFO", "IOI", 'I', EntrophicFurnace.entrophicFurnace1, 'F', Block.blockDiamond, 'O', Block.obsidian }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicFurnace3, new Object[] {
+                    "IOI", "OFO", "IOI", 'I', EntrophicFurnace.entrophicFurnace2, 'F', Item.netherStar, 'O', Item.diamond }));
         }
         else
         {
