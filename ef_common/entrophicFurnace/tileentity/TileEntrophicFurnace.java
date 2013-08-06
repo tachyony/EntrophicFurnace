@@ -24,7 +24,6 @@ import universalelectricity.prefab.tile.TileEntityElectricalStorage;
 import com.google.common.io.ByteArrayDataInput;
 
 import entrophicFurnace.EntrophicFurnace;
-import entrophicFurnace.generic.BlockIds;
 
 /**
  * Tile entity
@@ -273,7 +272,7 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketManager.getPacket(BlockIds.channel, this, this.smeltingTicks, this.disabledTicks, this.joules, this.addWatts);
+        return PacketManager.getPacket("EntrophicFurnace", this, this.smeltingTicks, this.disabledTicks, this.joules, this.addWatts);
     }
 
     /**

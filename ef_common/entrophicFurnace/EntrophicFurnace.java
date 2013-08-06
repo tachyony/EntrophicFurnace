@@ -9,7 +9,6 @@ import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTool;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
@@ -33,7 +32,6 @@ import entrophicFurnace.block.BlockEntrophicCrop;
 import entrophicFurnace.block.BlockEntrophicFurnace1;
 import entrophicFurnace.block.BlockEntrophicFurnace2;
 import entrophicFurnace.block.BlockEntrophicFurnace3;
-import entrophicFurnace.generic.BlockIds;
 import entrophicFurnace.generic.CommonProxy;
 import entrophicFurnace.generic.ItemStackValues;
 import entrophicFurnace.item.ItemEntrophicOre;
@@ -53,7 +51,7 @@ import entrophicFurnace.tileentity.TileEntrophicFurnace;
  *
  */
 @Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.5.2_1", useMetadata = true, certificateFingerprint="")
-@NetworkMod(channels = BlockIds.channel, clientSideRequired = true, serverSideRequired = false, packetHandler = universalelectricity.prefab.network.PacketManager.class)
+@NetworkMod(channels = "EntrophicFurnace", clientSideRequired = true, serverSideRequired = false, packetHandler = universalelectricity.prefab.network.PacketManager.class)
 public class EntrophicFurnace
 {
     /**
@@ -163,48 +161,47 @@ public class EntrophicFurnace
      * Pre init
      * @param event
      */
-    @SuppressWarnings("unused")
     @PreInit
     public void preInit(FMLPreInitializationEvent event)
     {
         NetworkRegistry.instance().registerGuiHandler(this, EntrophicFurnace.proxy);
         EntrophicFurnace.CONFIGURATION.load();
         this.hardMode = EntrophicFurnace.CONFIGURATION.get("Config", "HardMode", false).getBoolean(false);
-        int qfurnace1 = EntrophicFurnace.CONFIGURATION.getItem("EntrophicFurnace1", BlockIds.entrophicFurnace1)
+        int qFurnace1 = EntrophicFurnace.CONFIGURATION.getBlock("EntrophicFurnace1", 410)
                 .getInt();
-        int qfurnace2 = EntrophicFurnace.CONFIGURATION.getItem("EntrophicFurnace2", BlockIds.entrophicFurnace2)
+        int qFurnace2 = EntrophicFurnace.CONFIGURATION.getBlock("EntrophicFurnace2", 411)
                 .getInt();
-        int qfurnace3 = EntrophicFurnace.CONFIGURATION.getItem("EntrophicFurnace3", BlockIds.entrophicFurnace3)
+        int qFurnace3 = EntrophicFurnace.CONFIGURATION.getBlock("EntrophicFurnace3", 412)
                 .getInt();
-        int qore = EntrophicFurnace.CONFIGURATION.getItem("EntrophicOre", BlockIds.entrophicOre).getInt();
-        int qore1 = EntrophicFurnace.CONFIGURATION.getItem("EntrophicOre1", BlockIds.entrophicOre1).getInt();
-        int qore2 = EntrophicFurnace.CONFIGURATION.getItem("EntrophicOre2", BlockIds.entrophicOre2).getInt();
-        int qore3 = EntrophicFurnace.CONFIGURATION.getItem("EntrophicOre3", BlockIds.entrophicOre3).getInt();
-        int qore4 = EntrophicFurnace.CONFIGURATION.getItem("EntrophicOre4", BlockIds.entrophicOre4).getInt();
-        int qore5 = EntrophicFurnace.CONFIGURATION.getItem("EntrophicOre5", BlockIds.entrophicOre5).getInt();
-        int inCopper = EntrophicFurnace.CONFIGURATION.getItem("ingotCopper", BlockIds.ingotCopper).getInt();
-        int inTin = EntrophicFurnace.CONFIGURATION.getItem("ingotTin", BlockIds.ingotTin).getInt();
-        int inPaxel = EntrophicFurnace.CONFIGURATION.getItem("EntrophicPaxel", BlockIds.entrophicPaxel).getInt();
-        int seedEntrophic = EntrophicFurnace.CONFIGURATION.getItem("EntrophicSeed", BlockIds.entrophicSeed).getInt();
-        int cropEntrophic = EntrophicFurnace.CONFIGURATION.getItem("EntrophicCrop", BlockIds.entrophicCrop).getInt();
+        int qOre = EntrophicFurnace.CONFIGURATION.getItem("EntrophicOre", 414).getInt();
+        int qOre1 = EntrophicFurnace.CONFIGURATION.getItem("EntrophicOre1", 415).getInt();
+        int qOre2 = EntrophicFurnace.CONFIGURATION.getItem("EntrophicOre2", 516).getInt();
+        int qOre3 = EntrophicFurnace.CONFIGURATION.getItem("EntrophicOre3", 417).getInt();
+        int qOre4 = EntrophicFurnace.CONFIGURATION.getItem("EntrophicOre4", 418).getInt();
+        int qOre5 = EntrophicFurnace.CONFIGURATION.getItem("EntrophicOre5", 419).getInt();
+        int inCopper = EntrophicFurnace.CONFIGURATION.getItem("ingotCopper", 420).getInt();
+        int inTin = EntrophicFurnace.CONFIGURATION.getItem("ingotTin", 421).getInt();
+        int qPaxel = EntrophicFurnace.CONFIGURATION.getItem("EntrophicPaxel", 413).getInt();
+        int seedEntrophic = EntrophicFurnace.CONFIGURATION.getItem("EntrophicSeed", 422).getInt();
+        int cropEntrophic = EntrophicFurnace.CONFIGURATION.getBlock("EntrophicCrop", 423).getInt();
         
-        entrophicFurnace1 = new BlockEntrophicFurnace1(410, UniversalElectricity.machine)
+        entrophicFurnace1 = new BlockEntrophicFurnace1(qFurnace1, UniversalElectricity.machine)
                 .setHardness(0.5F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabMaterials);
-        entrophicFurnace2 = new BlockEntrophicFurnace2(411, UniversalElectricity.machine)
+        entrophicFurnace2 = new BlockEntrophicFurnace2(qFurnace2, UniversalElectricity.machine)
                 .setHardness(0.5F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabMaterials);
-        entrophicFurnace3 = new BlockEntrophicFurnace3(412, UniversalElectricity.machine)
+        entrophicFurnace3 = new BlockEntrophicFurnace3(qFurnace3, UniversalElectricity.machine)
                 .setHardness(0.5F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabMaterials);
-        entrophicPaxel = new ItemEntrophicPaxel(413, entrophicMaterial, "entrophicPaxel");
-        entrophicOre = new ItemEntrophicOre(414);
-        entrophicOre1 = new ItemEntrophicOre1(415);
-        entrophicOre2 = new ItemEntrophicOre2(416);
-        entrophicOre3 = new ItemEntrophicOre3(417);
-        entrophicOre4 = new ItemEntrophicOre4(418);
-        entrophicOre5 = new ItemEntrophicOre5(419);
-        ingotCopper = new ItemIngotCopper(420);
-        ingotTin = new ItemIngotTin(421);
-        entrophicCrop = new BlockEntrophicCrop(423);
-        entrophicSeed = new ItemSeeds(422, EntrophicFurnace.entrophicCrop.blockID, Block.tilledField.blockID).setUnlocalizedName("entrophicSeed").setMaxStackSize(64);
+        entrophicPaxel = new ItemEntrophicPaxel(qPaxel, entrophicMaterial, "entrophicPaxel");
+        entrophicOre = new ItemEntrophicOre(qOre);
+        entrophicOre1 = new ItemEntrophicOre1(qOre1);
+        entrophicOre2 = new ItemEntrophicOre2(qOre2);
+        entrophicOre3 = new ItemEntrophicOre3(qOre3);
+        entrophicOre4 = new ItemEntrophicOre4(qOre4);
+        entrophicOre5 = new ItemEntrophicOre5(qOre5);
+        ingotCopper = new ItemIngotCopper(inCopper);
+        ingotTin = new ItemIngotTin(inTin);
+        entrophicCrop = new BlockEntrophicCrop(cropEntrophic);
+        entrophicSeed = new ItemSeeds(seedEntrophic, EntrophicFurnace.entrophicCrop.blockID, Block.tilledField.blockID).setUnlocalizedName("entrophicSeed").setMaxStackSize(64);
         EntrophicFurnace.CONFIGURATION.save();
 
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace1, "EntrophicFurnace1");
