@@ -202,6 +202,9 @@ public class EntrophicFurnace
         ingotTin = new ItemIngotTin(inTin);
         entrophicCrop = new BlockEntrophicCrop(cropEntrophic);
         entrophicSeed = new ItemSeeds(seedEntrophic, EntrophicFurnace.entrophicCrop.blockID, Block.tilledField.blockID).setUnlocalizedName("entrophicSeed").setMaxStackSize(64);
+        
+        // Get the values of stuff
+        itemValues = new ItemStackValues(this.hardMode);
         EntrophicFurnace.CONFIGURATION.save();
 
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace1, "EntrophicFurnace1");
@@ -233,7 +236,7 @@ public class EntrophicFurnace
      *
      * @param event
      */
-    @SuppressWarnings({ "boxing" })
+    @SuppressWarnings("boxing")
     @Init
     public void init(FMLInitializationEvent event)
     {
@@ -439,12 +442,6 @@ public class EntrophicFurnace
                 EntrophicFurnace.entrophicOre3 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Item.diamond, new Object[] { "   ", " o ", " o ", 'o',
                 EntrophicFurnace.entrophicOre4 }));
-        
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.netherStar, new Object[] {
-                "DDD", "DGD", "DDD", 'G', Item.ingotGold, 'D', Item.diamond }));
-        
-        // Get the values of stuff
-        itemValues = new ItemStackValues(this.hardMode);
     }
 
     /**

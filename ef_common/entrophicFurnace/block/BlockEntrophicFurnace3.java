@@ -26,8 +26,8 @@ import entrophicFurnace.tileentity.TileEntrophicFurnace;
 public class BlockEntrophicFurnace3 extends BlockRotatable
 {
     /**
-     * @param id
-     * @param textureIndex
+     * @param id Block id
+     * @param material The material
      */
     public BlockEntrophicFurnace3(int id, Material material)
     {

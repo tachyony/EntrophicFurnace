@@ -1,9 +1,6 @@
 package entrophicFurnace.tileentity;
 
-import java.util.Map;
-
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -12,7 +9,6 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.block.IEnergyStorage;
 import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.IElectricityNetwork;
 import universalelectricity.core.vector.Vector3;
@@ -30,8 +26,7 @@ import entrophicFurnace.EntrophicFurnace;
  *
  * @author Tachyony
  */
-@SuppressWarnings("unused")
-public class TileEntrophicFurnace extends TileEntityElectricalStorage implements IEnergyStorage, IPacketReceiver, ISidedInventory
+public class TileEntrophicFurnace extends TileEntityElectricalStorage implements IPacketReceiver, /*net.minecraftforge.common.ISidedInventory,*/ net.minecraft.inventory.ISidedInventory
 {
     /**
      * Max charge level
@@ -101,11 +96,6 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
     private int blockId = 0;
 
     /**
-	 *
-	 */
-    private boolean isFull = false;
-
-    /**
      * Constructor
      */
     public TileEntrophicFurnace()
@@ -140,19 +130,9 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
      * @param slot
      * @return multiplier
      */
-    @SuppressWarnings("boxing")
     public long getWattValue(int slot)
     {
-        ItemStack sourceStack = this.containingItems[slot];
-        for (Map.Entry<ItemStack, Integer> stackEntry : EntrophicFurnace.itemValues.itemStacks.entrySet())
-        {
-            if (sourceStack.isItemEqual(stackEntry.getKey()))
-            {
-                return stackEntry.getValue() * TileEntrophicFurnace.WATTS_MULTIPLE * SMELTING_TIME_REQUIRED;
-            }
-        }
-        
-        return 0;
+        return EntrophicFurnace.itemValues.getItemValue(this.containingItems[slot]) * TileEntrophicFurnace.WATTS_MULTIPLE * SMELTING_TIME_REQUIRED;
     }
 
     /**
@@ -268,11 +248,10 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
      *
      * @return Packet
      */
-    @SuppressWarnings("boxing")
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketManager.getPacket("EntrophicFurnace", this, this.smeltingTicks, this.disabledTicks, this.joules, this.addWatts);
+        return PacketManager.getPacket("EntrophicFurnace", this, Integer.valueOf(this.smeltingTicks), Integer.valueOf(this.disabledTicks), Double.valueOf(this.joules), Long.valueOf(this.addWatts));
     }
 
     /**
@@ -446,56 +425,51 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
     }
 
     /**
-	 *
+	 * Stack thing, from EE3
 	 */
     @Override
-    public ItemStack decrStackSize(int par1, int par2)
+    public ItemStack decrStackSize(int slot, int amount)
     {
-        if (this.containingItems[par1] != null)
-        {
-            ItemStack var3;
-            if (this.containingItems[par1].stackSize <= par2)
-            {
-                var3 = this.containingItems[par1];
-                this.containingItems[par1] = null;
-                return var3;
+        ItemStack itemStack = getStackInSlot(slot);
+        if (itemStack != null) {
+            if (itemStack.stackSize <= amount) {
+                setInventorySlotContents(slot, null);
             }
-            var3 = this.containingItems[par1].splitStack(par2);
-            if (this.containingItems[par1].stackSize == 0)
-            {
-                this.containingItems[par1] = null;
+            else {
+                itemStack = itemStack.splitStack(amount);
+                if (itemStack.stackSize == 0) {
+                    setInventorySlotContents(slot, null);
+                }
             }
-
-            return var3;
         }
-        return null;
+
+        return itemStack;
     }
 
     /**
-	 *
+	 * Slot closing, updated from EE3
 	 */
     @Override
-    public ItemStack getStackInSlotOnClosing(int par1)
+    public ItemStack getStackInSlotOnClosing(int slot)
     {
-        if (this.containingItems[par1] != null)
-        {
-            ItemStack var2 = this.containingItems[par1];
-            this.containingItems[par1] = null;
-            return var2;
+        ItemStack itemStack = getStackInSlot(slot);
+        if (itemStack != null) {
+            setInventorySlotContents(slot, null);
         }
-        return null;
+        
+        return itemStack;
     }
 
     /**
-	 *
+	 * Set inventory slot
 	 */
     @Override
-    public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
+    public void setInventorySlotContents(int slot, ItemStack itemStack)
     {
-        this.containingItems[par1] = par2ItemStack;
-        if ((par2ItemStack != null) && (par2ItemStack.stackSize > this.getInventoryStackLimit()))
+        this.containingItems[slot] = itemStack;
+        if ((itemStack != null) && (itemStack.stackSize > this.getInventoryStackLimit()))
         {
-            par2ItemStack.stackSize = this.getInventoryStackLimit();
+            itemStack.stackSize = this.getInventoryStackLimit();
         }
     }
 
@@ -505,7 +479,7 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
     @Override
     public String getInvName()
     {
-        return "Quantum Furnace";
+        return "quantumFurnace";
     }
 
     /**
@@ -532,23 +506,16 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
         return false;
     }
 
+    /**
+     * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
+     */
     @Override
     public boolean isStackValidForSlot(int i, ItemStack itemstack) {
-        return false;
-    }
-
-    @Override
-    public int[] getAccessibleSlotsFromSide(int var1) {
-        return null;
-    }
-
-    @Override
-    public boolean canInsertItem(int i, ItemStack itemstack, int j) {
-        return false;
-    }
-
-    @Override
-    public boolean canExtractItem(int i, ItemStack itemstack, int j) {
+        if (i == 0)
+        {
+            return true;
+        }
+        
         return false;
     }
 
@@ -561,8 +528,42 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
      * 
      * @return voltage
      */
-    @SuppressWarnings("static-method")
-    public double getVoltage() {
+    public static double getVoltage() {
         return WATTS_MULTIPLE;
+    }
+    
+    /**
+     * Returns true if automation can insert the given item in the given slot from the given side. Args: Slot, item,
+     * side
+     */
+    @Override
+    public boolean canInsertItem(int i, ItemStack itemStack, int side)
+    {
+        return this.isStackValidForSlot(i, itemStack);
+    }
+    
+    /**
+     * Returns true if automation can extract the given item in the given slot from the given side. Args: Slot, item,
+     * side
+     */
+    @Override
+    public boolean canExtractItem(int i, ItemStack itemStack, int side)
+    {
+        if (i == 2)
+        {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Returns an array containing the indices of the slots that can be accessed by automation on the given side of this
+     * block.
+     */
+    @Override
+    public int[] getAccessibleSlotsFromSide(int side)
+    {
+        return new int[] { 0, 2 };
     }
 }
