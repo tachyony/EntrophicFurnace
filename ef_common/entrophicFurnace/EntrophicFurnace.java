@@ -14,6 +14,7 @@ import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import universalelectricity.core.UniversalElectricity;
+import appeng.api.Materials;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -50,7 +51,7 @@ import entrophicFurnace.tileentity.TileEntrophicFurnace;
  * @author Tachyony
  *
  */
-@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.5.2_1", useMetadata = true, certificateFingerprint="")
+@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.5.2_1", useMetadata = true, certificateFingerprint="", dependencies="after:AppliedEnergistics")
 @NetworkMod(channels = "EntrophicFurnace", clientSideRequired = true, serverSideRequired = false, packetHandler = universalelectricity.prefab.network.PacketManager.class)
 public class EntrophicFurnace
 {
@@ -437,6 +438,14 @@ public class EntrophicFurnace
         GameRegistry.addRecipe(new ShapedOreRecipe(Item.blazeRod, new Object[] { "   ", "o o", "   ", 'o',
                 EntrophicFurnace.entrophicOre3 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Item.ingotGold, new Object[] { " o ", "o  ", " oo", 'o',
+                EntrophicFurnace.entrophicOre3 }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(Materials.matQuartz, new Object[] { " o ", "o  ", "oo ", 'o',
+                EntrophicFurnace.entrophicOre3 }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(Item.netherQuartz, new Object[] { "   ", " o ", "   ", 'o',
+                EntrophicFurnace.entrophicOre3 }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(Materials.matQuartzDustNether, new Object[] { " o ", "   ", "   ", 'o',
+                EntrophicFurnace.entrophicOre3 }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(Materials.matQuartzDust, new Object[] { "   ", "o  ", "   ", 'o',
                 EntrophicFurnace.entrophicOre3 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Item.emerald, new Object[] { "   ", " o ", " o ", 'o',
                 EntrophicFurnace.entrophicOre3 }));
