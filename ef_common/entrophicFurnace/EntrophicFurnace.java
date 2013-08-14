@@ -2,6 +2,8 @@ package entrophicFurnace;
 
 import java.io.File;
 
+import buildcraft.BuildCraftEnergy;
+
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
@@ -51,7 +53,7 @@ import entrophicFurnace.tileentity.TileEntrophicFurnace;
  * @author Tachyony
  *
  */
-@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.5.2_1", useMetadata = true, certificateFingerprint="", dependencies="after:AppliedEnergistics")
+@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.5.2_1", useMetadata = true, certificateFingerprint="", dependencies="after:BuildCraft|Energy;after:AppliedEnergistics")
 @NetworkMod(channels = "EntrophicFurnace", clientSideRequired = true, serverSideRequired = false, packetHandler = universalelectricity.prefab.network.PacketManager.class)
 public class EntrophicFurnace
 {
@@ -439,13 +441,18 @@ public class EntrophicFurnace
                 EntrophicFurnace.entrophicOre3 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Item.ingotGold, new Object[] { " o ", "o  ", " oo", 'o',
                 EntrophicFurnace.entrophicOre3 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Materials.matQuartz, new Object[] { " o ", "o  ", "oo ", 'o',
+        GameRegistry.addRecipe(new ShapedOreRecipe(BuildCraftEnergy.bucketOil, new Object[] { "ooo", " o ", "   ", 'o',
                 EntrophicFurnace.entrophicOre3 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.netherQuartz, new Object[] { "   ", " o ", "   ", 'o',
+        if (Materials.matQuartz != null)
+        {
+        GameRegistry.addRecipe(new ShapedOreRecipe(Materials.matQuartz, new Object[] { " o ", "o  ", "oo ", 'o',
                 EntrophicFurnace.entrophicOre3 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Materials.matQuartzDustNether, new Object[] { " o ", "   ", "   ", 'o',
                 EntrophicFurnace.entrophicOre3 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Materials.matQuartzDust, new Object[] { "   ", "o  ", "   ", 'o',
+                EntrophicFurnace.entrophicOre3 }));
+        }
+        GameRegistry.addRecipe(new ShapedOreRecipe(Item.netherQuartz, new Object[] { "   ", " o ", "   ", 'o',
                 EntrophicFurnace.entrophicOre3 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Item.emerald, new Object[] { "   ", " o ", " o ", 'o',
                 EntrophicFurnace.entrophicOre3 }));
