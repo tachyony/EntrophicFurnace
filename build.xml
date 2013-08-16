@@ -126,7 +126,7 @@
 	<target name="copy-src" depends="clean-src,initialize-version">
 		<!-- Copy sources -->
 		<copy todir="${mcpsrc.dir}/minecraft" verbose="true">
-			<fileset dir="${src.dir}/common"/>
+			<fileset dir="${src.dir}/ef_common"/>
 			<filterset>
 				<filter token="VERSION" value="${project.complete.version}" />
 				<filter token="BUILD_NUMBER" value="${build.number}" />

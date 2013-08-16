@@ -19,9 +19,10 @@ public class ItemStackValues {
      * Build a list of stuff for resource values
      * @param hardMode Hard mode
      */
+    @SuppressWarnings("unused")
     public ItemStackValues(boolean hardMode)
     {
-        this.itemStacks = new HashMap<>();
+        this.itemStacks = new HashMap<ItemStack, Integer>();
         this.addStack(new ItemStack(Block.cobblestone), "cobblestone", 1);
         this.addStack(new ItemStack(Block.dirt), "dirt", 1);
         this.addStack(new ItemStack(Block.sand), "sand", 1);
