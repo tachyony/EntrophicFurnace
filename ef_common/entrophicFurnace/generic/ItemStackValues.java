@@ -21,7 +21,7 @@ public class ItemStackValues {
      */
     public ItemStackValues(boolean hardMode)
     {
-        this.itemStacks = new HashMap<ItemStack, Integer>();
+        this.itemStacks = new HashMap<>();
         this.addStack(new ItemStack(Block.cobblestone), "cobblestone", 1);
         this.addStack(new ItemStack(Block.dirt), "dirt", 1);
         this.addStack(new ItemStack(Block.sand), "sand", 1);

@@ -15,7 +15,7 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.tile.TileEntityElectricalStorage;
+import universalelectricity.prefab.tile.TileEntityElectricityStorage;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -26,7 +26,7 @@ import entrophicFurnace.EntrophicFurnace;
  *
  * @author Tachyony
  */
-public class TileEntrophicFurnace extends TileEntityElectricalStorage implements IPacketReceiver, /*net.minecraftforge.common.ISidedInventory,*/ net.minecraft.inventory.ISidedInventory
+public class TileEntrophicFurnace extends TileEntityElectricityStorage implements IPacketReceiver, net.minecraft.inventory.ISidedInventory
 {
     /**
      * Max charge level
@@ -519,16 +519,12 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
         return false;
     }
 
-    @Override
-    public float getMaxEnergyStored() {
-        return 0;
-    }
-
     /**
      * 
      * @return voltage
      */
-    public static double getVoltage() {
+    @Override
+    public double getVoltage() {
         return WATTS_MULTIPLE;
     }
     
@@ -565,5 +561,20 @@ public class TileEntrophicFurnace extends TileEntityElectricalStorage implements
     public int[] getAccessibleSlotsFromSide(int side)
     {
         return new int[] { 0, 2 };
+    }
+
+    @Override
+    public double getMaxJoules() {
+        return TileEntrophicFurnace.MAX_CHARGE;
+    }
+
+    @Override
+    public boolean canConnect(ForgeDirection direction) {
+        if ((direction == ForgeDirection.UP) || (direction == ForgeDirection.DOWN))
+        {
+            return true;
+        }
+        
+        return false;
     }
 }

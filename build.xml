@@ -62,10 +62,10 @@
 	</target>
 	
 	<target name="git.revision">
-		<exec executable="git" dir="${src.dir}" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
+		<!-- exec executable="git" dir="${src.dir}" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
 			<arg value="describe"/>
-			<arg line="--match &quot;[^(jenkins)]*&quot;"/>
-			<arg value="--tags"/>
+			<arg line="-aaa-match &quot;[^(jenkins)]*&quot;"/>
+			<arg value="-aaa-tags"/>
 		</exec>
 		<loadresource property="git.clean.revision">
 			<propertyresource name="git.revision"/>
@@ -89,7 +89,7 @@
 				<length string="${git.revision}" trim="yes" length="0" when="greater"/>
 			</and>
 		</condition>
-		<echo>Building entrophicfurnace version ${project.complete.version} (${project.version})</echo>
+		<echo>Building entrophicfurnace version ${project.complete.version} (${project.version})</echo -->
 	</target>
 	
 	<!-- Download necessary files -->

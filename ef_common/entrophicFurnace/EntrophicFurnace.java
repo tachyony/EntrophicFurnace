@@ -2,8 +2,6 @@ package entrophicFurnace;
 
 import java.io.File;
 
-import buildcraft.BuildCraftEnergy;
-
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
@@ -17,6 +15,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import universalelectricity.core.UniversalElectricity;
 import appeng.api.Materials;
+import buildcraft.BuildCraftEnergy;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
