@@ -77,8 +77,8 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
 
     /**
      * Number of players using this
-     */
-    private int playersUsing = 0;
+     *
+    private int playersUsing = 0;*/
 
     /**
      * Watts for current item
@@ -284,7 +284,7 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
             PacketManager.sendPacketToClients(getDescriptionPacket(), this.worldObj, new Vector3(this), 15);
         }
 
-        this.playersUsing++;
+        //this.playersUsing++;
     }
 
     /**
@@ -293,7 +293,7 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
     @Override
     public void closeChest()
     {
-        this.playersUsing--;
+        //this.playersUsing--;
     }
 
     /**

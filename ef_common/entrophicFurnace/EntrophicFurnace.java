@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -36,6 +37,7 @@ import entrophicFurnace.block.BlockEntrophicFurnace2;
 import entrophicFurnace.block.BlockEntrophicFurnace3;
 import entrophicFurnace.generic.CommonProxy;
 import entrophicFurnace.generic.ItemStackValues;
+import entrophicFurnace.generic.WorldProviderEntrophic;
 import entrophicFurnace.item.ItemEntrophicOre;
 import entrophicFurnace.item.ItemEntrophicOre1;
 import entrophicFurnace.item.ItemEntrophicOre2;
@@ -43,6 +45,7 @@ import entrophicFurnace.item.ItemEntrophicOre3;
 import entrophicFurnace.item.ItemEntrophicOre4;
 import entrophicFurnace.item.ItemEntrophicOre5;
 import entrophicFurnace.item.ItemEntrophicPaxel;
+import entrophicFurnace.item.ItemEntrophicTeleporter;
 import entrophicFurnace.item.ItemIngotCopper;
 import entrophicFurnace.item.ItemIngotTin;
 import entrophicFurnace.tileentity.TileEntrophicFurnace;
@@ -139,6 +142,8 @@ public class EntrophicFurnace
      */
     public static Item entrophicSeed;
     
+    public static Item entrophicTeleporter;
+    
     /**
      * Entrophic crop
      */
@@ -185,6 +190,7 @@ public class EntrophicFurnace
         int inTin = EntrophicFurnace.CONFIGURATION.getItem("ingotTin", 421).getInt();
         int qPaxel = EntrophicFurnace.CONFIGURATION.getItem("EntrophicPaxel", 413).getInt();
         int seedEntrophic = EntrophicFurnace.CONFIGURATION.getItem("EntrophicSeed", 422).getInt();
+        int entTeleporter = EntrophicFurnace.CONFIGURATION.getItem("EntrophicTeleporter", 423).getInt();
         int cropEntrophic = EntrophicFurnace.CONFIGURATION.getBlock("EntrophicCrop", 423).getInt();
         
         entrophicFurnace1 = new BlockEntrophicFurnace1(qFurnace1, UniversalElectricity.machine)
@@ -204,6 +210,7 @@ public class EntrophicFurnace
         ingotTin = new ItemIngotTin(inTin);
         entrophicCrop = new BlockEntrophicCrop(cropEntrophic);
         entrophicSeed = new ItemSeeds(seedEntrophic, EntrophicFurnace.entrophicCrop.blockID, Block.tilledField.blockID).setUnlocalizedName("entrophicSeed").setMaxStackSize(64);
+        entrophicTeleporter = new ItemEntrophicTeleporter(entTeleporter);
         
         // Get the values of stuff
         itemValues = new ItemStackValues(this.hardMode);
@@ -231,6 +238,7 @@ public class EntrophicFurnace
         LanguageRegistry.addName(EntrophicFurnace.ingotTin, "Tin");
         LanguageRegistry.addName(EntrophicFurnace.entrophicPaxel, "Entrophic Paxel");
         LanguageRegistry.addName(EntrophicFurnace.entrophicSeed, "Entrophic Seed");
+        LanguageRegistry.addName(EntrophicFurnace.entrophicTeleporter, "Entrophic Teleporter");
         proxy.preInit();
     }
 
@@ -332,7 +340,9 @@ public class EntrophicFurnace
                 'o', EntrophicFurnace.entrophicOre2 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.ingotTin, new Object[] { "oo ", "ooo", "ooo", 'o',
                 EntrophicFurnace.entrophicOre2 }));
- 
+        GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicTeleporter, new Object[] { "ooo", " o ", " o ", 'o',
+                EntrophicFurnace.entrophicOre }));
+        
         GameRegistry.addRecipe(new ShapedOreRecipe(Block.cobblestone, new Object[] { "o  ", "   ", "   ", 'o',
                 EntrophicFurnace.entrophicOre }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Block.dirt, new Object[] { " o ", "   ", "   ", 'o',
@@ -457,6 +467,9 @@ public class EntrophicFurnace
                 EntrophicFurnace.entrophicOre3 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(Item.diamond, new Object[] { "   ", " o ", " o ", 'o',
                 EntrophicFurnace.entrophicOre4 }));
+        
+        DimensionManager.registerProviderType(143, WorldProviderEntrophic.class, false);
+        DimensionManager.registerDimension(143, 143);
     }
 
     /**

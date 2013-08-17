@@ -7,27 +7,27 @@
 	<property name="src.dir" value="${imported.basedir}"/>
 	<property name="lang.dir" value="./"/>
 	<property name="resources.dir" value="${imported.basedir}/resources"/>
-	
 	<property name="download.dir" value="download"/>
-	
 	<property name="classes.dir" value="${build.dir}/classes"/>
 	<property name="jar.dir" value="bin"/>
-	
+	<property name="forge.buildnum" value="738" />
+	<property name="forge.version" value="1.5.2-7.8.1.${forge.buildnum}" />
 	<property name="forge.dir" value="${build.dir}/forge"/>
+	<property name="forge.url" value="http://files.minecraftforge.net/minecraftforge/minecraftforge-src-${forge.version}.zip" />
 	<property name="mcp.dir" value="${forge.dir}/mcp"/>
-	
 	<property name="mcpsrc.dir" value="${mcp.dir}/src"/>
-	
 	<property name="mc.version" value="1.5.2"/>
-	<property name="forge.version" value="7.8.1.738"/>
-	<!-- <property name="project.version" value="0.0.0"/>-->
-	
 	<property name="entrophicfurnace.name" value="entrophicfurnace"/>
 	<property name="forge.name" value="minecraftforge-src-${mc.version}-${forge.version}.zip"/>
 
-	<available property="forge-exists" file="${download.dir}/${forge.name}"/>
+	<available property="forge-exists" file="${download.dir}/minecraftforge-src-${forge.version}.zip" />
 	<available file="${src.dir}/.git" type="dir" property="git.present"/>
-	
+	<condition property="should-download-ant-contrib">
+		<or>
+			<available file="${download.dir}/ant-contrib/ant-contrib-1.0b3.jar"/>
+			<available file="${download.dir}/minecraftforge-src-${forge.version}.zip"/>
+		</or>
+	</condition>
 	<condition property="out-of-date">
 		<not>
 			<and>
@@ -96,8 +96,17 @@
 	<target name="download-files" depends="download-forge"/>
 
 	<!-- Download forge (if it doesn't exist) -->
-	<target name="download-forge" unless="forge-exists">
-		<get src="http://files.minecraftforge.net/${forge.name}" dest="${download.dir}" usetimestamp="True"/>
+	<target name="download-forge" depends="download-ant-contrib" unless="forge-exists">
+		<taskdef resource="net/sf/antcontrib/antlib.xml">
+			<classpath>
+				<pathelement location="${download.dir}/ant-contrib/ant-contrib-1.0b3.jar"/>
+				<fileset dir="${download.dir}/ant-contrib/lib">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</taskdef>
+		<echo message="Downloading forge... " />
+		<get src="${forge.url}" dest="${download.dir}/minecraftforge-src-${forge.version}.zip" />
 	</target>
 
 	<!-- Setup mcp and forge -->
@@ -213,4 +222,21 @@
 
 	<!-- Default target to run -->
 	<target name="main" depends="package"/>
+	
+	<target name="download-ant-contrib" unless="should-download-ant-contrib">
+		<echo message="Getting: ant-contrib"/>
+		<mkdir dir="${download.dir}/tmp"/>
+		<mkdir dir="${download.dir}/ant-contrib/lib" />
+		<get src="http://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.zip/download" dest="${download.dir}/tmp/ant-contrib-1.0b3-bin.zip"/>
+		<get src="http://archive.apache.org/dist/commons/codec/binaries/commons-codec-1.6-bin.zip" dest="${download.dir}/tmp/commons-codec-1.6-bin.zip"/>
+		<unzip src="${download.dir}/tmp/ant-contrib-1.0b3-bin.zip" dest="${download.dir}"/>
+		<unzip src="${download.dir}/tmp/commons-codec-1.6-bin.zip" dest="${download.dir}/tmp"/>
+		<move todir="${download.dir}/ant-contrib/lib">
+		<fileset file="${download.dir}/tmp/commons-codec-1.6/commons-codec-1.6.jar"/>
+		</move>
+		<!-- Delete useless files -->
+		<delete dir="${download.dir}/ant-contrib/docs"/>
+		<delete dir="${download.dir}/tmp"/>
+
+	</target>
 </project>
