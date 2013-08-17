@@ -29,7 +29,8 @@ public class EntrophicTeleporter extends Teleporter
      * A list of valid keys for the destinationCoordainteCache. These are based on the X & Z of the players initial
      * location.
      */
-    private final List<Long> destinationCoordinateKeys = new ArrayList<>();
+    @SuppressWarnings("unused")
+    private final List<Long> destinationCoordinateKeys = new ArrayList<Long>();
     
     public EntrophicTeleporter(WorldServer par1WorldServer)
     {
