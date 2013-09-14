@@ -19,7 +19,11 @@
 	<property name="mc.version" value="1.5.2"/>
 	<property name="entrophicfurnace.name" value="entrophicfurnace"/>
 	<property name="forge.name" value="minecraftforge-src-${forge.version}.zip"/>
+	<property name="libs" value="C:/stuff"/>
+	<property name="lib.dir" value="lib"/>
+	<property name="ue.name" value="UniversalElectricity_v1.4.0.89.zip"/>
 	<available property="forge-exists" file="${download.dir}/minecraftforge-src-${forge.version}.zip" />
+	<available property="ue-exists" file="${libs}/${ue.name}"/>
 	<available file="${src.dir}/.git" type="dir" property="git.present"/>
 	<condition property="should-download-ant-contrib">
 		<or>
@@ -107,7 +111,7 @@
 		<echo message="Downloading forge... " />
 		<get src="${forge.url}" dest="${download.dir}/minecraftforge-src-${forge.version}.zip" />
 	</target>
-
+	
 	<!-- Setup mcp and forge -->
 	<target name="setup" depends="download-files" if="out-of-date">
 		<delete dir="${forge.dir}" failonerror="false"/>
@@ -122,7 +126,14 @@
 			<arg value="install.sh"/>
 		</exec>
 	</target>
-
+	
+	<target name="get-ue" unless="ue-exists">
+		<copy file="${libs}/${ue.name}" todir="${lib.dir} verbose="true"/>
+	</target>
+	<target name="setup-ue" depends="get-ue">
+		<unzip dest="${mcpsrc.dir}/" src="${lib.dir}/${ue.name}"/>
+	</target>
+	
 	<target name="clean-src">
 		<delete verbose="true">
 			<fileset dir="${mcpsrc.dir}/minecraft">
@@ -131,7 +142,7 @@
 		</delete>
 	</target>
 	
-	<target name="copy-src" depends="clean-src,initialize-version">
+	<target name="copy-src" depends="clean-src,initialize-version,setup-ue">
 		<!-- Copy sources -->
 		<copy todir="${mcpsrc.dir}/minecraft" verbose="true">
 			<fileset dir="${src.dir}/ef_common"/>
