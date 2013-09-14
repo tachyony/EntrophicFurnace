@@ -110,7 +110,8 @@
 	</target>
 
 	<!-- Setup mcp and forge -->
-	<target name="setup" depends="download-files" if="out-of-date">
+	<!--target name="setup" depends="download-files" if="out-of-date"-->
+	<target name="setup" depends="download-files">
 		<delete dir="${forge.dir}" failonerror="false"/>
 		<unzip dest="${forge.dir}/.." src="${download.dir}/${forge.name}"/>
 		<!-- Fix executable permissions -->
