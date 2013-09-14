@@ -23,7 +23,7 @@
 	<property name="lib.dir" value="lib"/>
 	<property name="ue.name" value="UniversalElectricity_v1.4.0.89.zip"/>
 	<available property="forge-exists" file="${download.dir}/minecraftforge-src-${forge.version}.zip" />
-	<available property="ue-exists" file="${libs}/${ue.name}"/>
+	<available property="ue-exists" file="${lib.dir}/${ue.name}"/>
 	<available file="${src.dir}/.git" type="dir" property="git.present"/>
 	<condition property="should-download-ant-contrib">
 		<or>
