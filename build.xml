@@ -2,7 +2,6 @@
 	<property environment="env"/>
 	<!-- Properties -->
 	<dirname property="imported.basedir" file="${ant.file.EntrophicFurnace}"/>
-	<property file="${basedir}/build.properties"/>
 	<property name="build.dir" value="build"/>
 	<property name="src.dir" value="${imported.basedir}"/>
 	<property name="lang.dir" value="./"/>
@@ -22,6 +21,7 @@
 	<property name="libs" value="C:/stuff"/>
 	<property name="lib.dir" value="lib"/>
 	<property name="ue.name" value="UniversalElectricity_v1.4.0.89.zip"/>
+	<property name="project.version" value="1.0.1"/>
 	<available property="forge-exists" file="${download.dir}/minecraftforge-src-${forge.version}.zip" />
 	<available property="ue-exists" file="${lib.dir}/${ue.name}"/>
 	<available file="${src.dir}/.git" type="dir" property="git.present"/>
@@ -50,7 +50,7 @@
 	</target>
 	
 	<!-- Set full version -->
-	<target name="initialize-version" depends="version-provided,version-not-provided,git.revision">
+	<target name="initialize-version" depends="version-provided,version-not-provided">
 		<property name="project.version.full" value="${project.version}.${build.number}"/>
 	</target>
 	
@@ -62,37 +62,6 @@
 	<!-- Set build number from environment -->
 	<target name="version-provided" if="env.BUILD_NUMBER">
 		<property name="build.number" value="${env.BUILD_NUMBER}"/>
-	</target>
-	
-	<target name="git.revision">
-		<exec executable="git" dir="${src.dir}" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
-			<arg value="describe"/>
-			<arg line="-aaa-match &quot;[^(jenkins)]*&quot;"/>
-			<arg value="-aaa-tags"/>
-		</exec>
-		<loadresource property="git.clean.revision">
-			<propertyresource name="git.revision"/>
-			<filterchain>
-				<tokenfilter>
-					<filetokenizer/>
-					<replaceregex pattern="-[a-z0-9]+$" replace=""/>
-					<replacestring from="-" to="."/>
-				</tokenfilter>
-			</filterchain>
-		</loadresource>
-		<condition property="project.version" value="${git.clean.revision}" else="0.0.0">
-			<and>
-				<isset property="git.clean.revision"/>
-				<length string="${git.clean.revision}" trim="yes" length="0" when="greater"/>
-			</and>
-		</condition>
-		<condition property="project.complete.version" value="${git.revision}" else="0.0.0">
-			<and>
-				<isset property="git.revision"/>
-				<length string="${git.revision}" trim="yes" length="0" when="greater"/>
-			</and>
-		</condition>
-		<echo>Building entrophicfurnace version ${project.complete.version} (${project.version})</echo>
 	</target>
 	
 	<!-- Download necessary files -->
