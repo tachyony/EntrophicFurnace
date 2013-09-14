@@ -1,8 +1,8 @@
 <project name="EntrophicFurnace" default="main">
 	<property environment="env"/>
 	<!-- Properties -->
-	
 	<dirname property="imported.basedir" file="${ant.file.EntrophicFurnace}"/>
+	<property file="${basedir}/build.properties"/>
 	<property name="build.dir" value="build"/>
 	<property name="src.dir" value="${imported.basedir}"/>
 	<property name="lang.dir" value="./"/>
@@ -17,7 +17,7 @@
 	<property name="mcp.dir" value="${forge.dir}/mcp"/>
 	<property name="mcpsrc.dir" value="${mcp.dir}/src"/>
 	<property name="mc.version" value="1.5.2"/>
-	<property name="entrophicfurnace.name" value="entrophicfurnace"/>
+	<property name="entrophicfurnace.name" value="EntrophicFurnace"/>
 	<property name="forge.name" value="minecraftforge-src-${forge.version}.zip"/>
 	<property name="libs" value="C:/stuff"/>
 	<property name="lib.dir" value="lib"/>
@@ -65,7 +65,7 @@
 	</target>
 	
 	<target name="git.revision">
-		<!-- exec executable="git" dir="${src.dir}" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
+		<exec executable="git" dir="${src.dir}" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
 			<arg value="describe"/>
 			<arg line="-aaa-match &quot;[^(jenkins)]*&quot;"/>
 			<arg value="-aaa-tags"/>
@@ -92,7 +92,7 @@
 				<length string="${git.revision}" trim="yes" length="0" when="greater"/>
 			</and>
 		</condition>
-		<echo>Building entrophicfurnace version ${project.complete.version} (${project.version})</echo -->
+		<echo>Building entrophicfurnace version ${project.complete.version} (${project.version})</echo>
 	</target>
 	
 	<!-- Download necessary files -->
@@ -207,9 +207,7 @@
 		<delete includeemptydirs="true">
 			<fileset dir="${jar.dir}" includes="**/*"/>
 		</delete>
-		<condition property="jar.file.name" value="${jar.dir}/${buildcraft.name}-${mc.version}-${project.version.full}.jar" else="${jar.dir}/${buildcraft.name}-universal-${mc.version}-${project.version.full}.jar">
-			<isset property="forge-long-name"/>
-		</condition>
+		<condition property="jar.file.name" value="${jar.dir}/${entrophicfurnace.name}-${mc.version}-${project.version.full}.jar"/>
 		<jar destfile="${jar.file.name}" basedir="${classes.dir}"/>
 		<copy todir="${jar.dir}/changelog">
 			<fileset dir="${resources.dir}/changelog">
