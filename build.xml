@@ -128,7 +128,7 @@
 	</target>
 	
 	<target name="get-ue" unless="ue-exists">
-		<copy file="${libs}/${ue.name}" todir="${lib.dir} verbose="true"/>
+		<copy file="${libs}/${ue.name}" todir="${lib.dir}" verbose="true"/>
 	</target>
 	<target name="setup-ue" depends="get-ue">
 		<unzip dest="${mcpsrc.dir}/" src="${lib.dir}/${ue.name}"/>
