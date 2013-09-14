@@ -176,7 +176,7 @@
 		<delete includeemptydirs="true">
 			<fileset dir="${jar.dir}" includes="**/*"/>
 		</delete>
-		<condition property="jar.file.name" value="${jar.dir}/${entrophicfurnace.name}-${mc.version}-${project.version.full}.jar"/>
+		<property name="jar.file.name" value="${jar.dir}/${entrophicfurnace.name}-${mc.version}-${project.version.full}.jar"/>
 		<jar destfile="${jar.file.name}" basedir="${classes.dir}"/>
 		<copy todir="${jar.dir}/changelog">
 			<fileset dir="${resources.dir}/changelog">
