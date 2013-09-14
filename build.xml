@@ -131,7 +131,7 @@
 		<copy file="${libs}/${ue.name}" todir="${lib.dir}" verbose="true"/>
 	</target>
 	<target name="setup-ue" depends="get-ue">
-		<unzip dest="${mcpsrc.dir}/" src="${lib.dir}/${ue.name}"/>
+		<unzip dest="${mcpsrc.dir}/minecraft" src="${lib.dir}/${ue.name}"/>
 	</target>
 	
 	<target name="clean-src">
