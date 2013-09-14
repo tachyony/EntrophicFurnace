@@ -1,4 +1,4 @@
-QuantumFurnace
+EntrophicFurnace
 ==============
 
-Quantum Furnace, free cobblestone!
+EntrophicFurnace, free cobblestone!
