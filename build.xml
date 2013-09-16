@@ -150,11 +150,11 @@
 			<arg value="reobfuscate_srg.sh"/>
 		</exec>
 		<!-- Copy classes -->
-		<copy todir="${classes.dir}">
+		<copy todir="${classes.dir}" verbose="true">
 			<fileset dir="${mcp.dir}/reobf/minecraft"/>
 		</copy>
 		<!-- Copy resources -->
-		<copy todir="${classes.dir}">
+		<copy todir="${classes.dir}" verbose="true">
 			<fileset dir="${resources.dir}">
 				<exclude name="build.xml"/>
 			</fileset>
@@ -172,18 +172,6 @@
 		<property name="jar.file.name" value="${jar.dir}/${entrophicfurnace.name}-${mc.version}-${project.version.full}.jar"/>
 		<jar destfile="${jar.file.name}" basedir="${classes.dir}"/>
 	</target>
-
-	<target name="run">
-		<!-- Start Client -->
-		<exec dir="${mcp.dir}" executable="cmd" osfamily="windows">
-			<arg line="/c startclient.bat"/>
-		</exec>
-		<exec dir="${mcp.dir}" executable="sh" osfamily="unix">
-			<arg value="startclient.sh"/>
-		</exec>
-	</target>
-
-	<target name="test-run" depends="compile,run"/>
 
 	<!-- Default target to run -->
 	<target name="main" depends="package"/>
