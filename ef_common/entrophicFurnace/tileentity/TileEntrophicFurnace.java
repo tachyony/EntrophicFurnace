@@ -218,14 +218,11 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
                  * Decharge electric item.
                  *
                 this.setJoules(this.joules + ElectricItemHelper.dechargeItem(this.containingItems[0], this.getMaxJoules() - this.joules, this.getVoltage()));*/
-
                 TileEntity inputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.UP);
                 TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.DOWN);
-                
                 IElectricityNetwork inputNetwork = ElectricityNetworkHelper.getNetworkFromTileEntity(inputTile, ForgeDirection.UP);
                 IElectricityNetwork outputNetwork = ElectricityNetworkHelper.getNetworkFromTileEntity(outputTile, ForgeDirection.DOWN);
-                
-                if ((outputNetwork != null) && (inputNetwork != outputNetwork))
+                if ((outputNetwork != null) && inputNetwork.equals(outputNetwork))
                 {
                     /*double outputWatts = Math.min(outputNetwork.getRequest(this).getWatts(), Math.min(this.joules, 10000));
 
@@ -383,11 +380,12 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
         par1NBTTagCompound.setInteger("smeltingTicks", this.smeltingTicks);
         par1NBTTagCompound.setInteger("blockId", this.blockId);
         NBTTagList var2 = new NBTTagList();
+        NBTTagCompound var4;
         for (int var3 = 0; var3 < this.containingItems.length; ++var3)
         {
             if (this.containingItems[var3] != null)
             {
-                NBTTagCompound var4 = new NBTTagCompound();
+                var4 = new NBTTagCompound();
                 var4.setByte("Slot", (byte) var3);
                 this.containingItems[var3].writeToNBT(var4);
                 var2.appendTag(var4);

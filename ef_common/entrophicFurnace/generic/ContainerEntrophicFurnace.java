@@ -22,6 +22,7 @@ public class ContainerEntrophicFurnace extends Container
      */
     public ContainerEntrophicFurnace(InventoryPlayer par1InventoryPlayer, TileEntrophicFurnace tileEntity)
     {
+        super();
         this.tileEntity = tileEntity;
         this.addSlotToContainer(new Slot(tileEntity, 0, 55, 49));
         this.addSlotToContainer(new Slot(tileEntity, 1, 55, 25)); // To be

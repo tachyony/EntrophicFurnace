@@ -54,11 +54,12 @@ public class BlockEntrophicCrop extends BlockCrops {
         ArrayList<ItemStack> ret = super.getBlockDropped(world, x, y, z, metadata, fortune);
         if (metadata >= 15)
         {
+            ItemStack stack = new ItemStack(this.getSeedItem(), 1, 0);
             for (int n = 0; n < 2 + fortune; n++)
             {
                 if (world.rand.nextInt(127) <= metadata)
                 {
-                    ret.add(new ItemStack(this.getSeedItem(), 1, 0));
+                    ret.add(stack);
                 }   
             }
         }

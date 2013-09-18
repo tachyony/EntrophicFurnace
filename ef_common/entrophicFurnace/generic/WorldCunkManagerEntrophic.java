@@ -16,6 +16,7 @@ public class WorldCunkManagerEntrophic extends WorldChunkManager {
     private float rainfall;
     
     public WorldCunkManagerEntrophic(BiomeGenBase biomeGenerator) {
+        super();
         this.biomeGenerator = biomeGenerator;
     }
     

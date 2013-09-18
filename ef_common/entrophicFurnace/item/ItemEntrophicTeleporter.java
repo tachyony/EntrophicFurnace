@@ -30,18 +30,23 @@ public class ItemEntrophicTeleporter extends Item {
             {
                 thePlayer.timeUntilPortal = 10;
             }
-            else if (thePlayer.dimension != 143)
+            else if (thePlayer.dimension == 143)
             {
-                NBTTagCompound tag = player.getEntityData();
-                tag.setDouble("oldx", player.posX);
-                tag.setDouble("oldy", player.posY);
-                tag.setDouble("oldz", player.posZ);
-                thePlayer.timeUntilPortal = 10;
-                thePlayer.mcServer.getConfigurationManager().transferPlayerToDimension(thePlayer, 143, new EntrophicTeleporter(thePlayer.mcServer.worldServerForDimension(143)));
-            }
-            else {
                 thePlayer.timeUntilPortal = 10;
                 thePlayer.mcServer.getConfigurationManager().transferPlayerToDimension(thePlayer, 0, new EntrophicTeleporter(thePlayer.mcServer.worldServerForDimension(0)));
+            }
+            else
+            {
+                if (thePlayer.dimension == 0)
+                {
+                    NBTTagCompound tag = player.getEntityData();
+                    tag.setDouble("oldx", player.posX);
+                    tag.setDouble("oldy", player.posY);
+                    tag.setDouble("oldz", player.posZ);
+                    thePlayer.timeUntilPortal = 10;
+                }
+                
+                thePlayer.mcServer.getConfigurationManager().transferPlayerToDimension(thePlayer, 143, new EntrophicTeleporter(thePlayer.mcServer.worldServerForDimension(143)));
             }
         }
         
