@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.IElectricityNetwork;
+import universalelectricity.core.item.ElectricItemHelper;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
@@ -211,21 +212,20 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
             {
                 /**
                  * Recharges electric item.
-                 *
+                 */
                 this.setJoules(this.joules - ElectricItemHelper.chargeItem(this.containingItems[1], this.joules, this.getVoltage()));
 
                 /**
                  * Decharge electric item.
-                 *
-                this.setJoules(this.joules + ElectricItemHelper.dechargeItem(this.containingItems[0], this.getMaxJoules() - this.joules, this.getVoltage()));*/
+                 */
+                this.setJoules(this.joules + ElectricItemHelper.dechargeItem(this.containingItems[0], this.getMaxJoules() - this.joules, this.getVoltage()));
                 TileEntity inputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.UP);
                 TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.DOWN);
                 IElectricityNetwork inputNetwork = ElectricityNetworkHelper.getNetworkFromTileEntity(inputTile, ForgeDirection.UP);
                 IElectricityNetwork outputNetwork = ElectricityNetworkHelper.getNetworkFromTileEntity(outputTile, ForgeDirection.DOWN);
                 if ((outputNetwork != null) && inputNetwork.equals(outputNetwork))
                 {
-                    /*double outputWatts = Math.min(outputNetwork.getRequest(this).getWatts(), Math.min(this.joules, 10000));
-
+                    double outputWatts = Math.min(outputNetwork.getRequest(this).getWatts(), Math.min(this.joules, 10000));
                     if ((this.joules > 0) && (outputWatts > 0))
                     {
                         outputNetwork.startProducing(this, outputWatts / this.getVoltage(), this.getVoltage());
@@ -234,7 +234,7 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
                     else
                     {
                         outputNetwork.stopProducing(this);
-                    }*/
+                    }
                 }
             }
         }
