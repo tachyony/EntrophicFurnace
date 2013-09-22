@@ -223,7 +223,7 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
                 TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.DOWN);
                 IElectricityNetwork inputNetwork = ElectricityNetworkHelper.getNetworkFromTileEntity(inputTile, ForgeDirection.UP);
                 IElectricityNetwork outputNetwork = ElectricityNetworkHelper.getNetworkFromTileEntity(outputTile, ForgeDirection.DOWN);
-                if ((outputNetwork != null) && inputNetwork.equals(outputNetwork))
+                if ((outputNetwork != null) && (inputNetwork != null) && inputNetwork.equals(outputNetwork))
                 {
                     double outputWatts = Math.min(outputNetwork.getRequest(this).getWatts(), Math.min(this.joules, 10000));
                     if ((this.joules > 0) && (outputWatts > 0))
