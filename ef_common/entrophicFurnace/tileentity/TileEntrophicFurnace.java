@@ -1,5 +1,7 @@
 package entrophicFurnace.tileentity;
 
+import java.util.EnumSet;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,6 +12,7 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityNetworkHelper;
+import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.electricity.IElectricityNetwork;
 import universalelectricity.core.item.ElectricItemHelper;
 import universalelectricity.core.vector.Vector3;
@@ -64,11 +67,6 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
      * How many ticks has this item been smelting for?
      */
     public int smeltingTicks = 0;
-
-    /**
-     * Internal charge
-     */
-    public double joules = 0;
 
     /**
      * The ItemStacks that hold the items currently being used in the battery
@@ -137,21 +135,30 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
     }
 
     /**
+     * invalidates a tile entity
+     */
+    @Override
+    public void invalidate()
+    {
+        super.invalidate();
+    }
+    
+    /**
      * Update tick
      */
     @Override
     public void updateEntity()
     {
         super.updateEntity();
-        if (this.joules < MAX_CHARGE)
+        if (this.getJoules() < MAX_CHARGE)
         {
-            this.joules += this.addWatts;
+            this.setJoules(this.getJoules() + this.addWatts);
             if (this.containingItems[0] != null)
             {
                 long burn = this.getWattValue(0);
-                if ((burn > 0) && ((this.joules + burn) <= TileEntrophicFurnace.MAX_CHARGE))
+                if ((burn > 0) && ((this.getJoules() + burn) <= TileEntrophicFurnace.MAX_CHARGE))
                 {
-                    this.joules += burn;
+                    this.setJoules(this.getJoules() + this.addWatts);
                     --this.containingItems[0].stackSize;
                     if (this.containingItems[0].stackSize == 0)
                     {
@@ -178,7 +185,7 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
                     this.smeltId = this.containingItems[1].itemID;
                 }
 
-                if ((this.watts > 0) && (this.joules >= this.watts))
+                if ((this.watts > 0) && (this.getJoules() >= this.watts))
                 {
                     // Checks if the item can be smelted and if the
                     // smelting time left
@@ -193,7 +200,7 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
                         {
                             this.smeltItem();
                             this.smeltingTicks = 0;
-                            this.joules -= this.watts;
+                            this.setJoules(this.getJoules() - this.watts);
                         }
                     } else
                     {
@@ -213,23 +220,23 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
                 /**
                  * Recharges electric item.
                  */
-                this.setJoules(this.joules - ElectricItemHelper.chargeItem(this.containingItems[1], this.joules, this.getVoltage()));
+                this.setJoules(this.getJoules() - ElectricItemHelper.chargeItem(this.containingItems[1], this.getJoules(), this.getVoltage()));
 
                 /**
                  * Decharge electric item.
                  */
-                this.setJoules(this.joules + ElectricItemHelper.dechargeItem(this.containingItems[0], this.getMaxJoules() - this.joules, this.getVoltage()));
+                this.setJoules(this.getJoules() + ElectricItemHelper.dechargeItem(this.containingItems[0], this.getMaxJoules() - this.getJoules(), this.getVoltage()));
                 TileEntity inputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.UP);
                 TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.DOWN);
                 IElectricityNetwork inputNetwork = ElectricityNetworkHelper.getNetworkFromTileEntity(inputTile, ForgeDirection.UP);
                 IElectricityNetwork outputNetwork = ElectricityNetworkHelper.getNetworkFromTileEntity(outputTile, ForgeDirection.DOWN);
                 if ((outputNetwork != null) && (inputNetwork != null) && inputNetwork.equals(outputNetwork))
                 {
-                    double outputWatts = Math.min(outputNetwork.getRequest(this).getWatts(), Math.min(this.joules, 10000));
-                    if ((this.joules > 0) && (outputWatts > 0))
+                    double outputWatts = Math.min(outputNetwork.getRequest(this).getWatts(), Math.min(this.getJoules(), 10000));
+                    if ((this.getJoules() > 0) && (outputWatts > 0))
                     {
                         outputNetwork.startProducing(this, outputWatts / this.getVoltage(), this.getVoltage());
-                        this.joules = this.joules - outputWatts;
+                        this.setJoules(this.getJoules() - outputWatts);
                     }
                     else
                     {
@@ -248,7 +255,7 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketManager.getPacket("EntrophicFurnace", this, Integer.valueOf(this.smeltingTicks), Integer.valueOf(this.disabledTicks), Double.valueOf(this.joules), Long.valueOf(this.addWatts));
+        return PacketManager.getPacket("EntrophicFurnace", this, Integer.valueOf(this.smeltingTicks), Integer.valueOf(this.disabledTicks), Double.valueOf(this.getJoules()), Long.valueOf(this.addWatts));
     }
 
     /**
@@ -262,7 +269,7 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
         {
             this.smeltingTicks = dataStream.readInt();
             this.disabledTicks = dataStream.readInt();
-            this.joules = dataStream.readDouble();
+            this.setJoules(dataStream.readDouble());
             this.addWatts = dataStream.readLong();
         } catch (Exception e)
         {
@@ -270,6 +277,28 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
         }
     }
 
+    /**
+     * Returns the amount of energy being requested this tick. Return an empty ElectricityPack if no
+     * electricity is desired.
+     */
+    @Override
+    public ElectricityPack getRequest()
+    {
+        return super.getRequest();
+    }
+    
+    /**
+     * Called right after electricity is transmitted to the TileEntity. Override this if you wish to
+     * have another effect for a voltage overcharge.
+     * 
+     * @param electricityPack
+     */
+    @Override
+    public void onReceive(ElectricityPack electricityPack)
+    {
+        super.onReceive(electricityPack);
+    }
+    
     /**
      * On open chest
      */
@@ -351,7 +380,6 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
     public void readFromNBT(NBTTagCompound par1NBTTagCompound)
     {
         super.readFromNBT(par1NBTTagCompound);
-        this.joules = par1NBTTagCompound.getDouble("internalCharge");
         this.addWatts = par1NBTTagCompound.getLong("addWatts");
         this.smeltingTicks = par1NBTTagCompound.getInteger("smeltingTicks");
         this.blockId = par1NBTTagCompound.getInteger("blockID");
@@ -375,7 +403,6 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
     public void writeToNBT(NBTTagCompound par1NBTTagCompound)
     {
         super.writeToNBT(par1NBTTagCompound);
-        par1NBTTagCompound.setDouble("internalCharge", this.joules);
         par1NBTTagCompound.setLong("addWatts", this.addWatts);
         par1NBTTagCompound.setInteger("smeltingTicks", this.smeltingTicks);
         par1NBTTagCompound.setInteger("blockId", this.blockId);
@@ -411,15 +438,6 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
     public ItemStack getStackInSlot(int par1)
     {
         return this.containingItems[par1];
-    }
-
-    /**
-     *
-     * @return Joules
-     */
-    public double getInternalCharge()
-    {
-        return this.joules;
     }
 
     /**
@@ -561,11 +579,38 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
         return new int[] { 0, 2 };
     }
 
+    /**
+     * 
+     */
+    @Override
+    public double getJoules()
+    {
+        return super.getJoules();
+    }
+    
+    /**
+     * 
+     */
+    @Override
+    public void setJoules(double joules)
+    {
+        super.setJoules(joules);
+    }
+    
     @Override
     public double getMaxJoules() {
         return TileEntrophicFurnace.MAX_CHARGE;
     }
 
+    /**
+     * 
+     */
+    @Override
+    protected EnumSet<ForgeDirection> getConsumingSides()
+    {
+        return super.getConsumingSides();
+    }
+    
     @Override
     public boolean canConnect(ForgeDirection direction) {
         if ((direction == ForgeDirection.UP) || (direction == ForgeDirection.DOWN))
