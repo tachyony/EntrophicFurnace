@@ -1,6 +1,8 @@
 package entrophicFurnace;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -15,6 +17,7 @@ import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import universalelectricity.core.UniversalElectricity;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.IMCCallback;
@@ -55,7 +58,7 @@ import entrophicFurnace.tileentity.TileEntrophicFurnace;
  * @author Tachyony
  *
  */
-@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.5.2_1", useMetadata = true, certificateFingerprint="", dependencies="")
+@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.5.2_1", useMetadata = true, certificateFingerprint="", dependencies="after:EnergyManipulator")
 @NetworkMod(channels = "EntrophicFurnace", clientSideRequired = true, serverSideRequired = false, packetHandler = universalelectricity.prefab.network.PacketManager.class)
 public class EntrophicFurnace
 {
@@ -77,6 +80,11 @@ public class EntrophicFurnace
     public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(),
             "EntrophicFurnace.cfg"));
 
+    /**
+     * Logger
+     */
+    private static Logger efLogger = Logger.getLogger("EntrophicFurnace");
+    
     /**
 	 *
 	 */
@@ -174,6 +182,7 @@ public class EntrophicFurnace
     @PreInit
     public void preInit(FMLPreInitializationEvent event)
     {
+        efLogger.setParent(FMLLog.getLogger());
         NetworkRegistry.instance().registerGuiHandler(this, EntrophicFurnace.proxy);
         EntrophicFurnace.CONFIGURATION.load();
         this.hardMode = EntrophicFurnace.CONFIGURATION.get("Config", "HardMode", false).getBoolean(false);
@@ -214,10 +223,6 @@ public class EntrophicFurnace
         entrophicCrop = new BlockEntrophicCrop(cropEntrophic);
         entrophicSeed = new ItemSeeds(seedEntrophic, EntrophicFurnace.entrophicCrop.blockID, Block.tilledField.blockID).setUnlocalizedName("entrophicSeed").setMaxStackSize(64);
         entrophicTeleporter = new ItemEntrophicTeleporter(entTeleporter);
-        
-        // Get the values of stuff
-        itemValues = new ItemStackValues(this.hardMode);
-        EntrophicFurnace.CONFIGURATION.save();
 
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace1, "EntrophicFurnace1");
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace2, "EntrophicFurnace2");
@@ -266,6 +271,10 @@ public class EntrophicFurnace
         OreDictionary.registerOre("EntrophicFurnace2", new ItemStack(EntrophicFurnace.entrophicFurnace2));
         OreDictionary.registerOre("EntrophicFurnace3", new ItemStack(EntrophicFurnace.entrophicFurnace3));
 
+        // Get the values of stuff
+        itemValues = new ItemStackValues(this.hardMode);
+        EntrophicFurnace.CONFIGURATION.save();
+        
         // Add the entrophic ore, this is used for making other stuff and getting hard to find stuff,
         // like blaze rods or feathers
         GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicOre1, new Object[] { "   ", "   ", " o ",
@@ -481,5 +490,14 @@ public class EntrophicFurnace
     @IMCCallback
     public void handleIMCMessages(IMCEvent event) {
         //
+    }
+    
+    /**
+     * 
+     * @param logLevel
+     * @param message
+     */
+    public static void log(Level logLevel, String message) {
+        efLogger.log(logLevel, message);
     }
 }
