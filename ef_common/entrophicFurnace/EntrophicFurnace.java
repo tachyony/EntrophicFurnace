@@ -316,12 +316,6 @@ public class EntrophicFurnace
                     "IOI", "OFO", "IOI", 'I', EntrophicFurnace.entrophicFurnace1, 'F', Block.blockDiamond, 'O', Block.obsidian }));
             GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicFurnace3, new Object[] {
                     "IOI", "OFO", "IOI", 'I', EntrophicFurnace.entrophicFurnace2, 'F', Item.netherStar, 'O', Item.diamond }));
-            
-            // Add the UBer paxel, because every mod has to have a bad ass weapon/ tool
-            GameRegistry.addRecipe(paxelStack, new Object[] {
-                    "A", "X", "X", 'A', Item.netherStar, 'X', EntrophicFurnace.entrophicOre5 });
-            GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicTeleporter, new Object[] { "ooo", " o ", " o ", 'o',
-                    EntrophicFurnace.entrophicOre2 }));
         }
         else
         {
@@ -337,18 +331,12 @@ public class EntrophicFurnace
             		"I I", " F ", "I I", 'I', EntrophicFurnace.entrophicFurnace1, 'F', Block.blockGold }));
             GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicFurnace3, new Object[] {
             		"I I", " F ", "I I", 'I', EntrophicFurnace.entrophicFurnace2, 'F', Item.netherStar }));
-            
-            // Add the UBer paxel, because every mod has to have a bad ass weapon/ tool
-            GameRegistry.addRecipe(paxelStack, new Object[] {
-            		"A", "X", "X", 'A', Block.blockDiamond, 'X', EntrophicFurnace.entrophicOre4 });
-            
+
             // Add alternate recipes for those (un)lucky enough to be using GregTech.
             GameRegistry.addRecipe(new ShapedOreRecipe(Block.blockGold, new Object[] { "aab", "aab", "bb ", 'a',
                     EntrophicFurnace.entrophicOre4, 'b', EntrophicFurnace.entrophicOre3 }));
             GameRegistry.addRecipe(new ShapedOreRecipe(Block.blockDiamond, new Object[] { " o ", "   ", " o ", 'o',
                     EntrophicFurnace.entrophicOre5 }));
-            GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicTeleporter, new Object[] { "ooo", " o ", " o ", 'o',
-                    EntrophicFurnace.entrophicOre }));
             
             GameRegistry.addRecipe(new ShapedOreRecipe(Block.cobblestone, new Object[] { "o  ", "   ", "   ", 'o',
                     EntrophicFurnace.entrophicOre }));
@@ -468,6 +456,10 @@ public class EntrophicFurnace
             GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.ingotTin, new Object[] { "oo ", "ooo", "ooo", 'o',
                     EntrophicFurnace.entrophicOre2 }));
         }
+
+        // Add the UBer paxel, because every mod has to have a bad ass weapon/ tool
+        GameRegistry.addRecipe(new ShapedOreRecipe(paxelStack, new Object[] { "  o", " x ", "x  ", 'x', EntrophicFurnace.entrophicOre4, 'o', EntrophicFurnace.entrophicOre5 }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicTeleporter, new Object[] { "ooo", " o ", " o ", 'o', EntrophicFurnace.entrophicOre }));
         
         DimensionManager.registerProviderType(143, WorldProviderEntrophic.class, false);
         DimensionManager.registerDimension(143, 143);

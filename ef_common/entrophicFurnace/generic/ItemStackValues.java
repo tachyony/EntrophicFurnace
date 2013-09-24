@@ -123,6 +123,8 @@ public class ItemStackValues {
         this.addStack(new ItemStack(EntrophicFurnace.entrophicOre5), 4096, true);
         this.addStack(new ItemStack(EntrophicFurnace.ingotCopper), 256, true);
         this.addStack(new ItemStack(EntrophicFurnace.ingotTin), 256, true);
+        this.addStack(new ItemStack(EntrophicFurnace.entrophicTeleporter), 5, true);
+        this.addStack(new ItemStack(EntrophicFurnace.entrophicPaxel), 5120, true);
         
         this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace1, 1, 0), 48, false);
         this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace1, 1, 1), 48, false);
@@ -132,8 +134,6 @@ public class ItemStackValues {
         this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace2, 1, 1), 2496, false);
         this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace2, 1, 2), 2496, false);
         this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace2, 1, 3), 2496, false);
-        this.addStack(new ItemStack(EntrophicFurnace.entrophicPaxel), 9216, false);
-        this.addStack(new ItemStack(EntrophicFurnace.entrophicTeleporter), 5, false);
         this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace3, 1, 0), 18176, false);
         this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace3, 1, 1), 18176, false);
         this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace3, 1, 2), 18176, false);
