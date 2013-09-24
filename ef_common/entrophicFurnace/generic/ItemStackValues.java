@@ -114,7 +114,26 @@ public class ItemStackValues {
         this.addStack(new ItemStack(Block.blockGold), 36864, true);
         this.addStack(new ItemStack(Block.blockDiamond), 73728, true);
         this.addStack(new ItemStack(Item.netherStar), 32768, true);
-
+        this.addStack(new ItemStack(Item.dyePowder, 1, 0), 32, true);
+        this.addStack(new ItemStack(Item.dyePowder, 1, 1), 32, true);
+        this.addStack(new ItemStack(Item.dyePowder, 1, 2), 32, true);
+        this.addStack(new ItemStack(Item.dyePowder, 1, 3), 32, true);
+        this.addStack(new ItemStack(Item.dyePowder, 1, 4), 128, true);
+        this.addStack(new ItemStack(Item.dyePowder, 1, 5), 32, true);
+        this.addStack(new ItemStack(Item.dyePowder, 1, 6), 32, true);
+        this.addStack(new ItemStack(Item.dyePowder, 1, 7), 32, true);
+        this.addStack(new ItemStack(Item.dyePowder, 1, 8), 32, true);
+        this.addStack(new ItemStack(Item.dyePowder, 1, 9), 32, true);
+        this.addStack(new ItemStack(Item.dyePowder, 1, 10), 32, true);
+        this.addStack(new ItemStack(Item.dyePowder, 1, 11), 32, true);
+        this.addStack(new ItemStack(Item.dyePowder, 1, 12), 32, true);
+        this.addStack(new ItemStack(Item.dyePowder, 1, 13), 32, true);
+        this.addStack(new ItemStack(Item.dyePowder, 1, 14), 32, true);
+        this.addStack(new ItemStack(Item.dyePowder, 1, 15), 32, true);
+        this.addStack(new ItemStack(Item.bucketEmpty), 256, true);
+        this.addStack(new ItemStack(Item.bucketWater), 257, true);
+        this.addStack(new ItemStack(Item.bucketLava), 272, true);
+        
         this.addStack(new ItemStack(EntrophicFurnace.entrophicOre), 1, true);
         this.addStack(new ItemStack(EntrophicFurnace.entrophicOre1), 1, true);
         this.addStack(new ItemStack(EntrophicFurnace.entrophicOre2), 8, true);
@@ -182,7 +201,7 @@ public class ItemStackValues {
                 int emValue = EnergyManipulator.getEnergyValueByItemStack(stack);
                 if (itemValue != emValue)
                 {
-                    EntrophicFurnace.log(Level.INFO, "EF value: " + stack.getItemName() + ": " + itemValue + ":" + emValue);
+                    EntrophicFurnace.log(Level.INFO, "EF value: " + stack.getItemName() + ":" + stack.getItemDamage() + ": " + itemValue + ":" + emValue);
                 }
             }
         }
