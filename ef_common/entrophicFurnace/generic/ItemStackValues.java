@@ -2,13 +2,10 @@ package entrophicFurnace.generic;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
-import mods.gra.energymanipulator.common.EnergyManipulator;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.common.Loader;
 import entrophicFurnace.EntrophicFurnace;
 
 /**
@@ -196,14 +193,14 @@ public class ItemStackValues {
         if (!this.hardModeActive || (this.hardModeActive && addHardMode)) {
             int itemValue = EntrophicFurnace.CONFIGURATION.get("itemvalues", stack.getItemName(), defaultValue).getInt();
             this.itemStacks.put(stack, Integer.valueOf(itemValue));
-            if (Loader.isModLoaded("EnergyManipulator"))
+            /*if (Loader.isModLoaded("EnergyManipulator"))
             {
                 int emValue = EnergyManipulator.getEnergyValueByItemStack(stack);
                 if (itemValue != emValue)
                 {
                     EntrophicFurnace.log(Level.INFO, "EF value: " + stack.getItemName() + ":" + stack.getItemDamage() + ": " + itemValue + ":" + emValue);
                 }
-            }
+            }*/
         }
     }
     
