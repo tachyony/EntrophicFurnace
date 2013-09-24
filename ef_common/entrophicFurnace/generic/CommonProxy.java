@@ -17,12 +17,18 @@ public class CommonProxy implements IGuiHandler
      */
     public static String BLOCK_PNG = "/entrophicFurnace/generic/block.png";
 
+    /**
+     * 
+     */
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
         return null;
     }
 
+    /**
+     * 
+     */
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {

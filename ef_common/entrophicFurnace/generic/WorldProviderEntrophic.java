@@ -5,6 +5,11 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.common.DimensionManager;
 
+/**
+ * 
+ * @author tachyony
+ *
+ */
 public class WorldProviderEntrophic extends WorldProvider {
     @Override
     protected void registerWorldChunkManager() {
@@ -12,22 +17,36 @@ public class WorldProviderEntrophic extends WorldProvider {
         this.hasNoSky = true;
     }
 
+    /**
+     * 
+     * @param par0
+     * @return World provider
+     */
     public static WorldProvider getProviderForDimension(int par0)
     {
         return DimensionManager.createProviderFor(143);
     }
     
+    /**
+     * 
+     */
     @Override
     public String getSaveFolder() {
         return "DIM_ENTROPHIC";
     }
 
+    /**
+     * 
+     */
     @Override
     public String getWelcomeMessage()
     {
         return "Welcome to nowhere in particular.";
     }
     
+    /**
+     * 
+     */
     @Override
     public String getDepartMessage()
     {
@@ -73,6 +92,9 @@ public class WorldProviderEntrophic extends WorldProvider {
         return 160.0F;
     }
     
+    /**
+     * 
+     */
     @Override
     public String getDimensionName() {
         return "Entrophic";

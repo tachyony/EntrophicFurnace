@@ -17,12 +17,14 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import universalelectricity.core.UniversalElectricity;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.IMCCallback;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
@@ -139,7 +141,10 @@ public class EntrophicFurnace
      * Entrophic crop seed
      */
     public static Item entrophicSeed;
-    
+   
+    /**
+     * 
+     */
     public static Item entrophicTeleporter;
     
     /**
@@ -150,7 +155,7 @@ public class EntrophicFurnace
     /**
      * Hard mode
      */
-    public boolean hardMode;
+    private boolean hardMode;
     
     /**
      * Material for quantum paxel
@@ -306,6 +311,8 @@ public class EntrophicFurnace
             // Add the UBer paxel, because every mod has to have a bad ass weapon/ tool
             GameRegistry.addRecipe(paxelStack, new Object[] {
                     "A", "X", "X", 'A', Item.netherStar, 'X', EntrophicFurnace.entrophicOre5 });
+            GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicTeleporter, new Object[] { "ooo", " o ", " o ", 'o',
+                    EntrophicFurnace.entrophicOre2 }));
         }
         else
         {
@@ -331,140 +338,127 @@ public class EntrophicFurnace
                     EntrophicFurnace.entrophicOre4, 'b', EntrophicFurnace.entrophicOre3 }));
             GameRegistry.addRecipe(new ShapedOreRecipe(Block.blockDiamond, new Object[] { " o ", "   ", " o ", 'o',
                     EntrophicFurnace.entrophicOre5 }));
-        }
-        
-        // Generic tin and copper definition, because every forge tech mod uses these. Forge compatible!
-        GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.ingotCopper, new Object[] { "ooo", "o o", "ooo",
-                'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.ingotTin, new Object[] { "oo ", "ooo", "ooo", 'o',
-                EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicTeleporter, new Object[] { "ooo", " o ", " o ", 'o',
-                EntrophicFurnace.entrophicOre }));
-        
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.cobblestone, new Object[] { "o  ", "   ", "   ", 'o',
-                EntrophicFurnace.entrophicOre }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.dirt, new Object[] { " o ", "   ", "   ", 'o',
-                EntrophicFurnace.entrophicOre }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.sand, new Object[] { "   ", "   ", "o  ", 'o',
-                EntrophicFurnace.entrophicOre }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.stone, new Object[] { "   ", "o  ", "   ", 'o',
-                EntrophicFurnace.entrophicOre }));
-        /*GameRegistry.addRecipe(new ShapedOreRecipe(Block.glass, new Object[] { "   ", " o ", "   ", 'o',
-                EntrophicFurnace.entrophicOre }));*/
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.cobblestoneMossy, new Object[] { "   ", "   ", " o ", 'o',
-                EntrophicFurnace.entrophicOre1 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.silk, new Object[] { "   ", " o ", "   ", 'o',
-                EntrophicFurnace.entrophicOre1 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.netherrack, new Object[] { "   ", "o  ", "   ", 'o',
-                EntrophicFurnace.entrophicOre1 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.slowSand, new Object[] { "   ", " o ", "   ", 'o',
-                EntrophicFurnace.entrophicOre1 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.mycelium, new Object[] { "o  ", "   ", "   ", 'o',
-                EntrophicFurnace.entrophicOre1 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.grass, new Object[] { " o ", "   ", "   ", 'o',
-                EntrophicFurnace.entrophicOre1 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.gravel, new Object[] { " o ", "o o", " o ", 'o',
-                EntrophicFurnace.entrophicOre1 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.flint, new Object[] { " o ", "o o", "  o", 'o',
-                EntrophicFurnace.entrophicOre1 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.netherBrick, new Object[] { "o  ", " o ", "o o", 'o',
-                EntrophicFurnace.entrophicOre }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.cloth, 1, 0), new Object[] { "o  ", "ooo",
-                "   ", 'o', EntrophicFurnace.entrophicOre }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.feather, 1, 3), new Object[] { " oo", "oo ",
-                "o  ", 'o', EntrophicFurnace.entrophicOre }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.egg, new Object[] { " oo", " oo",
-            " oo", 'o', EntrophicFurnace.entrophicOre }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.chickenRaw, new Object[] { "o o", " oo",
-            " oo", 'o', EntrophicFurnace.entrophicOre }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.chickenCooked, new Object[] { " oo", " oo",
-            "o o", 'o', EntrophicFurnace.entrophicOre }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.porkRaw, new Object[] { "ooo", " oo",
-                "o  ", 'o', EntrophicFurnace.entrophicOre }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.porkCooked, new Object[] { "ooo", "oo ",
-                " o ", 'o', EntrophicFurnace.entrophicOre }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.sapling, 1, 0), new Object[] { "o o", " o ",
-                "o o", 'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.sapling, 1, 1), new Object[] { " o ", "o o",
-                "o o", 'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.sapling, 1, 2), new Object[] { "ooo", "o o",
-                "   ", 'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.sapling, 1, 3), new Object[] { "o  ", "ooo",
-                "  o", 'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.netherStalkSeeds, 1, 3), new Object[] { "   ",
-                " o ", "   ", 'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.furnaceIdle, new Object[] { " o ", "   ", "   ", 'o',
-                EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.coal, 1, 0), new Object[] { "   ", " o ", "  o",
-                'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.coal, 1, 1), new Object[] { "   ", " o ", " o ",
-                'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.wood, 1, 0), new Object[] { "o o", "   ", "   ",
-                'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.wood, 1, 1), new Object[] { "   ", "  o", " o ",
-                'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.wood, 1, 2), new Object[] { "   ", "  o", "  o",
-                'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.wood, 1, 3), new Object[] { "o  ", "   ", "  o",
-                'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.entrophicTeleporter, new Object[] { "ooo", " o ", " o ", 'o',
+                    EntrophicFurnace.entrophicOre }));
+            
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.cobblestone, new Object[] { "o  ", "   ", "   ", 'o',
+                    EntrophicFurnace.entrophicOre }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.dirt, new Object[] { " o ", "   ", "   ", 'o',
+                    EntrophicFurnace.entrophicOre }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.sand, new Object[] { "   ", "   ", "o  ", 'o',
+                    EntrophicFurnace.entrophicOre }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.stone, new Object[] { "   ", "o  ", "   ", 'o',
+                    EntrophicFurnace.entrophicOre }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.cobblestoneMossy, new Object[] { "   ", "   ", " o ", 'o',
+                    EntrophicFurnace.entrophicOre1 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.silk, new Object[] { "   ", " o ", "   ", 'o',
+                    EntrophicFurnace.entrophicOre1 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.netherrack, new Object[] { "   ", "o  ", "   ", 'o',
+                    EntrophicFurnace.entrophicOre1 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.slowSand, new Object[] { "   ", " o ", "   ", 'o',
+                    EntrophicFurnace.entrophicOre1 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.mycelium, new Object[] { "o  ", "   ", "   ", 'o',
+                    EntrophicFurnace.entrophicOre1 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.grass, new Object[] { " o ", "   ", "   ", 'o',
+                    EntrophicFurnace.entrophicOre1 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.gravel, new Object[] { " o ", "o o", " o ", 'o',
+                    EntrophicFurnace.entrophicOre1 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.flint, new Object[] { " o ", "o o", "  o", 'o',
+                    EntrophicFurnace.entrophicOre1 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.netherBrick, new Object[] { "o  ", " o ", "o o", 'o',
+                    EntrophicFurnace.entrophicOre }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.cloth, 1, 0), new Object[] { "o  ", "ooo",
+                    "   ", 'o', EntrophicFurnace.entrophicOre }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.feather, 1, 3), new Object[] { " oo", "oo ",
+                    "o  ", 'o', EntrophicFurnace.entrophicOre }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.egg, new Object[] { " oo", " oo",
+                " oo", 'o', EntrophicFurnace.entrophicOre }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.chickenRaw, new Object[] { "o o", " oo",
+                " oo", 'o', EntrophicFurnace.entrophicOre }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.chickenCooked, new Object[] { " oo", " oo",
+                "o o", 'o', EntrophicFurnace.entrophicOre }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.porkRaw, new Object[] { "ooo", " oo",
+                    "o  ", 'o', EntrophicFurnace.entrophicOre }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.porkCooked, new Object[] { "ooo", "oo ",
+                    " o ", 'o', EntrophicFurnace.entrophicOre }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.sapling, 1, 0), new Object[] { "o o", " o ",
+                    "o o", 'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.sapling, 1, 1), new Object[] { " o ", "o o",
+                    "o o", 'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.sapling, 1, 2), new Object[] { "ooo", "o o",
+                    "   ", 'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.sapling, 1, 3), new Object[] { "o  ", "ooo",
+                    "  o", 'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.netherStalkSeeds, 1, 3), new Object[] { "   ",
+                    " o ", "   ", 'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.furnaceIdle, new Object[] { " o ", "   ", "   ", 'o',
+                    EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.coal, 1, 0), new Object[] { "   ", " o ", "  o",
+                    'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.coal, 1, 1), new Object[] { "   ", " o ", " o ",
+                    'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.wood, 1, 0), new Object[] { "o o", "   ", "   ",
+                    'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.wood, 1, 1), new Object[] { "   ", "  o", " o ",
+                    'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.wood, 1, 2), new Object[] { "   ", "  o", "  o",
+                    'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.wood, 1, 3), new Object[] { "o  ", "   ", "  o",
+                    'o', EntrophicFurnace.entrophicOre2 }));
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.seeds, new Object[] {
-        		"o  ", "o  ", "   ", 'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.wheat, new Object[] {
-        		"o  ", "  o", "   ", 'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.reed, new Object[] {
-        		"o  ", "   ", "o  ", 'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.cactus, new Object[] {
-        		" o ", " o ", "   ", 'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.melon, new Object[] {
-        		"oo ", "   ", "   ", 'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.pumpkin, new Object[] {
-        		"   ", "oo ", "   ", 'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.carrot, new Object[] {
-        		" o ", "   ", "o  ", 'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.potato, new Object[] {
-        		" o ", "   ", " o ", 'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.gunpowder, new Object[] {
-        		"   ", " o ", "o o", 'o', EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.leather, new Object[] { "o  ", " o ", "   ", 'o',
-                EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.blockClay, new Object[] { "oo ", " oo", "   ", 'o',
-                EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.enderPearl, new Object[] { "oo ", "oo ", "   ", 'o',
-                EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.obsidian, new Object[] { " o ", "o o", " o ", 'o',
-                EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.waterlily, new Object[] { "   ", "oo ", "oo ", 'o',
-                EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.ingotIron, new Object[] { "ooo", "oo ", "ooo", 'o',
-                EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.redstone, new Object[] { "ooo", "ooo", "o o", 'o',
-                EntrophicFurnace.entrophicOre2 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Block.glowStone, new Object[] { "   ", " oo", "   ", 'o',
-                EntrophicFurnace.entrophicOre3 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.slimeBall, new Object[] { "oo ", "   ", "   ", 'o',
-                EntrophicFurnace.entrophicOre3 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.blazeRod, new Object[] { "   ", "o o", "   ", 'o',
-                EntrophicFurnace.entrophicOre3 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.ingotGold, new Object[] { " o ", "o  ", " oo", 'o',
-                EntrophicFurnace.entrophicOre3 }));
-        /*GameRegistry.addRecipe(new ShapedOreRecipe(BuildCraftEnergy.bucketOil, new Object[] { "ooo", " o ", "   ", 'o',
-                EntrophicFurnace.entrophicOre3 }));
-        if (Materials.matQuartz != null)
-        {
-        GameRegistry.addRecipe(new ShapedOreRecipe(Materials.matQuartz, new Object[] { " o ", "o  ", "oo ", 'o',
-                EntrophicFurnace.entrophicOre3 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Materials.matQuartzDustNether, new Object[] { " o ", "   ", "   ", 'o',
-                EntrophicFurnace.entrophicOre3 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Materials.matQuartzDust, new Object[] { "   ", "o  ", "   ", 'o',
-                EntrophicFurnace.entrophicOre3 }));
-        }*/
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.netherQuartz, new Object[] { "   ", " o ", "   ", 'o',
-                EntrophicFurnace.entrophicOre3 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.emerald, new Object[] { "   ", " o ", " o ", 'o',
-                EntrophicFurnace.entrophicOre3 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(Item.diamond, new Object[] { "   ", " o ", " o ", 'o',
-                EntrophicFurnace.entrophicOre4 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.seeds, new Object[] {
+                    "o  ", "o  ", "   ", 'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.wheat, new Object[] {
+                    "o  ", "  o", "   ", 'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.reed, new Object[] {
+                    "o  ", "   ", "o  ", 'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.cactus, new Object[] {
+                    " o ", " o ", "   ", 'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.melon, new Object[] {
+                    "oo ", "   ", "   ", 'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.pumpkin, new Object[] {
+                    "   ", "oo ", "   ", 'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.carrot, new Object[] {
+                    " o ", "   ", "o  ", 'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.potato, new Object[] {
+                    " o ", "   ", " o ", 'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.gunpowder, new Object[] {
+                    "   ", " o ", "o o", 'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.leather, new Object[] { "o  ", " o ", "   ", 'o',
+                    EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.blockClay, new Object[] { "oo ", " oo", "   ", 'o',
+                    EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.enderPearl, new Object[] { "oo ", "oo ", "   ", 'o',
+                    EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.obsidian, new Object[] { " o ", "o o", " o ", 'o',
+                    EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.waterlily, new Object[] { "   ", "oo ", "oo ", 'o',
+                    EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.ingotIron, new Object[] { "ooo", "oo ", "ooo", 'o',
+                    EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.redstone, new Object[] { "ooo", "ooo", "o o", 'o',
+                    EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Block.glowStone, new Object[] { "   ", " oo", "   ", 'o',
+                    EntrophicFurnace.entrophicOre3 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.slimeBall, new Object[] { "oo ", "   ", "   ", 'o',
+                    EntrophicFurnace.entrophicOre3 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.blazeRod, new Object[] { "   ", "o o", "   ", 'o',
+                    EntrophicFurnace.entrophicOre3 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.ingotGold, new Object[] { " o ", "o  ", " oo", 'o',
+                    EntrophicFurnace.entrophicOre3 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.netherQuartz, new Object[] { "   ", " o ", "   ", 'o',
+                    EntrophicFurnace.entrophicOre3 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.emerald, new Object[] { "   ", " o ", " o ", 'o',
+                    EntrophicFurnace.entrophicOre3 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(Item.diamond, new Object[] { "   ", " o ", " o ", 'o',
+                    EntrophicFurnace.entrophicOre4 }));
+            
+            // Generic tin and copper definition, because every forge tech mod uses these. Forge compatible!
+            GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.ingotCopper, new Object[] { "ooo", "o o", "ooo",
+                    'o', EntrophicFurnace.entrophicOre2 }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.ingotTin, new Object[] { "oo ", "ooo", "ooo", 'o',
+                    EntrophicFurnace.entrophicOre2 }));
+        }
         
         DimensionManager.registerProviderType(143, WorldProviderEntrophic.class, false);
         DimensionManager.registerDimension(143, 143);
@@ -477,6 +471,15 @@ public class EntrophicFurnace
     @PostInit
     public void postInit(FMLPostInitializationEvent event)
     {
+        //
+    }
+    
+    /**
+     * 
+     * @param event
+     */
+    @IMCCallback
+    public void handleIMCMessages(IMCEvent event) {
         //
     }
 }

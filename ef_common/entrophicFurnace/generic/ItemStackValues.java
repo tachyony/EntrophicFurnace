@@ -8,7 +8,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import entrophicFurnace.EntrophicFurnace;
 
-
+/**
+ * 
+ * @author tachyony
+ *
+ */
 public class ItemStackValues {
     /**
      * List of stuff
@@ -16,12 +20,18 @@ public class ItemStackValues {
     private Map<ItemStack, Integer> itemStacks;
     
     /**
+     * Hard mode active
+     */
+    private boolean hardModeActive;
+    
+    /**
      * Build a list of stuff for resource values
-     * @param hardMode Hard mode
+     * @param hardModeActive Hard mode active
      */
     @SuppressWarnings("unused")
-    public ItemStackValues(boolean hardMode)
+    public ItemStackValues(boolean hardModeActive)
     {
+        this.hardModeActive = hardModeActive;
         this.itemStacks = new HashMap<ItemStack, Integer>();
         this.addStack(new ItemStack(Block.cobblestone), "cobblestone", 1);
         this.addStack(new ItemStack(Block.dirt), "dirt", 1);
@@ -109,32 +119,57 @@ public class ItemStackValues {
         this.addStack(new ItemStack(Item.emerald), "itemEmerald", 256);
         this.addStack(new ItemStack(EntrophicFurnace.entrophicOre4), "entrophicOre4", 512);
         this.addStack(new ItemStack(Item.diamond), "itemDiamond", 1024);
-        this.addStack(new ItemStack(Block.blockGold), "blockGold", 2304, hardMode);
-        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace2, 1, 0), "entrophicFurnace2", 2496, hardMode);
-        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace2, 1, 1), "entrophicFurnace2", 2496, hardMode);
-        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace2, 1, 2), "entrophicFurnace2", 2496, hardMode);
-        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace2, 1, 3), "entrophicFurnace2", 2496, hardMode);
+        this.addStack(new ItemStack(Block.blockGold), "blockGold", 2304, true);
+        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace2, 1, 0), "entrophicFurnace2", 2496, true);
+        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace2, 1, 1), "entrophicFurnace2", 2496, true);
+        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace2, 1, 2), "entrophicFurnace2", 2496, true);
+        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace2, 1, 3), "entrophicFurnace2", 2496, true);
         this.addStack(new ItemStack(EntrophicFurnace.entrophicOre5), "entrophicOre5", 4096);
         this.addStack(new ItemStack(Block.blockDiamond), "blockDiamond", 8192);
         this.addStack(new ItemStack(Item.netherStar), "netherStar", 8192);
-        this.addStack(new ItemStack(EntrophicFurnace.entrophicPaxel), "entrophicPaxel", 9216, hardMode);
-        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace3, 1, 0), "entrophicFurnace3", 18176, hardMode);
-        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace3, 1, 1), "entrophicFurnace3", 18176, hardMode);
-        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace3, 1, 2), "entrophicFurnace3", 18176, hardMode);
-        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace3, 1, 3), "entrophicFurnace3", 18176, hardMode);
+        this.addStack(new ItemStack(EntrophicFurnace.entrophicPaxel), "entrophicPaxel", 9216, true);
+        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace3, 1, 0), "entrophicFurnace3", 18176, true);
+        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace3, 1, 1), "entrophicFurnace3", 18176, true);
+        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace3, 1, 2), "entrophicFurnace3", 18176, true);
+        this.addStack(new ItemStack(EntrophicFurnace.entrophicFurnace3, 1, 3), "entrophicFurnace3", 18176, true);
+        
+        /*for (Object recipeObject : CraftingManager.getInstance().getRecipeList()) {
+            if (recipeObject instanceof IRecipe) {
+                IRecipe recipe = (IRecipe)recipeObject;
+                ItemStack recipeOutput = recipe.getRecipeOutput();
+                if (recipeOutput != null) {
+                    if (recipe instanceof ShapedRecipes) {
+                        ShapedRecipes shapedRecipe = (ShapedRecipes)recipe;
+                    }
+                    else if (recipe instanceof ShapelessRecipes) {
+                        ShapelessRecipes shapelessRecipe = (ShapelessRecipes)recipe;
+                    }
+                    else if (recipe instanceof ShapedOreRecipe) {
+                        ShapedOreRecipe shapedOreRecipe = (ShapedOreRecipe)recipe;
+                    }
+                    else if (recipe instanceof ShapelessOreRecipe) {
+                        ShapelessOreRecipe shapelessOreRecipe = (ShapelessOreRecipe) recipe;
+                    }
+                    else {
+                        //
+                    }
+                }
+            }
+            else {
+                //
+            }
+        }*/
     }
 
     /**
      * Add something to the value stack
      * @param stack Item
      * @param valueName Config value name
-     * @param hardMode Ignore if hard mode is on
+     * @param addHardMode Ignore if hard mode is on
      */
-    private void addStack(ItemStack stack, String valueName, int defaultValue, boolean hardMode)
-    {
+    private void addStack(ItemStack stack, String valueName, int defaultValue, boolean addHardMode) {
         int itemValue = EntrophicFurnace.CONFIGURATION.get("itemvalues", valueName, defaultValue).getInt();
-        if (!hardMode)
-        {
+        if (!addHardMode || (this.hardModeActive && addHardMode)) {
             this.itemStacks.put(stack, Integer.valueOf(itemValue));
         }
     }
@@ -144,8 +179,7 @@ public class ItemStackValues {
      * @param stack Item
      * @param valueName Config value name
      */
-    private void addStack(ItemStack stack, String valueName, int defaultValue)
-    {
+    private void addStack(ItemStack stack, String valueName, int defaultValue) {
         this.addStack(stack, valueName, defaultValue, false);
     }
     
@@ -154,14 +188,22 @@ public class ItemStackValues {
      * @param sourceStack Source item
      * @return Item value
      */
-    public int getItemValue(ItemStack sourceStack)
-    {
+    public int getItemValue(ItemStack sourceStack) {
         int itemValue = 0;
-        for (Map.Entry<ItemStack, Integer> stackEntry : this.itemStacks.entrySet())
-        {
-            if (sourceStack.isItemEqual(stackEntry.getKey()))
-            {
+        for (Map.Entry<ItemStack, Integer> stackEntry : this.itemStacks.entrySet()) {
+            ItemStack compareStack = stackEntry.getKey();
+            if (sourceStack.isItemEqual(compareStack)) {
+                if (sourceStack.hasTagCompound() || compareStack.hasTagCompound()) {
+                    if (!(sourceStack.hasTagCompound() && compareStack.hasTagCompound())) {
+                        break;
+                    }
+                    
+                    itemValue = stackEntry.getValue().intValue();
+                    break;
+                }
+                
                 itemValue = stackEntry.getValue().intValue();
+                break;
             }
         }
         

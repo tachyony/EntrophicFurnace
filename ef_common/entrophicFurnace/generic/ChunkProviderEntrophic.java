@@ -15,6 +15,11 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
 
+/**
+ * 
+ * @author tachyony
+ *
+ */
 public class ChunkProviderEntrophic implements IChunkProvider {
     private World worldObj;
     
@@ -30,7 +35,15 @@ public class ChunkProviderEntrophic implements IChunkProvider {
     private NoiseGeneratorOctaves noiseGen2;
     private NoiseGeneratorOctaves noiseGen3;
     private NoiseGeneratorOctaves noiseGen4;
+    
+    /**
+     * 
+     */
     public NoiseGeneratorOctaves noiseGen5;
+    
+    /**
+     * 
+     */
     public NoiseGeneratorOctaves noiseGen6;
     
     double[] noise3;
@@ -41,6 +54,11 @@ public class ChunkProviderEntrophic implements IChunkProvider {
     
     float[] parabolicField;
     
+    /**
+     * 
+     * @param worldObj
+     * @param seed
+     */
     public ChunkProviderEntrophic(World worldObj, long seed) {
         this.worldObj = worldObj;
         this.rand = new Random(seed);
@@ -61,6 +79,9 @@ public class ChunkProviderEntrophic implements IChunkProvider {
         return true;
     }
 
+    /**
+     * 
+     */
     @Override
     public Chunk provideChunk(int par1, int par2) {
         this.rand.setSeed(par1 * 341873128712L + par2 * 132897987541L);
@@ -180,21 +201,33 @@ public class ChunkProviderEntrophic implements IChunkProvider {
         return true;
     }
 
+    /**
+     * 
+     */
     @Override
     public boolean unloadQueuedChunks() {
         return false;
     }
 
+    /**
+     * 
+     */
     @Override
     public boolean canSave() {
         return true;
     }
 
+    /**
+     * 
+     */
     @Override
     public String makeString() {
         return "EntrophicLevelSource";
     }
 
+    /**
+     * 
+     */
     @SuppressWarnings("rawtypes")
     @Override
     public List getPossibleCreatures(EnumCreatureType enumcreaturetype, int i,
@@ -212,16 +245,25 @@ public class ChunkProviderEntrophic implements IChunkProvider {
         return null;
     }
 
+    /**
+     * 
+     */
     @Override
     public int getLoadedChunkCount() {
         return 0;
     }
 
+    /**
+     * 
+     */
     @Override
     public void recreateStructures(int i, int j) {
         return;
     }
 
+    /**
+     * 
+     */
     @Override
     public void func_104112_b() {
         return;

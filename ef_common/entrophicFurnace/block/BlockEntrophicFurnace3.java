@@ -111,18 +111,27 @@ public class BlockEntrophicFurnace3 extends BlockRotatable
         return true;
     }
 
+    /**
+     * 
+     */
     @Override
     public boolean isOpaqueCube()
     {
         return false;
     }
 
+    /**
+     * 
+     */
     @Override
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
+    /**
+     * 
+     */
     @Override
     public boolean canProvidePower()
     {
@@ -140,6 +149,9 @@ public class BlockEntrophicFurnace3 extends BlockRotatable
         return new TileEntrophicFurnace(2, this.blockID);
     }
 
+    /**
+     * 
+     */
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
@@ -152,6 +164,9 @@ public class BlockEntrophicFurnace3 extends BlockRotatable
         return new ItemStack(id, 1, 2);
     }
 
+    /**
+     * 
+     */
     @Override
     public int damageDropped(int metadata)
     {
@@ -206,6 +221,9 @@ public class BlockEntrophicFurnace3 extends BlockRotatable
         return 0;
     }
     
+    /**
+     * 
+     */
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister) {

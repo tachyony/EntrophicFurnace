@@ -47,6 +47,9 @@ public class ContainerEntrophicFurnace extends Container
         tileEntity.openChest();
     }
 
+    /**
+     * 
+     */
     @Override
     public void onCraftGuiClosed(EntityPlayer entityplayer)
     {
@@ -54,6 +57,9 @@ public class ContainerEntrophicFurnace extends Container
         this.tileEntity.closeChest();
     }
 
+    /**
+     * 
+     */
     @Override
     public boolean canInteractWith(EntityPlayer par1EntityPlayer)
     {

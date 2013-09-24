@@ -38,6 +38,12 @@ public class ItemEntrophicPaxel extends ItemTool
 
     private int weaponDamage;
 
+    /**
+     * 
+     * @param ID
+     * @param material
+     * @param name
+     */
     public ItemEntrophicPaxel(int ID, EnumToolMaterial material, String name)
     {
         super(ID, 3, material, blocksEffectiveAgainst);
@@ -48,6 +54,9 @@ public class ItemEntrophicPaxel extends ItemTool
         this.setCreativeTab(CreativeTabs.tabTools);
     }
 
+    /**
+     * 
+     */
     @Override
     public boolean canHarvestBlock(Block par1Block)
     {
@@ -72,7 +81,9 @@ public class ItemEntrophicPaxel extends ItemTool
         return false;
     }
 
-    // How well it mines a block
+    /**
+     * 
+     */
     @Override
     public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
     {
@@ -114,7 +125,9 @@ public class ItemEntrophicPaxel extends ItemTool
         return this.toolMaterial.toString();
     }
 
-    // What happens when you hit an entity
+    /**
+     * 
+     */
     @Override
     public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving,
             EntityLiving par3EntityLiving)
@@ -123,7 +136,9 @@ public class ItemEntrophicPaxel extends ItemTool
         return true;
     }
 
-    // What happens when you break a block
+    /**
+     * 
+     */
     @Override
     public boolean onBlockDestroyed(ItemStack par1ItemStack, World par2World, int par3, int par4,
             int par5, int par6, EntityLiving par7EntityLiving)
@@ -144,36 +159,46 @@ public class ItemEntrophicPaxel extends ItemTool
         return this.toolMaterial.getDamageVsEntity();
     }
 
-    // How much damage the sword deals
+    /**
+     * 
+     */
     @Override
     public int getDamageVsEntity(Entity par1Entity)
     {
         return this.weaponDamage;
     }
 
+    /**
+     * 
+     */
     @Override
     @SideOnly(Side.CLIENT)
-    // Makes it have a slightly different render
     public boolean isFull3D()
     {
         return true;
     }
 
-    // How well it enchants
+    /**
+     * 
+     */
     @Override
     public int getItemEnchantability()
     {
         return this.toolMaterial.getEnchantability();
     }
 
-    // Allows you to block on right click
+    /**
+     * 
+     */
     @Override
     public EnumAction getItemUseAction(ItemStack par1ItemStack)
     {
         return EnumAction.block;
     }
 
-    // The max use time of the action
+    /**
+     * 
+     */
     @Override
     public int getMaxItemUseDuration(ItemStack par1ItemStack)
     {
@@ -189,7 +214,9 @@ public class ItemEntrophicPaxel extends ItemTool
         return this.toolMaterial.toString();
     }
 
-    // Allows for repair in an anvil
+    /**
+     * 
+     */
     @Override
     public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack)
     {
@@ -197,7 +224,9 @@ public class ItemEntrophicPaxel extends ItemTool
                 par1ItemStack, par2ItemStack);
     }
 
-    // How fast it mines a block (Compatibility edition)
+    /**
+     * 
+     */
     @Override
     public float getStrVsBlock(ItemStack stack, Block block, int meta)
     {
@@ -209,6 +238,9 @@ public class ItemEntrophicPaxel extends ItemTool
         return getStrVsBlock(stack, block);
     }
 
+    /**
+     * 
+     */
     @Override
     public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer,
             World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
@@ -251,7 +283,9 @@ public class ItemEntrophicPaxel extends ItemTool
         return true;
     }
 
-    // Called on right clicking anywhere
+    /**
+     * 
+     */
     @Override
     public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World,
             EntityPlayer par3EntityPlayer)

@@ -20,6 +20,10 @@ import entrophicFurnace.EntrophicFurnace;
  *
  */
 public class BlockEntrophicCrop extends BlockCrops {
+    /**
+     * 
+     * @param blockId
+     */
     public BlockEntrophicCrop(int blockId) {
         super(blockId);
     }
@@ -84,13 +88,14 @@ public class BlockEntrophicCrop extends BlockCrops {
     {
         return EntrophicFurnace.entrophicOre.itemID;
     }
-    
-    @Override
-    @SideOnly(Side.CLIENT)
 
     /**
      * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     * @param par1
+     * @param par2
      */
+    @Override
+    @SideOnly(Side.CLIENT)
     public Icon getIcon(int par1, int par2)
     {
         if (par2 < 0 || par2 > 15)

@@ -9,7 +9,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import entrophicFurnace.generic.EntrophicTeleporter;
 
+/**
+ * 
+ * @author tachyony
+ *
+ */
 public class ItemEntrophicTeleporter extends Item {
+    /**
+     * 
+     * @param id
+     */
     public ItemEntrophicTeleporter(int id)
     {
         super(id);
@@ -18,7 +27,9 @@ public class ItemEntrophicTeleporter extends Item {
         this.setUnlocalizedName("entrophicTeleporter");
     }
     
-    // Called on right clicking anywhere
+    /**
+     * 
+     */
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
     {

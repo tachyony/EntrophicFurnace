@@ -9,6 +9,10 @@ import net.minecraft.item.Item;
  */
 public class ItemEntrophicOre1 extends Item
 {
+    /**
+     * 
+     * @param id
+     */
     public ItemEntrophicOre1(int id)
     {
         super(id);

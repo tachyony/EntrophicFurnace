@@ -9,14 +9,9 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.ElectricityPack;
-import universalelectricity.core.electricity.IElectricityNetwork;
-import universalelectricity.core.item.ElectricItemHelper;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityElectricityStorage;
@@ -219,12 +214,12 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
             {
                 /**
                  * Recharges electric item.
-                 */
+                 *
                 this.setJoules(this.getJoules() - ElectricItemHelper.chargeItem(this.containingItems[1], this.getJoules(), this.getVoltage()));
 
                 /**
                  * Decharge electric item.
-                 */
+                 *
                 this.setJoules(this.getJoules() + ElectricItemHelper.dechargeItem(this.containingItems[0], this.getMaxJoules() - this.getJoules(), this.getVoltage()));
                 TileEntity inputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.UP);
                 TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.DOWN);
@@ -242,7 +237,7 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
                     {
                         outputNetwork.stopProducing(this);
                     }
-                }
+                }*/
             }
         }
     }
@@ -309,8 +304,6 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
         {
             PacketManager.sendPacketToClients(getDescriptionPacket(), this.worldObj, new Vector3(this), 15);
         }
-
-        //this.playersUsing++;
     }
 
     /**
@@ -319,7 +312,7 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
     @Override
     public void closeChest()
     {
-        //this.playersUsing--;
+        //
     }
 
     /**
@@ -517,6 +510,9 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
                 : par1EntityPlayer.getDistanceSq(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64.0D;
     }
 
+    /**
+     * 
+     */
     @Override
     public boolean isInvNameLocalized() {
         return false;
@@ -597,6 +593,9 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
         super.setJoules(joules);
     }
     
+    /**
+     * 
+     */
     @Override
     public double getMaxJoules() {
         return TileEntrophicFurnace.MAX_CHARGE;
@@ -611,6 +610,9 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
         return super.getConsumingSides();
     }
     
+    /**
+     * 
+     */
     @Override
     public boolean canConnect(ForgeDirection direction) {
         if ((direction == ForgeDirection.UP) || (direction == ForgeDirection.DOWN))

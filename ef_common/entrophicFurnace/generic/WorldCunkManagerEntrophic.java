@@ -8,6 +8,11 @@ import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.WorldChunkManager;
 
+/**
+ * 
+ * @author tachyony
+ *
+ */
 public class WorldCunkManagerEntrophic extends WorldChunkManager {
     private BiomeGenBase biomeGenerator;
     
@@ -15,6 +20,10 @@ public class WorldCunkManagerEntrophic extends WorldChunkManager {
     
     private float rainfall;
     
+    /**
+     * 
+     * @param biomeGenerator
+     */
     public WorldCunkManagerEntrophic(BiomeGenBase biomeGenerator) {
         super();
         this.biomeGenerator = biomeGenerator;

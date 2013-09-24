@@ -18,6 +18,11 @@ import net.minecraft.world.PortalPosition;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
 
+/**
+ * 
+ * @author tachyony
+ *
+ */
 public class EntrophicTeleporter extends Teleporter
 {
     private final WorldServer worldServerInstance;
@@ -32,12 +37,17 @@ public class EntrophicTeleporter extends Teleporter
     @SuppressWarnings("unused")
     private final List<Long> destinationCoordinateKeys = new ArrayList<Long>();
     
+    /**
+     * 
+     * @param par1WorldServer
+     */
     public EntrophicTeleporter(WorldServer par1WorldServer)
     {
         super(par1WorldServer);
         this.worldServerInstance = par1WorldServer;
         this.random = new Random(par1WorldServer.getSeed());
     }
+    
     /**
      * Place an entity in a nearby portal, creating one if necessary.
      */
@@ -276,6 +286,9 @@ public class EntrophicTeleporter extends Teleporter
 
         return false;    
     }
+    /**
+     * 
+     */
     @Override
     public boolean makePortal(Entity par1Entity)
     {
