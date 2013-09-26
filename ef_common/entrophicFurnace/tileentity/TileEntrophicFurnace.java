@@ -11,6 +11,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
+import universalelectricity.core.item.ElectricItemHelper;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
@@ -214,14 +215,14 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
             {
                 /**
                  * Recharges electric item.
-                 *
+                 */
                 this.setJoules(this.getJoules() - ElectricItemHelper.chargeItem(this.containingItems[1], this.getJoules(), this.getVoltage()));
 
                 /**
                  * Decharge electric item.
-                 *
+                 */
                 this.setJoules(this.getJoules() + ElectricItemHelper.dechargeItem(this.containingItems[0], this.getMaxJoules() - this.getJoules(), this.getVoltage()));
-                TileEntity inputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.UP);
+                /*TileEntity inputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.UP);
                 TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.DOWN);
                 IElectricityNetwork inputNetwork = ElectricityNetworkHelper.getNetworkFromTileEntity(inputTile, ForgeDirection.UP);
                 IElectricityNetwork outputNetwork = ElectricityNetworkHelper.getNetworkFromTileEntity(outputTile, ForgeDirection.DOWN);
@@ -488,7 +489,22 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
     @Override
     public String getInvName()
     {
-        return "quantumFurnace";
+        if (this.blockId == EntrophicFurnace.entrophicFurnace1.blockID)
+        {
+            return "entrophicFurnace1";
+        }
+        else if (this.blockId == EntrophicFurnace.entrophicFurnace2.blockID)
+        {
+            return "entrophicFurnace2";
+        }
+        else if (this.blockId == EntrophicFurnace.entrophicFurnace3.blockID)
+        {
+            return "entrophicFurnace3";
+        }
+        else
+        {
+            return "entrophicFurnace";
+        }
     }
 
     /**
