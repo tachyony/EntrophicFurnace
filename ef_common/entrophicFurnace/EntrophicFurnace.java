@@ -224,7 +224,7 @@ public class EntrophicFurnace
         int seedEntrophic = EntrophicFurnace.CONFIGURATION.getItem("EntrophicSeed", 422).getInt();
         int entTeleporter = EntrophicFurnace.CONFIGURATION.getItem("EntrophicTeleporter", 423).getInt();
         int darkWaterId = EntrophicFurnace.CONFIGURATION.getItem("DarkWater", 424).getInt();
-        int darkWaterBucketId = EntrophicFurnace.CONFIGURATION.getItem("DarkWater", 425).getInt();
+        int darkWaterBucketId = EntrophicFurnace.CONFIGURATION.getItem("DarkWaterBucket", 425).getInt();
         int cropEntrophic = EntrophicFurnace.CONFIGURATION.getBlock("EntrophicCrop", 423).getInt();
         
         entrophicFurnace1 = new BlockEntrophicFurnace1(qFurnace1, UniversalElectricity.machine)
