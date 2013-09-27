@@ -19,6 +19,6 @@ public class ItemDarkWaterBucket extends Item
         super(id);
         this.setMaxStackSize(1);
         this.setCreativeTab(CreativeTabs.tabMisc);
-        this.setUnlocalizedName("darkWater");
+        this.setUnlocalizedName("darkWaterBucket");
     }
 }
