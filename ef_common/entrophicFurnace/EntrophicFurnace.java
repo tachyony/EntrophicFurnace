@@ -14,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.EnumHelper;
+import net.minecraftforge.liquids.LiquidContainerData;
+import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -166,6 +168,11 @@ public class EntrophicFurnace
     /**
      * 
      */
+    public static Item darkWaterBucket;
+    
+    /**
+     * 
+     */
     public static LiquidStack entrophicLiquid;
     
     /**
@@ -217,6 +224,7 @@ public class EntrophicFurnace
         int seedEntrophic = EntrophicFurnace.CONFIGURATION.getItem("EntrophicSeed", 422).getInt();
         int entTeleporter = EntrophicFurnace.CONFIGURATION.getItem("EntrophicTeleporter", 423).getInt();
         int darkWaterId = EntrophicFurnace.CONFIGURATION.getItem("DarkWater", 424).getInt();
+        int darkWaterBucketId = EntrophicFurnace.CONFIGURATION.getItem("DarkWater", 425).getInt();
         int cropEntrophic = EntrophicFurnace.CONFIGURATION.getBlock("EntrophicCrop", 423).getInt();
         
         entrophicFurnace1 = new BlockEntrophicFurnace1(qFurnace1, UniversalElectricity.machine)
@@ -238,6 +246,7 @@ public class EntrophicFurnace
         entrophicSeed = new ItemSeeds(seedEntrophic, EntrophicFurnace.entrophicCrop.blockID, Block.tilledField.blockID).setUnlocalizedName("entrophicSeed").setMaxStackSize(64);
         entrophicTeleporter = new ItemEntrophicTeleporter(entTeleporter);
         darkWater = new ItemDarkWater(darkWaterId);
+        darkWaterBucket = new ItemDarkWater(darkWaterBucketId);
         
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace1, "EntrophicFurnace1");
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace2, "EntrophicFurnace2");
@@ -265,8 +274,9 @@ public class EntrophicFurnace
         LanguageRegistry.addName(EntrophicFurnace.entrophicSeed, "Entrophic Seed");
         LanguageRegistry.addName(EntrophicFurnace.entrophicTeleporter, "Entrophic Teleporter");
         LanguageRegistry.addName(EntrophicFurnace.darkWater, "Dark Water");
+        LanguageRegistry.addName(EntrophicFurnace.darkWaterBucket, "Dark Water Bucket");
         
-        // LiquidContainerRegistry.registerLiquid(new LiquidContainerData(LiquidDictionary.getLiquid("Dark Water", LiquidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketFuel), new ItemStack(Item.bucketEmpty)));
+        LiquidContainerRegistry.registerLiquid(new LiquidContainerData(LiquidDictionary.getLiquid("Dark Water", LiquidContainerRegistry.BUCKET_VOLUME), new ItemStack(darkWaterBucket), new ItemStack(Item.bucketEmpty)));
         
         proxy.preInit();
     }
@@ -295,6 +305,11 @@ public class EntrophicFurnace
         // Get the values of stuff
         itemValues = new ItemStackValues(this.hardMode);
         EntrophicFurnace.CONFIGURATION.save();
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.darkWater, new Object[] { "   ", "w w", "   ",
+                'w', EntrophicFurnace.entrophicOre3 }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.darkWaterBucket, new Object[] { "   ", "w w", " w ",
+                'w', EntrophicFurnace.entrophicOre3 }));
         
         // Add the entrophic ore, this is used for making other stuff and getting hard to find stuff,
         // like blaze rods or feathers
