@@ -228,8 +228,11 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
                 ElectricityPack powerPack = ElectricityNetworkHelper.consumeFromMultipleSides(this, EnumSet.of(ForgeDirection.UP), powerRequested);
                 this.setJoules(this.getJoules() + powerPack.getWatts());
                 
-                ElectricityPack powerRemaining = ElectricityNetworkHelper.produceFromMultipleSides(this, EnumSet.of(ForgeDirection.DOWN), new ElectricityPack(1, getVoltage()));
-                this.setJoules(this.getJoules() - powerRemaining.getWatts());
+                if (this.getJoules() > this.getVoltage())
+                {
+                    ElectricityPack powerRemaining = ElectricityNetworkHelper.produceFromMultipleSides(this, EnumSet.of(ForgeDirection.DOWN), new ElectricityPack(1, getVoltage()));
+                    this.setJoules(this.getJoules() - powerRemaining.getWatts());
+                }
                 
                 /*TileEntity inputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.UP);
                 TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.DOWN);
