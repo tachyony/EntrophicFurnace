@@ -21,6 +21,7 @@ import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import universalelectricity.core.UniversalElectricity;
+import buildcraft.api.fuels.IronEngineFuel;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -63,7 +64,7 @@ import entrophicFurnace.tileentity.TileEntrophicFurnace;
  * @author Tachyony
  *
  */
-@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.5.2_1", useMetadata = true, certificateFingerprint="", dependencies="after:EnergyManipulator")
+@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.5.2_1", useMetadata = true, certificateFingerprint="", dependencies="after:EnergyManipulator;BuildCraft|Energy")
 @NetworkMod(channels = "EntrophicFurnace", clientSideRequired = true, serverSideRequired = false, packetHandler = universalelectricity.prefab.network.PacketManager.class)
 public class EntrophicFurnace
 {
@@ -275,6 +276,11 @@ public class EntrophicFurnace
         LanguageRegistry.addName(EntrophicFurnace.entrophicTeleporter, "Entrophic Teleporter");
         LanguageRegistry.addName(EntrophicFurnace.darkWater, "Dark Water");
         LanguageRegistry.addName(EntrophicFurnace.darkWaterBucket, "Dark Water Bucket");
+        
+        if (Loader.isModLoaded("BuildCraft|Energy"))
+        {
+            IronEngineFuel.fuels.add(new IronEngineFuel(LiquidDictionary.getLiquid("Dark Water", LiquidContainerRegistry.BUCKET_VOLUME), 6, 100000));
+        }
         
         LiquidContainerRegistry.registerLiquid(new LiquidContainerData(LiquidDictionary.getLiquid("Dark Water", LiquidContainerRegistry.BUCKET_VOLUME), new ItemStack(darkWaterBucket), new ItemStack(Item.bucketEmpty)));
         
