@@ -10,6 +10,7 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.item.ElectricItemHelper;
 import universalelectricity.core.vector.Vector3;
@@ -146,72 +147,72 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
     public void updateEntity()
     {
         super.updateEntity();
-        if (this.getJoules() < MAX_CHARGE)
+        if (!this.worldObj.isRemote)
         {
-            this.setJoules(this.getJoules() + this.addWatts);
-            if (this.containingItems[0] != null)
+            if (this.getJoules() < MAX_CHARGE)
             {
-                long burn = this.getWattValue(0);
-                if ((burn > 0) && ((this.getJoules() + burn) <= TileEntrophicFurnace.MAX_CHARGE))
+                this.setJoules(this.getJoules() + this.addWatts);
+                if (this.containingItems[0] != null)
                 {
-                    this.setJoules(this.getJoules() + this.addWatts);
-                    --this.containingItems[0].stackSize;
-                    if (this.containingItems[0].stackSize == 0)
+                    long burn = this.getWattValue(0);
+                    if ((burn > 0) && ((this.getJoules() + burn) <= TileEntrophicFurnace.MAX_CHARGE))
                     {
-                        this.containingItems[0] = this.containingItems[0].getItem().getContainerItemStack(this.containingItems[0]);
+                        this.setJoules(this.getJoules() + this.addWatts);
+                        --this.containingItems[0].stackSize;
+                        if (this.containingItems[0].stackSize == 0)
+                        {
+                            this.containingItems[0] = this.containingItems[0].getItem().getContainerItemStack(this.containingItems[0]);
+                        }
                     }
                 }
             }
-        }
-
-        if (this.containingItems[1] != null)
-        {
-            if (!this.isDisabled())
+    
+            if (this.containingItems[1] != null)
             {
-                // The left slot contains the item to be smelted
-                if (this.smeltId != this.containingItems[1].itemID)
+                if (!this.isDisabled())
                 {
-                    this.smeltingTicks = 0;
-                }
-
-                if ((this.containingItems[1] != null) && this.canSmelt() && (this.smeltingTicks == 0))
-                {
-                    this.smeltingTicks = TileEntrophicFurnace.SMELTING_TIME_REQUIRED;
-                    this.watts = this.getWattValue(1);
-                    this.smeltId = this.containingItems[1].itemID;
-                }
-
-                if ((this.watts > 0) && (this.getJoules() >= this.watts))
-                {
-                    // Checks if the item can be smelted and if the
-                    // smelting time left
-                    // is greater than 0, if so, then smelt the
-                    // item.
-                    if (this.canSmelt() && this.smeltingTicks > 0)
-                    {
-                        this.smeltingTicks--;
-
-                        // When the item is finished smelting
-                        if (this.smeltingTicks < 1)
-                        {
-                            this.smeltItem();
-                            this.smeltingTicks = 0;
-                            this.setJoules(this.getJoules() - this.watts);
-                        }
-                    } else
+                    // The left slot contains the item to be smelted
+                    if (this.smeltId != this.containingItems[1].itemID)
                     {
                         this.smeltingTicks = 0;
                     }
+    
+                    if ((this.containingItems[1] != null) && this.canSmelt() && (this.smeltingTicks == 0))
+                    {
+                        this.smeltingTicks = TileEntrophicFurnace.SMELTING_TIME_REQUIRED;
+                        this.watts = this.getWattValue(1);
+                        this.smeltId = this.containingItems[1].itemID;
+                    }
+    
+                    if ((this.watts > 0) && (this.getJoules() >= this.watts))
+                    {
+                        // Checks if the item can be smelted and if the
+                        // smelting time left
+                        // is greater than 0, if so, then smelt the
+                        // item.
+                        if (this.canSmelt() && this.smeltingTicks > 0)
+                        {
+                            this.smeltingTicks--;
+    
+                            // When the item is finished smelting
+                            if (this.smeltingTicks < 1)
+                            {
+                                this.smeltItem();
+                                this.smeltingTicks = 0;
+                                this.setJoules(this.getJoules() - this.watts);
+                            }
+                        } else
+                        {
+                            this.smeltingTicks = 0;
+                        }
+                    }
                 }
+            } else
+            {
+                this.smeltingTicks = 0;
             }
-        } else
-        {
-            this.smeltingTicks = 0;
-        }
-
-        if (!this.isDisabled())
-        {
-            if (!this.worldObj.isRemote)
+            
+            if (!this.isDisabled())
             {
                 /**
                  * Recharges electric item.
@@ -222,6 +223,14 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
                  * Decharge electric item.
                  */
                 this.setJoules(this.getJoules() + ElectricItemHelper.dechargeItem(this.containingItems[0], this.getMaxJoules() - this.getJoules(), this.getVoltage()));
+                
+                ElectricityPack powerRequested = new ElectricityPack(1, getVoltage());
+                ElectricityPack powerPack = ElectricityNetworkHelper.consumeFromMultipleSides(this, EnumSet.of(ForgeDirection.UP), powerRequested);
+                this.setJoules(this.getJoules() + powerPack.getWatts());
+                
+                ElectricityPack powerRemaining = ElectricityNetworkHelper.produceFromMultipleSides(this, EnumSet.of(ForgeDirection.DOWN), new ElectricityPack(1, getVoltage()));
+                this.setJoules(this.getJoules() - powerRemaining.getWatts());
+                
                 /*TileEntity inputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.UP);
                 TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.DOWN);
                 IElectricityNetwork inputNetwork = ElectricityNetworkHelper.getNetworkFromTileEntity(inputTile, ForgeDirection.UP);
