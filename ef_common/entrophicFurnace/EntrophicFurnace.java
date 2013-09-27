@@ -14,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.EnumHelper;
+import net.minecraftforge.liquids.LiquidDictionary;
+import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import universalelectricity.core.UniversalElectricity;
@@ -41,6 +43,7 @@ import entrophicFurnace.block.BlockEntrophicFurnace3;
 import entrophicFurnace.generic.CommonProxy;
 import entrophicFurnace.generic.ItemStackValues;
 import entrophicFurnace.generic.WorldProviderEntrophic;
+import entrophicFurnace.item.ItemDarkWater;
 import entrophicFurnace.item.ItemEntrophicOre;
 import entrophicFurnace.item.ItemEntrophicOre1;
 import entrophicFurnace.item.ItemEntrophicOre2;
@@ -156,6 +159,16 @@ public class EntrophicFurnace
     public static Item entrophicTeleporter;
     
     /**
+     * 
+     */
+    public static Item darkWater;
+    
+    /**
+     * 
+     */
+    public static LiquidStack entrophicLiquid;
+    
+    /**
      * Entrophic crop
      */
     public static Block entrophicCrop;
@@ -203,6 +216,7 @@ public class EntrophicFurnace
         int qPaxel = EntrophicFurnace.CONFIGURATION.getItem("EntrophicPaxel", 413).getInt();
         int seedEntrophic = EntrophicFurnace.CONFIGURATION.getItem("EntrophicSeed", 422).getInt();
         int entTeleporter = EntrophicFurnace.CONFIGURATION.getItem("EntrophicTeleporter", 423).getInt();
+        int darkWaterId = EntrophicFurnace.CONFIGURATION.getItem("DarkWater", 424).getInt();
         int cropEntrophic = EntrophicFurnace.CONFIGURATION.getBlock("EntrophicCrop", 423).getInt();
         
         entrophicFurnace1 = new BlockEntrophicFurnace1(qFurnace1, UniversalElectricity.machine)
@@ -223,7 +237,8 @@ public class EntrophicFurnace
         entrophicCrop = new BlockEntrophicCrop(cropEntrophic);
         entrophicSeed = new ItemSeeds(seedEntrophic, EntrophicFurnace.entrophicCrop.blockID, Block.tilledField.blockID).setUnlocalizedName("entrophicSeed").setMaxStackSize(64);
         entrophicTeleporter = new ItemEntrophicTeleporter(entTeleporter);
-
+        darkWater = new ItemDarkWater(darkWaterId);
+        
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace1, "EntrophicFurnace1");
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace2, "EntrophicFurnace2");
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace3, "EntrophicFurnace3");
@@ -232,6 +247,8 @@ public class EntrophicFurnace
         GameRegistry.registerTileEntity(TileEntrophicFurnace.class, "EntrophicFurnace2");
         GameRegistry.registerTileEntity(TileEntrophicFurnace.class, "EntrophicFurnace3");
 
+        entrophicLiquid = LiquidDictionary.getOrCreateLiquid("Dark Water", new LiquidStack(darkWater, 1));
+        
         LanguageRegistry.addName(EntrophicFurnace.entrophicFurnace1, "Entrophic Furnace 1");
         LanguageRegistry.addName(EntrophicFurnace.entrophicFurnace2, "Entrophic Furnace 2");
         LanguageRegistry.addName(EntrophicFurnace.entrophicFurnace3, "Entrophic Furnace 3");
@@ -247,6 +264,10 @@ public class EntrophicFurnace
         LanguageRegistry.addName(EntrophicFurnace.entrophicPaxel, "Entrophic Paxel");
         LanguageRegistry.addName(EntrophicFurnace.entrophicSeed, "Entrophic Seed");
         LanguageRegistry.addName(EntrophicFurnace.entrophicTeleporter, "Entrophic Teleporter");
+        LanguageRegistry.addName(EntrophicFurnace.darkWater, "Dark Water");
+        
+        // LiquidContainerRegistry.registerLiquid(new LiquidContainerData(LiquidDictionary.getLiquid("Dark Water", LiquidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketFuel), new ItemStack(Item.bucketEmpty)));
+        
         proxy.preInit();
     }
 
