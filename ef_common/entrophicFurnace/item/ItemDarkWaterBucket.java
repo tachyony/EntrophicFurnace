@@ -20,5 +20,6 @@ public class ItemDarkWaterBucket extends Item
         this.setMaxStackSize(1);
         this.setCreativeTab(CreativeTabs.tabMisc);
         this.setUnlocalizedName("darkWaterBucket");
+        this.setContainerItem(Item.bucketEmpty);
     }
 }

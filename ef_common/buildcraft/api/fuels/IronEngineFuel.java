@@ -14,10 +14,22 @@ import java.util.LinkedList;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 
+/**
+ * 
+ */
 public class IronEngineFuel {
 
-	public static LinkedList<IronEngineFuel> fuels = new LinkedList<IronEngineFuel>();
+	/**
+	 * 
+	 */
+    @SuppressWarnings("unused")
+    public static LinkedList<IronEngineFuel> fuels = new LinkedList<IronEngineFuel>();
 
+    /**
+     * 
+     * @param liquid
+     * @return Fuel
+     */
 	public static IronEngineFuel getFuelForLiquid(LiquidStack liquid) {
 		if (liquid == null)
 			return null;
@@ -31,14 +43,37 @@ public class IronEngineFuel {
 		return null;
 	}
 
+	/**
+	 * 
+	 */
 	public final LiquidStack liquid;
+	
+	/**
+	 * 
+	 */
 	public final float powerPerCycle;
+	
+	/**
+	 * 
+	 */
 	public final int totalBurningTime;
 
+	/**
+	 * 
+	 * @param liquidId
+	 * @param powerPerCycle
+	 * @param totalBurningTime
+	 */
 	public IronEngineFuel(int liquidId, float powerPerCycle, int totalBurningTime) {
 		this(new LiquidStack(liquidId, LiquidContainerRegistry.BUCKET_VOLUME, 0), powerPerCycle, totalBurningTime);
 	}
 
+	/**
+	 * 
+	 * @param liquid
+	 * @param powerPerCycle
+	 * @param totalBurningTime
+	 */
 	public IronEngineFuel(LiquidStack liquid, float powerPerCycle, int totalBurningTime) {
 		this.liquid = liquid;
 		this.powerPerCycle = powerPerCycle;

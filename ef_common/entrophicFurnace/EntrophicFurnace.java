@@ -5,15 +5,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.EnumHelper;
+import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.liquids.LiquidContainerData;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidDictionary;
@@ -39,6 +42,8 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import entrophicFurnace.block.BlockEntrophicCrop;
 import entrophicFurnace.block.BlockEntrophicFurnace1;
 import entrophicFurnace.block.BlockEntrophicFurnace2;
@@ -287,6 +292,19 @@ public class EntrophicFurnace
         proxy.preInit();
     }
 
+    /**
+     * 
+     * @param event
+     */
+    @SuppressWarnings("static-method")
+    @ForgeSubscribe
+    @SideOnly(Side.CLIENT)
+    public void textureHook(TextureStitchEvent.Post event) {
+        if (event.map == Minecraft.getMinecraft().renderEngine.textureMapItems) {
+            LiquidDictionary.getCanonicalLiquid("Dark Water").setRenderingIcon(darkWater.getIconFromDamage(0)).setTextureSheet("/gui/items.png");
+        }
+    }
+    
     /**
      *
      * @param event
