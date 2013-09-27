@@ -16,8 +16,7 @@ public class ItemDarkWater extends Item
     public ItemDarkWater(int id)
     {
         super(id);
-        this.setMaxStackSize(64);
-        //this.setCreativeTab(CreativeTabs.tabMisc);
+        this.setMaxStackSize(1);
         this.setUnlocalizedName("darkWater");
     }
 }

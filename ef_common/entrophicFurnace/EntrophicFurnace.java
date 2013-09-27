@@ -16,6 +16,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.EnumHelper;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.liquids.LiquidContainerData;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
@@ -63,13 +64,15 @@ import entrophicFurnace.item.ItemEntrophicTeleporter;
 import entrophicFurnace.item.ItemIngotCopper;
 import entrophicFurnace.item.ItemIngotTin;
 import entrophicFurnace.tileentity.TileEntrophicFurnace;
+import forestry.api.fuels.EngineBronzeFuel;
+import forestry.api.fuels.FuelManager;
 
 /**
  *
  * @author Tachyony
  *
  */
-@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.5.2_1", useMetadata = true, certificateFingerprint="", dependencies="after:EnergyManipulator;after:BuildCraft|Energy")
+@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.5.2_1", useMetadata = true, certificateFingerprint="", dependencies="after:EnergyManipulator;after:BuildCraft|Energy;after:Forestry")
 @NetworkMod(channels = "EntrophicFurnace", clientSideRequired = true, serverSideRequired = false, packetHandler = universalelectricity.prefab.network.PacketManager.class)
 public class EntrophicFurnace
 {
@@ -287,8 +290,15 @@ public class EntrophicFurnace
             IronEngineFuel.fuels.add(new IronEngineFuel(LiquidDictionary.getLiquid("Dark Water", LiquidContainerRegistry.BUCKET_VOLUME), 6, 100000));
         }
         
+        if (Loader.isModLoaded("Forestry"))
+        {
+            EngineBronzeFuel bronzeFuel = new EngineBronzeFuel(new ItemStack(darkWater), 6, 100000, 1);
+            FuelManager.bronzeEngineFuel.put(new ItemStack(darkWater), bronzeFuel);
+        }
+        
         LiquidContainerRegistry.registerLiquid(new LiquidContainerData(LiquidDictionary.getLiquid("Dark Water", LiquidContainerRegistry.BUCKET_VOLUME), new ItemStack(darkWaterBucket), new ItemStack(Item.bucketEmpty)));
         
+        MinecraftForge.EVENT_BUS.register(this);
         proxy.preInit();
     }
 
@@ -329,11 +339,6 @@ public class EntrophicFurnace
         // Get the values of stuff
         itemValues = new ItemStackValues(this.hardMode);
         EntrophicFurnace.CONFIGURATION.save();
-
-        GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.darkWater, new Object[] { "   ", "w w", "   ",
-                'w', EntrophicFurnace.entrophicOre3 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(EntrophicFurnace.darkWaterBucket, new Object[] { "   ", "w w", " w ",
-                'w', EntrophicFurnace.entrophicOre3 }));
         
         // Add the entrophic ore, this is used for making other stuff and getting hard to find stuff,
         // like blaze rods or feathers
@@ -358,6 +363,8 @@ public class EntrophicFurnace
                 'o', EntrophicFurnace.entrophicOre4 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(EntrophicFurnace.entrophicOre4, 8), new Object[] { "o  ", "   ", "   ",
                 'o', EntrophicFurnace.entrophicOre5 }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(EntrophicFurnace.darkWaterBucket), new Object[] { "   ", "o o", " o ",
+            'o', EntrophicFurnace.entrophicOre4 }));
         ItemStack paxelStack = new ItemStack(EntrophicFurnace.entrophicPaxel, 1);
         paxelStack.addEnchantment(Enchantment.silkTouch, 1);
         paxelStack.addEnchantment(Enchantment.unbreaking, 3);
