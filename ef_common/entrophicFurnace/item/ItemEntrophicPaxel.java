@@ -5,21 +5,22 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagDouble;
+import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import universalelectricity.core.electricity.ElectricityDisplay;
-import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.item.ElectricItemHelper;
 import universalelectricity.core.item.IItemElectric;
@@ -56,7 +57,7 @@ public class ItemEntrophicPaxel extends ItemTool implements IItemElectric
         this.damageVsEntity = 6 + this.toolMaterial.getDamageVsEntity();
         this.setUnlocalizedName(name);
         this.setMaxStackSize(1);
-        this.setMaxDamage(material.getMaxUses());
+        this.setMaxDamage(100);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setNoRepair();
     }
@@ -69,13 +70,13 @@ public class ItemEntrophicPaxel extends ItemTool implements IItemElectric
     public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4)
     {
         String color = "";
-        double joules = this.getJoules(itemStack);
+        float joules = this.getElectricityStored(itemStack);
 
-        if (joules <= this.getMaxJoules(itemStack) / 3)
+        if (joules <= this.getMaxElectricityStored(itemStack) / 3)
         {
             color = "\u00a74";
         }
-        else if (joules > this.getMaxJoules(itemStack) * 2 / 3)
+        else if (joules > this.getMaxElectricityStored(itemStack) * 2 / 3)
         {
             color = "\u00a72";
         }
@@ -84,7 +85,7 @@ public class ItemEntrophicPaxel extends ItemTool implements IItemElectric
             color = "\u00a76";
         }
 
-        list.add(color + ElectricityDisplay.getDisplay(joules, ElectricUnit.JOULES) + "/" + ElectricityDisplay.getDisplay(this.getMaxJoules(itemStack), ElectricUnit.JOULES));
+        list.add(color + ElectricityDisplay.getDisplayShort(joules, ElectricUnit.JOULES) + "/" + ElectricityDisplay.getDisplayShort(this.getMaxElectricityStored(itemStack), ElectricUnit.JOULES));
     }
     
     /**
@@ -94,67 +95,45 @@ public class ItemEntrophicPaxel extends ItemTool implements IItemElectric
     @Override
     public void onCreated(ItemStack itemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        this.setJoules(0, itemStack);
+        this.setElectricity(itemStack, 0);
     }
     
     /**
      * 
      */
     @Override
-    public ElectricityPack onReceive(ElectricityPack electricityPack, ItemStack itemStack)
+    public float recharge(ItemStack itemStack, float energy, boolean doReceive)
     {
-        double rejectedElectricity = Math.max((this.getJoules(itemStack) + electricityPack.getWatts()) - this.getMaxJoules(itemStack), 0);
-        double joulesToStore = electricityPack.getWatts() - rejectedElectricity;
-        this.setJoules(this.getJoules(itemStack) + joulesToStore, itemStack);
-        return ElectricityPack.getFromWatts(joulesToStore, this.getVoltage(itemStack));
-    }
-    
-    /**
-     * 
-     */
-    @Override
-    public ElectricityPack onProvide(ElectricityPack electricityPack, ItemStack itemStack)
-    {
-        double electricityToUse = Math.min(this.getJoules(itemStack), electricityPack.getWatts());
-        this.setJoules(this.getJoules(itemStack) - electricityToUse, itemStack);
-        return ElectricityPack.getFromWatts(electricityToUse, this.getVoltage(itemStack));
-    }
-    
-    /**
-     * 
-     */
-    @Override
-    public ElectricityPack getReceiveRequest(ItemStack itemStack)
-    {
-        return ElectricityPack.getFromWatts(Math.min(this.getMaxJoules(itemStack) - this.getJoules(itemStack), this.getTransferRate(itemStack)), this.getVoltage(itemStack));
+        float rejectedElectricity = Math.max((this.getElectricityStored(itemStack) + energy) - this.getMaxElectricityStored(itemStack), 0);
+        float energyToReceive = energy - rejectedElectricity;
+        if (doReceive)
+        {
+            this.setElectricity(itemStack, this.getElectricityStored(itemStack) + energyToReceive);
+        }
+
+        return energyToReceive;
     }
 
     /**
      * 
      */
     @Override
-    public ElectricityPack getProvideRequest(ItemStack itemStack)
+    public float discharge(ItemStack itemStack, float energy, boolean doTransfer)
     {
-        return ElectricityPack.getFromWatts(Math.min(this.getJoules(itemStack), this.getTransferRate(itemStack)), this.getVoltage(itemStack));
-    }
+        float energyToTransfer = Math.min(this.getElectricityStored(itemStack), energy);
+        if (doTransfer)
+        {
+            this.setElectricity(itemStack, this.getElectricityStored(itemStack) - energyToTransfer);
+        }
 
-    /**
-     * 
-     * @param itemStack
-     * @return Transfer rate
-     */
-    public double getTransferRate(ItemStack itemStack)
-    {
-        return this.getMaxJoules(itemStack) * 0.01;
+        return energyToTransfer;
     }
     
     /**
-     * This function sets the electricty. Do not directly call this function. Try to use
-     * onReceiveElectricity or onUseElectricity instead.
-     * @param joules - The amount of electricity in joules
+     * 
      */
     @Override
-    public void setJoules(double joules, ItemStack itemStack)
+    public void setElectricity(ItemStack itemStack, float joules)
     {
         // Saves the frequency in the ItemStack
         if (itemStack.getTagCompound() == null)
@@ -162,35 +141,47 @@ public class ItemEntrophicPaxel extends ItemTool implements IItemElectric
             itemStack.setTagCompound(new NBTTagCompound());
         }
 
-        double electricityStored = Math.max(Math.min(joules, this.getMaxJoules(itemStack)), 0);
-        itemStack.getTagCompound().setDouble("electricity", electricityStored);
+        float electricityStored = Math.max(Math.min(joules, this.getMaxElectricityStored(itemStack)), 0);
+        itemStack.getTagCompound().setFloat("electricity", electricityStored);
 
-        /**
-         * Sets the damage as a percentage to render the bar properly.
-         */
-        itemStack.setItemDamage((int) (100 - (electricityStored / getMaxJoules(itemStack)) * 100));
+        /** Sets the damage as a percentage to render the bar properly. */
+        itemStack.setItemDamage((int) (100 - (electricityStored / getMaxElectricityStored(itemStack)) * 100));
     }
-    
+
     /**
-     * This function is called to get the electricity stored in this item
      * 
-     * @return - The amount of electricity stored in watts
      */
     @Override
-    public double getJoules(ItemStack itemStack)
+    public float getTransfer(ItemStack itemStack)
+    {
+        return this.getMaxElectricityStored(itemStack) - this.getElectricityStored(itemStack);
+    }
+    
+    /** Gets the energy stored in the item. Energy is stored using item NBT */
+    @Override
+    public float getElectricityStored(ItemStack itemStack)
     {
         if (itemStack.getTagCompound() == null)
         {
-            return 0;
+            itemStack.setTagCompound(new NBTTagCompound());
+        }
+        float energyStored = 0f;
+        if (itemStack.getTagCompound().hasKey("electricity"))
+        {
+            NBTBase obj = itemStack.getTagCompound().getTag("electricity");
+            if (obj instanceof NBTTagDouble)
+            {
+                energyStored = (float) ((NBTTagDouble) obj).data;
+            }
+            else if (obj instanceof NBTTagFloat)
+            {
+                energyStored = ((NBTTagFloat) obj).data;
+            }
         }
 
-        double electricityStored = itemStack.getTagCompound().getDouble("electricity");
-
-        /**
-         * Sets the damage as a percentage to render the bar properly.
-         */
-        itemStack.setItemDamage((int) (100 - (electricityStored / getMaxJoules(itemStack)) * 100));
-        return electricityStored;
+        /** Sets the damage as a percentage to render the bar properly. */
+        itemStack.setItemDamage((int) (100 - (energyStored / getMaxElectricityStored(itemStack)) * 100));
+        return energyStored;
     }
     
     /**
@@ -200,11 +191,8 @@ public class ItemEntrophicPaxel extends ItemTool implements IItemElectric
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-        // Add an uncharged version of the electric item
         par3List.add(ElectricItemHelper.getUncharged(new ItemStack(this)));
-        // Add an electric item to the creative list that is fully charged
-        ItemStack chargedItem = new ItemStack(this);
-        par3List.add(ElectricItemHelper.getWithCharge(chargedItem, this.getMaxJoules(chargedItem)));
+        par3List.add(ElectricItemHelper.getWithCharge(new ItemStack(this), this.getMaxElectricityStored(new ItemStack(this))));
     }
     
     /**
@@ -263,27 +251,11 @@ public class ItemEntrophicPaxel extends ItemTool implements IItemElectric
     }
 
     /**
-     * @return ToString
-     */
-    public String func_77825_f()
-    {
-        return this.toolMaterial.toString();
-    }
-
-    /**
-     * @return ToString
-     */
-    public String func_77842_f()
-    {
-        return this.toolMaterial.toString();
-    }
-
-    /**
      * 
      */
     @Override
-    public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving,
-            EntityLiving par3EntityLiving)
+    public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLiving,
+            EntityLivingBase par3EntityLiving)
     {
         par1ItemStack.damageItem(1, par3EntityLiving);
         return true;
@@ -294,7 +266,7 @@ public class ItemEntrophicPaxel extends ItemTool implements IItemElectric
      */
     @Override
     public boolean onBlockDestroyed(ItemStack par1ItemStack, World par2World, int par3, int par4,
-            int par5, int par6, EntityLiving par7EntityLiving)
+            int par5, int par6, EntityLivingBase par7EntityLiving)
     {
         if (Block.blocksList[par3].getBlockHardness(par2World, par4, par5, par6) != 0.0D)
         {
@@ -305,20 +277,15 @@ public class ItemEntrophicPaxel extends ItemTool implements IItemElectric
     }
 
     /**
-     * @return Damage
-     */
-    public int func_82803_g()
-    {
-        return this.toolMaterial.getDamageVsEntity();
-    }
-
-    /**
-     * 
+     * Return the itemDamage represented by this ItemStack. Defaults to the itemDamage field on ItemStack, but can be overridden here for other sources such as NBT.
+     *
+     * @param stack The itemstack that is damaged
+     * @return the damage value
      */
     @Override
-    public int getDamageVsEntity(Entity par1Entity)
+    public int getDamage(ItemStack stack)
     {
-        return this.damageVsEntity;
+        return super.getDamage(stack);
     }
 
     /**
@@ -451,15 +418,16 @@ public class ItemEntrophicPaxel extends ItemTool implements IItemElectric
      * 
      */
     @Override
-    public double getMaxJoules(ItemStack itemStack) {
-        return 120000000;
+    public float getVoltage(ItemStack itemStack)
+    {
+        return 0.120f;
     }
 
     /**
      * 
      */
     @Override
-    public double getVoltage(ItemStack itemStack) {
-        return 120;
+    public float getMaxElectricityStored(ItemStack theItem) {
+        return getVoltage(theItem) * 1000000;
     }
 }

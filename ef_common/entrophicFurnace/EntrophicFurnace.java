@@ -5,7 +5,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.EnumToolMaterial;
@@ -18,22 +17,16 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.liquids.LiquidContainerData;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import universalelectricity.core.UniversalElectricity;
-import buildcraft.api.fuels.IronEngineFuel;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.IMCCallback;
-import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PostInit;
-import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent;
@@ -49,7 +42,7 @@ import entrophicFurnace.block.BlockEntrophicCrop;
 import entrophicFurnace.block.BlockEntrophicFurnace1;
 import entrophicFurnace.block.BlockEntrophicFurnace2;
 import entrophicFurnace.block.BlockEntrophicFurnace3;
-import entrophicFurnace.generic.CommonProxy;
+import entrophicFurnace.core.proxy.CommonProxy;
 import entrophicFurnace.generic.ItemStackValues;
 import entrophicFurnace.generic.WorldProviderEntrophic;
 import entrophicFurnace.item.ItemDarkWater;
@@ -64,15 +57,13 @@ import entrophicFurnace.item.ItemEntrophicTeleporter;
 import entrophicFurnace.item.ItemIngotCopper;
 import entrophicFurnace.item.ItemIngotTin;
 import entrophicFurnace.tileentity.TileEntrophicFurnace;
-import forestry.api.fuels.EngineBronzeFuel;
-import forestry.api.fuels.FuelManager;
 
 /**
  *
  * @author Tachyony
  *
  */
-@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.5.2_1", useMetadata = true, certificateFingerprint="", dependencies="after:EnergyManipulator;after:BuildCraft|Energy;after:Forestry")
+@Mod(modid = "EntrophicFurnace", name = "Entrophic Furnace", version = "1.6.4_1", useMetadata = true, certificateFingerprint="", dependencies="after:EnergyManipulator;after:BuildCraft|Energy;after:Forestry")
 @NetworkMod(channels = "EntrophicFurnace", clientSideRequired = true, serverSideRequired = false, packetHandler = universalelectricity.prefab.network.PacketManager.class)
 public class EntrophicFurnace
 {
@@ -172,17 +163,27 @@ public class EntrophicFurnace
     /**
      * 
      */
-    public static Item darkWater;
+    public static Item itemDarkWater;
+
+    /**
+     * 
+     */
+    public static Block blockDarkWater;
     
     /**
      * 
      */
-    public static Item darkWaterBucket;
+    public static Item bucketDarkWater;
     
     /**
      * 
      */
-    public static LiquidStack entrophicLiquid;
+    public static Fluid fluidEntrophic;
+    
+    /**
+     * 
+     */
+    private static Fluid efFluidEntrophic;
     
     /**
      * Entrophic crop
@@ -208,7 +209,7 @@ public class EntrophicFurnace
      * Pre init
      * @param event
      */
-    @PreInit
+    @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         efLogger.setParent(FMLLog.getLogger());
@@ -254,8 +255,12 @@ public class EntrophicFurnace
         entrophicCrop = new BlockEntrophicCrop(cropEntrophic);
         entrophicSeed = new ItemSeeds(seedEntrophic, EntrophicFurnace.entrophicCrop.blockID, Block.tilledField.blockID).setUnlocalizedName("entrophicSeed").setMaxStackSize(64);
         entrophicTeleporter = new ItemEntrophicTeleporter(entTeleporter);
-        darkWater = new ItemDarkWater(darkWaterId);
-        darkWaterBucket = new ItemDarkWater(darkWaterBucketId);
+        efFluidEntrophic = new Fluid("darkWater");
+        FluidRegistry.registerFluid(efFluidEntrophic);
+        fluidEntrophic = FluidRegistry.getFluid("darkWater");
+        blockDarkWater = new blockDarkWater(blockDarkWaterId, fluidEntrophic);
+        //darkWater = new ItemDarkWater(darkWaterId);
+        //darkWaterBucket = new ItemDarkWaterBucket(darkWaterBucketId);
         
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace1, "EntrophicFurnace1");
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace2, "EntrophicFurnace2");
@@ -264,8 +269,6 @@ public class EntrophicFurnace
         GameRegistry.registerTileEntity(TileEntrophicFurnace.class, "EntrophicFurnace1");
         GameRegistry.registerTileEntity(TileEntrophicFurnace.class, "EntrophicFurnace2");
         GameRegistry.registerTileEntity(TileEntrophicFurnace.class, "EntrophicFurnace3");
-
-        entrophicLiquid = LiquidDictionary.getOrCreateLiquid("Dark Water", new LiquidStack(darkWater, 1));
         
         LanguageRegistry.addName(EntrophicFurnace.entrophicFurnace1, "Entrophic Furnace 1");
         LanguageRegistry.addName(EntrophicFurnace.entrophicFurnace2, "Entrophic Furnace 2");
@@ -282,7 +285,7 @@ public class EntrophicFurnace
         LanguageRegistry.addName(EntrophicFurnace.entrophicPaxel, "Entrophic Paxel");
         LanguageRegistry.addName(EntrophicFurnace.entrophicSeed, "Entrophic Seed");
         LanguageRegistry.addName(EntrophicFurnace.entrophicTeleporter, "Entrophic Teleporter");
-        LanguageRegistry.addName(EntrophicFurnace.darkWater, "Dark Water");
+        /*LanguageRegistry.addName(EntrophicFurnace.darkWater, "Dark Water");
         LanguageRegistry.addName(EntrophicFurnace.darkWaterBucket, "Dark Water Bucket");
         
         if (Loader.isModLoaded("BuildCraft|Energy"))
@@ -294,25 +297,23 @@ public class EntrophicFurnace
         {
             EngineBronzeFuel bronzeFuel = new EngineBronzeFuel(new ItemStack(darkWater), 6, 100000, 1);
             FuelManager.bronzeEngineFuel.put(new ItemStack(darkWater), bronzeFuel);
-        }
+        }*/
         
-        LiquidContainerRegistry.registerLiquid(new LiquidContainerData(LiquidDictionary.getLiquid("Dark Water", LiquidContainerRegistry.BUCKET_VOLUME), new ItemStack(darkWaterBucket), new ItemStack(Item.bucketEmpty)));
+        //LiquidContainerRegistry.registerLiquid(new LiquidContainerData(LiquidDictionary.getLiquid("Dark Water", LiquidContainerRegistry.BUCKET_VOLUME), new ItemStack(darkWaterBucket), new ItemStack(Item.bucketEmpty)));
         
         MinecraftForge.EVENT_BUS.register(this);
-        proxy.preInit();
     }
 
     /**
      * 
      * @param event
      */
-    @SuppressWarnings("static-method")
     @ForgeSubscribe
     @SideOnly(Side.CLIENT)
     public void textureHook(TextureStitchEvent.Post event) {
-        if (event.map == Minecraft.getMinecraft().renderEngine.textureMapItems) {
+        /*if (event.map == Minecraft.getMinecraft().renderEngine.textureMapItems) {
             LiquidDictionary.getCanonicalLiquid("Dark Water").setRenderingIcon(darkWater.getIconFromDamage(0)).setTextureSheet("/gui/items.png");
-        }
+        }*/
     }
     
     /**
@@ -320,10 +321,9 @@ public class EntrophicFurnace
      * @param event
      */
     @SuppressWarnings("boxing")
-    @Init
+    @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        proxy.init();
         OreDictionary.registerOre("ingotCopper", new ItemStack(ingotCopper));
         OreDictionary.registerOre("ingotTin", new ItemStack(ingotTin));
         OreDictionary.registerOre("quantumOre", new ItemStack(entrophicOre));
@@ -536,7 +536,7 @@ public class EntrophicFurnace
      *
      * @param event
      */
-    @PostInit
+    @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
         //
@@ -546,7 +546,7 @@ public class EntrophicFurnace
      * 
      * @param event
      */
-    @IMCCallback
+    @EventHandler
     public void handleIMCMessages(IMCEvent event) {
         //
     }

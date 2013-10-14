@@ -2,7 +2,7 @@ package entrophicFurnace.block;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -10,9 +10,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.prefab.block.BlockRotatable;
-import universalelectricity.prefab.implement.IRedstoneProvider;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -40,7 +38,7 @@ public class BlockEntrophicFurnace3 extends BlockRotatable
      * Called when the block is placed in the world.
      */
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entityLiving, ItemStack itemStack)
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack)
     {
         int metadata = world.getBlockMetadata(x, y, z);
         int angle = MathHelper.floor_double((entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
@@ -146,7 +144,17 @@ public class BlockEntrophicFurnace3 extends BlockRotatable
     @Override
     public TileEntity createNewTileEntity(World world)
     {
-        return new TileEntrophicFurnace(2, this.blockID);
+        return new TileEntrophicFurnace(0, this.blockID);
+    }
+
+    /**
+     * 
+     * @param world
+     * @return Tile entity
+     */
+    @Override
+    public TileEntity createTileEntity(World world, int metadata) {
+        return new TileEntrophicFurnace(0, this.blockID, metadata);
     }
 
     /**
@@ -197,13 +205,7 @@ public class BlockEntrophicFurnace3 extends BlockRotatable
     @Override
     public int isProvidingStrongPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
     {
-        TileEntity tileEntity = par1IBlockAccess.getBlockTileEntity(x, y, z);
-        if (tileEntity instanceof IRedstoneProvider)
-        {
-            return ((IRedstoneProvider)tileEntity).isPoweringTo(ForgeDirection.getOrientation(side)) ? 1 : 0;
-        }
-
-        return 0;
+        return super.isProvidingStrongPower(par1IBlockAccess, x, y, z, side);
     }
 
     /**
@@ -212,13 +214,7 @@ public class BlockEntrophicFurnace3 extends BlockRotatable
     @Override
     public int isProvidingWeakPower(IBlockAccess par1IBlockAccess, int x, int y, int z, int side)
     {
-        TileEntity tileEntity = par1IBlockAccess.getBlockTileEntity(x, y, z);
-        if (tileEntity instanceof IRedstoneProvider)
-        {
-            return ((IRedstoneProvider)tileEntity).isIndirectlyPoweringTo(ForgeDirection.getOrientation(side)) ? 1 : 0;
-        }
-
-        return 0;
+        return super.isProvidingStrongPower(par1IBlockAccess, x, y, z, side);
     }
     
     /**
@@ -228,6 +224,6 @@ public class BlockEntrophicFurnace3 extends BlockRotatable
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister) {
 
-        this.blockIcon = iconRegister.registerIcon(this.getUnlocalizedName2());
+        this.blockIcon = iconRegister.registerIcon(this.getUnlocalizedName());
     }
 }

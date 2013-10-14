@@ -10,13 +10,12 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.item.ElectricItemHelper;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.tile.TileEntityElectricityStorage;
+import universalelectricity.prefab.tile.TileEntityElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -27,7 +26,7 @@ import entrophicFurnace.EntrophicFurnace;
  *
  * @author Tachyony
  */
-public class TileEntrophicFurnace extends TileEntityElectricityStorage implements IPacketReceiver, net.minecraft.inventory.ISidedInventory
+public class TileEntrophicFurnace extends TileEntityElectrical implements IPacketReceiver, net.minecraft.inventory.ISidedInventory
 {
     /**
      * Max charge level
@@ -37,7 +36,7 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
     /**
      * The amount of watts required by the electric furnace per tick
      */
-    public static final long WATTS_MULTIPLE = 120;
+    public static final float WATTS_MULTIPLE = 120f;
 
     /**
      * 20 for game tick * 50 smelting time div 3 secs
@@ -103,6 +102,16 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
      * Constructor
      * @param level
      * @param blockId
+     * @param metadata
+     */
+    public TileEntrophicFurnace(int level, int blockId, int metadata)
+    {
+        this(level, blockId);
+    }
+    /**
+     * Constructor
+     * @param level
+     * @param blockId
      */
     public TileEntrophicFurnace(int level, int blockId)
     {
@@ -129,15 +138,6 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
     public long getWattValue(int slot)
     {
         return EntrophicFurnace.itemValues.getItemValue(this.containingItems[slot]) * TileEntrophicFurnace.WATTS_MULTIPLE * SMELTING_TIME_REQUIRED;
-    }
-
-    /**
-     * invalidates a tile entity
-     */
-    @Override
-    public void invalidate()
-    {
-        super.invalidate();
     }
     
     /**
@@ -169,42 +169,39 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
     
             if (this.containingItems[1] != null)
             {
-                if (!this.isDisabled())
+                // The left slot contains the item to be smelted
+                if (this.smeltId != this.containingItems[1].itemID)
                 {
-                    // The left slot contains the item to be smelted
-                    if (this.smeltId != this.containingItems[1].itemID)
+                    this.smeltingTicks = 0;
+                }
+
+                if ((this.containingItems[1] != null) && this.canSmelt() && (this.smeltingTicks == 0))
+                {
+                    this.smeltingTicks = TileEntrophicFurnace.SMELTING_TIME_REQUIRED;
+                    this.watts = this.getWattValue(1);
+                    this.smeltId = this.containingItems[1].itemID;
+                }
+
+                if ((this.watts > 0) && (this.getJoules() >= this.watts))
+                {
+                    // Checks if the item can be smelted and if the
+                    // smelting time left
+                    // is greater than 0, if so, then smelt the
+                    // item.
+                    if (this.canSmelt() && this.smeltingTicks > 0)
+                    {
+                        this.smeltingTicks--;
+
+                        // When the item is finished smelting
+                        if (this.smeltingTicks < 1)
+                        {
+                            this.smeltItem();
+                            this.smeltingTicks = 0;
+                            this.setJoules(this.getJoules() - this.watts);
+                        }
+                    } else
                     {
                         this.smeltingTicks = 0;
-                    }
-    
-                    if ((this.containingItems[1] != null) && this.canSmelt() && (this.smeltingTicks == 0))
-                    {
-                        this.smeltingTicks = TileEntrophicFurnace.SMELTING_TIME_REQUIRED;
-                        this.watts = this.getWattValue(1);
-                        this.smeltId = this.containingItems[1].itemID;
-                    }
-    
-                    if ((this.watts > 0) && (this.getJoules() >= this.watts))
-                    {
-                        // Checks if the item can be smelted and if the
-                        // smelting time left
-                        // is greater than 0, if so, then smelt the
-                        // item.
-                        if (this.canSmelt() && this.smeltingTicks > 0)
-                        {
-                            this.smeltingTicks--;
-    
-                            // When the item is finished smelting
-                            if (this.smeltingTicks < 1)
-                            {
-                                this.smeltItem();
-                                this.smeltingTicks = 0;
-                                this.setJoules(this.getJoules() - this.watts);
-                            }
-                        } else
-                        {
-                            this.smeltingTicks = 0;
-                        }
                     }
                 }
             } else
@@ -212,45 +209,24 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
                 this.smeltingTicks = 0;
             }
             
-            if (!this.isDisabled())
-            {
-                /**
-                 * Recharges electric item.
-                 */
-                this.setJoules(this.getJoules() - ElectricItemHelper.chargeItem(this.containingItems[1], this.getJoules(), this.getVoltage()));
+            /**
+             * Recharges electric item.
+             */
+            this.setJoules(this.getJoules() - ElectricItemHelper.chargeItem(this.containingItems[1], this.getJoules(), this.getVoltage()));
 
-                /**
-                 * Decharge electric item.
-                 */
-                this.setJoules(this.getJoules() + ElectricItemHelper.dechargeItem(this.containingItems[0], this.getMaxJoules() - this.getJoules(), this.getVoltage()));
-                
-                ElectricityPack powerRequested = new ElectricityPack(1, getVoltage());
-                ElectricityPack powerPack = ElectricityNetworkHelper.consumeFromMultipleSides(this, EnumSet.of(ForgeDirection.UP), powerRequested);
-                this.setJoules(this.getJoules() + powerPack.getWatts());
-                
-                if (this.getJoules() > this.getVoltage())
-                {
-                    ElectricityPack powerRemaining = ElectricityNetworkHelper.produceFromMultipleSides(this, EnumSet.of(ForgeDirection.DOWN), new ElectricityPack(1, getVoltage()));
-                    this.setJoules(this.getJoules() - powerRemaining.getWatts());
-                }
-                
-                /*TileEntity inputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.UP);
-                TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), ForgeDirection.DOWN);
-                IElectricityNetwork inputNetwork = ElectricityNetworkHelper.getNetworkFromTileEntity(inputTile, ForgeDirection.UP);
-                IElectricityNetwork outputNetwork = ElectricityNetworkHelper.getNetworkFromTileEntity(outputTile, ForgeDirection.DOWN);
-                if ((outputNetwork != null) && (inputNetwork != null) && inputNetwork.equals(outputNetwork))
-                {
-                    double outputWatts = Math.min(outputNetwork.getRequest(this).getWatts(), Math.min(this.getJoules(), 10000));
-                    if ((this.getJoules() > 0) && (outputWatts > 0))
-                    {
-                        outputNetwork.startProducing(this, outputWatts / this.getVoltage(), this.getVoltage());
-                        this.setJoules(this.getJoules() - outputWatts);
-                    }
-                    else
-                    {
-                        outputNetwork.stopProducing(this);
-                    }
-                }*/
+            /**
+             * Decharge electric item.
+             */
+            this.setJoules(this.getJoules() + ElectricItemHelper.dechargeItem(this.containingItems[0], this.getMaxJoules() - this.getJoules(), this.getVoltage()));
+            
+            ElectricityPack powerRequested = new ElectricityPack(1, getVoltage());
+            ElectricityPack powerPack = ElectricityNetworkHelper.consumeFromMultipleSides(this, EnumSet.of(ForgeDirection.UP), powerRequested);
+            this.setJoules(this.getJoules() + powerPack.getWatts());
+            
+            if (this.getJoules() > this.getVoltage())
+            {
+                ElectricityPack powerRemaining = ElectricityNetworkHelper.produceFromMultipleSides(this, EnumSet.of(ForgeDirection.DOWN), new ElectricityPack(1, getVoltage()));
+                this.setJoules(this.getJoules() - powerRemaining.getWatts());
             }
         }
     }
@@ -276,35 +252,12 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
         try
         {
             this.smeltingTicks = dataStream.readInt();
-            this.disabledTicks = dataStream.readInt();
             this.setJoules(dataStream.readDouble());
             this.addWatts = dataStream.readLong();
         } catch (Exception e)
         {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Returns the amount of energy being requested this tick. Return an empty ElectricityPack if no
-     * electricity is desired.
-     */
-    @Override
-    public ElectricityPack getRequest()
-    {
-        return super.getRequest();
-    }
-    
-    /**
-     * Called right after electricity is transmitted to the TileEntity. Override this if you wish to
-     * have another effect for a voltage overcharge.
-     * 
-     * @param electricityPack
-     */
-    @Override
-    public void onReceive(ElectricityPack electricityPack)
-    {
-        super.onReceive(electricityPack);
     }
     
     /**
@@ -550,7 +503,7 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
      * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
      */
     @Override
-    public boolean isStackValidForSlot(int i, ItemStack itemstack) {
+    public boolean isItemValidForSlot(int i, ItemStack itemstack) {
         if (i == 0)
         {
             return true;
@@ -564,7 +517,7 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
      * @return voltage
      */
     @Override
-    public double getVoltage() {
+    public float getVoltage() {
         return WATTS_MULTIPLE;
     }
     
@@ -607,35 +560,26 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
      * 
      */
     @Override
-    public double getJoules()
+    public float getEnergyStored()
     {
-        return super.getJoules();
+        return super.getEnergyStored();
     }
     
     /**
      * 
      */
     @Override
-    public void setJoules(double joules)
+    public void setEnergyStored(float energy)
     {
-        super.setJoules(joules);
+        super.setEnergyStored(energy);
     }
     
     /**
      * 
      */
     @Override
-    public double getMaxJoules() {
+    public float getMaxEnergyStored() {
         return TileEntrophicFurnace.MAX_CHARGE;
-    }
-
-    /**
-     * 
-     */
-    @Override
-    protected EnumSet<ForgeDirection> getConsumingSides()
-    {
-        return super.getConsumingSides();
     }
     
     /**
@@ -649,5 +593,21 @@ public class TileEntrophicFurnace extends TileEntityElectricityStorage implement
         }
         
         return false;
+    }
+
+    /**
+     * 
+     */
+    @Override
+    public float getRequest(ForgeDirection direction) {
+        return 0;
+    }
+
+    /**
+     * 
+     */
+    @Override
+    public float getProvide(ForgeDirection direction) {
+        return 0;
     }
 }

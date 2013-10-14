@@ -1,4 +1,4 @@
-package entrophicFurnace.generic;
+package entrophicFurnace.world.gen;
 
 import java.util.List;
 import java.util.Random;
@@ -14,6 +14,11 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.Event.Result;
+import net.minecraftforge.event.terraingen.ChunkProviderEvent;
+import net.minecraftforge.event.terraingen.PopulateChunkEvent;
+import net.minecraftforge.event.terraingen.TerrainGen;
 
 /**
  * 
@@ -62,12 +67,14 @@ public class ChunkProviderEntrophic implements IChunkProvider {
     public ChunkProviderEntrophic(World worldObj, long seed) {
         this.worldObj = worldObj;
         this.rand = new Random(seed);
-        this.noiseGen1 = new NoiseGeneratorOctaves(this.rand, 16);
-        this.noiseGen2 = new NoiseGeneratorOctaves(this.rand, 16);
-        this.noiseGen3 = new NoiseGeneratorOctaves(this.rand, 8);
-        this.noiseGen4 = new NoiseGeneratorOctaves(this.rand, 4);
-        this.noiseGen5 = new NoiseGeneratorOctaves(this.rand, 10);
-        this.noiseGen6 = new NoiseGeneratorOctaves(this.rand, 16);
+        NoiseGeneratorOctaves[] noiseGens = {this.noiseGen1, this.noiseGen2, this.noiseGen3, this.noiseGen4, this.noiseGen5, this.noiseGen6};
+        noiseGens = TerrainGen.getModdedNoiseGenerators(this.worldObj, this.rand, noiseGens);
+        this.noiseGen1 = noiseGens[0];
+        this.noiseGen2 = noiseGens[1];
+        this.noiseGen3 = noiseGens[2];
+        this.noiseGen4 = noiseGens[3];
+        this.noiseGen5 = noiseGens[4];
+        this.noiseGen6 = noiseGens[5];
     }
 
     /**
@@ -89,15 +96,15 @@ public class ChunkProviderEntrophic implements IChunkProvider {
         this.generateTerrain(par1, par2, var3);
         this.biomesForGeneration = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(this.biomesForGeneration, par1 * 16, par2 * 16, 16, 16);
         this.replaceBlocksForBiome(par1, par2, var3, this.biomesForGeneration);
-        Chunk var4 = new Chunk(this.worldObj, var3, par1, par2);
-        byte[] var5 = var4.getBiomeArray();
+        Chunk chunk = new Chunk(this.worldObj, var3, par1, par2);
+        byte[] var5 = chunk.getBiomeArray();
         for (int var6 = 0; var6 < var5.length; ++var6)
         {
             var5[var6] = (byte)this.biomesForGeneration[var6].biomeID;
         }
 
-        var4.generateSkylightMap();
-        return var4;
+        chunk.generateSkylightMap();
+        return chunk;
     }
 
     /**
@@ -116,6 +123,8 @@ public class ChunkProviderEntrophic implements IChunkProvider {
     public void populate(IChunkProvider par1IChunkProvider, int par2, int par3)
     {
         BlockSand.fallInstantly = true;
+        MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(par1IChunkProvider, this.worldObj, this.rand, par2, par3, false));
+        
         int var4 = par2 * 16;
         int var5 = par3 * 16;
         BiomeGenBase var6 = this.worldObj.getBiomeGenForCoords(var4 + 16, var5 + 16);
@@ -123,7 +132,6 @@ public class ChunkProviderEntrophic implements IChunkProvider {
         long var7 = this.rand.nextLong() / 2L * 2L + 1L;
         long var9 = this.rand.nextLong() / 2L * 2L + 1L;
         this.rand.setSeed(par2 * var7 + par3 * var9 ^ this.worldObj.getSeed());
-        //boolean var11 = false;
 
         int var12;
         int var13;
@@ -168,7 +176,6 @@ public class ChunkProviderEntrophic implements IChunkProvider {
         }
 
         var6.decorate(this.worldObj, this.rand, var4, var5);
-        //SpawnerAnimals.performWorldGenSpawning(this.worldObj, var6, var4 + 8, var5 + 8, 16, 16, this.rand);
         var4 += 8;
         var5 += 8;
         for (var12 = 0; var12 < 16; ++var12)
@@ -188,6 +195,7 @@ public class ChunkProviderEntrophic implements IChunkProvider {
             }
         }
 
+        MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(par1IChunkProvider, this.worldObj, this.rand, par2, par3, false));
         BlockSand.fallInstantly = false;
     }
 
@@ -258,15 +266,7 @@ public class ChunkProviderEntrophic implements IChunkProvider {
      */
     @Override
     public void recreateStructures(int i, int j) {
-        return;
-    }
-
-    /**
-     * 
-     */
-    @Override
-    public void func_104112_b() {
-        return;
+        // Void
     }
 
     /**
@@ -345,6 +345,10 @@ public class ChunkProviderEntrophic implements IChunkProvider {
      */
     public void replaceBlocksForBiome(int par1, int par2, byte[] par3ArrayOfByte, BiomeGenBase[] par4ArrayOfBiomeGenBase)
     {
+        ChunkProviderEvent.ReplaceBiomeBlocks event = new ChunkProviderEvent.ReplaceBiomeBlocks(this, par1, par2, par3ArrayOfByte, par4ArrayOfBiomeGenBase);
+        MinecraftForge.EVENT_BUS.post(event);
+        if (event.getResult() == Result.DENY) return;
+        
         byte var5 = 63;//SeaLevel
         double var6 = 0.03125D;
         this.stoneNoise = this.noiseGen4.generateNoiseOctaves(this.stoneNoise, par1 * 16, par2 * 16, 0, 16, 16, 1, var6 * 2.0D, var6 * 2.0D, var6 * 2.0D);
@@ -353,7 +357,6 @@ public class ChunkProviderEntrophic implements IChunkProvider {
             for (int var9 = 0; var9 < 16; ++var9)
             {
                 BiomeGenBase var10 = par4ArrayOfBiomeGenBase[var9 + var8 * 16];
-                //float var11 = var10.getFloatTemperature();
                 int var12 = (int)(this.stoneNoise[var8 + var9 * 16] / 3.0D + 3.0D + this.rand.nextDouble() * 0.25D);
                 int var13 = -1;
                 byte var14 = var10.topBlock;
@@ -361,14 +364,7 @@ public class ChunkProviderEntrophic implements IChunkProvider {
                 for (int var16 = 127; var16 >= 0; --var16)
                 {
                     int var17 = (var9 * 16 + var8) * 128 + var16;
-                    /*if (var16 <= 0 + this.rand.nextInt(5))
-                    {
-                        par3ArrayOfByte[var17] = (byte)Block.bedrock.blockID;
-                    }
-                    else
-                    {*/
                     byte var18 = par3ArrayOfByte[var17];
-
                     if (var18 == 0)
                     {
                         var13 = -1;
@@ -380,7 +376,7 @@ public class ChunkProviderEntrophic implements IChunkProvider {
                             if (var12 <= 0)
                             {
                                 var14 = 0;
-                                var15 = 0;//(byte)Main.dimensionStone.blockID;
+                                var15 = 0;
                             }
                             else if (var16 >= var5 - 4 && var16 <= var5 + 1)
                             {
@@ -549,5 +545,15 @@ public class ChunkProviderEntrophic implements IChunkProvider {
             }
         }
         return par1ArrayOfDouble;
+    }
+    
+    /**
+     * Save extra data not associated with any Chunk.  Not saved during autosave, only during world unload.  Currently
+     * unimplemented.
+     */
+    @Override
+    public void saveExtraData()
+    {
+        // Does nothing ATM
     }
 }

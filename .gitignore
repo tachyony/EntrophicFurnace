@@ -8,3 +8,4 @@ bin
 build
 download
 lib
+org.eclipse.core.runtime.prefs

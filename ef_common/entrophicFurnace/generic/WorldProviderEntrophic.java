@@ -1,5 +1,6 @@
 package entrophicFurnace.generic;
 
+import entrophicFurnace.world.gen.ChunkProviderEntrophic;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
