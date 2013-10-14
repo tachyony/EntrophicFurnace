@@ -71,14 +71,9 @@ public class TileEntrophicFurnace extends TileEntityElectrical implements IPacke
     private ItemStack[] containingItems = new ItemStack[3];
 
     /**
-     * Number of players using this
-     *
-    private int playersUsing = 0;*/
-
-    /**
      * Watts for current item
      */
-    private long watts = 0;
+    private float watts = 0;
 
     /**
      * Current block id
@@ -135,7 +130,7 @@ public class TileEntrophicFurnace extends TileEntityElectrical implements IPacke
      * @param slot
      * @return multiplier
      */
-    public long getWattValue(int slot)
+    public float getWattValue(int slot)
     {
         return EntrophicFurnace.itemValues.getItemValue(this.containingItems[slot]) * TileEntrophicFurnace.WATTS_MULTIPLE * SMELTING_TIME_REQUIRED;
     }
@@ -154,7 +149,7 @@ public class TileEntrophicFurnace extends TileEntityElectrical implements IPacke
                 this.setJoules(this.getJoules() + this.addWatts);
                 if (this.containingItems[0] != null)
                 {
-                    long burn = this.getWattValue(0);
+                    float burn = this.getWattValue(0);
                     if ((burn > 0) && ((this.getJoules() + burn) <= TileEntrophicFurnace.MAX_CHARGE))
                     {
                         this.setJoules(this.getJoules() + this.addWatts);
@@ -182,7 +177,7 @@ public class TileEntrophicFurnace extends TileEntityElectrical implements IPacke
                     this.smeltId = this.containingItems[1].itemID;
                 }
 
-                if ((this.watts > 0) && (this.getJoules() >= this.watts))
+                if ((this.watts > 0) && (this.getEnergyStored() >= this.watts))
                 {
                     // Checks if the item can be smelted and if the
                     // smelting time left
@@ -197,7 +192,7 @@ public class TileEntrophicFurnace extends TileEntityElectrical implements IPacke
                         {
                             this.smeltItem();
                             this.smeltingTicks = 0;
-                            this.setJoules(this.getJoules() - this.watts);
+                            this.setEnergyStored(this.getEnergyStored() - this.watts);
                         }
                     } else
                     {
@@ -217,16 +212,14 @@ public class TileEntrophicFurnace extends TileEntityElectrical implements IPacke
             /**
              * Decharge electric item.
              */
-            this.setJoules(this.getJoules() + ElectricItemHelper.dechargeItem(this.containingItems[0], this.getMaxJoules() - this.getJoules(), this.getVoltage()));
-            
+            this.setJoules(this.getEnergyStored() + ElectricItemHelper.dechargeItem(this.containingItems[0], this.getMaxJoules() - this.getEnergyStored(), this.getVoltage()));
             ElectricityPack powerRequested = new ElectricityPack(1, getVoltage());
             ElectricityPack powerPack = ElectricityNetworkHelper.consumeFromMultipleSides(this, EnumSet.of(ForgeDirection.UP), powerRequested);
-            this.setJoules(this.getJoules() + powerPack.getWatts());
-            
-            if (this.getJoules() > this.getVoltage())
+            this.setEnergyStored(this.getEnergyStored() + powerPack.getWatts());
+            if (this.getEnergyStored() > this.getVoltage())
             {
                 ElectricityPack powerRemaining = ElectricityNetworkHelper.produceFromMultipleSides(this, EnumSet.of(ForgeDirection.DOWN), new ElectricityPack(1, getVoltage()));
-                this.setJoules(this.getJoules() - powerRemaining.getWatts());
+                this.setEnergyStored(this.getEnergyStored() - powerRemaining.getWatts());
             }
         }
     }
@@ -239,7 +232,7 @@ public class TileEntrophicFurnace extends TileEntityElectrical implements IPacke
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketManager.getPacket("EntrophicFurnace", this, Integer.valueOf(this.smeltingTicks), Integer.valueOf(this.disabledTicks), Double.valueOf(this.getJoules()), Long.valueOf(this.addWatts));
+        return PacketManager.getPacket("EntrophicFurnace", this, Integer.valueOf(this.smeltingTicks), Float.valueOf(this.getEnergyStored()), Long.valueOf(this.addWatts));
     }
 
     /**
@@ -252,7 +245,7 @@ public class TileEntrophicFurnace extends TileEntityElectrical implements IPacke
         try
         {
             this.smeltingTicks = dataStream.readInt();
-            this.setJoules(dataStream.readDouble());
+            this.setEnergyStored(dataStream.readFloat());
             this.addWatts = dataStream.readLong();
         } catch (Exception e)
         {

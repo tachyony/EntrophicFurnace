@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.EnumToolMaterial;
@@ -18,6 +19,7 @@ import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -38,14 +40,16 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import entrophicFurnace.block.BlockDarkWater;
 import entrophicFurnace.block.BlockEntrophicCrop;
 import entrophicFurnace.block.BlockEntrophicFurnace1;
 import entrophicFurnace.block.BlockEntrophicFurnace2;
 import entrophicFurnace.block.BlockEntrophicFurnace3;
 import entrophicFurnace.core.proxy.CommonProxy;
+import entrophicFurnace.generic.EfBucketHandler;
 import entrophicFurnace.generic.ItemStackValues;
 import entrophicFurnace.generic.WorldProviderEntrophic;
-import entrophicFurnace.item.ItemDarkWater;
+import entrophicFurnace.item.ItemDarkWaterBucket;
 import entrophicFurnace.item.ItemEntrophicOre;
 import entrophicFurnace.item.ItemEntrophicOre1;
 import entrophicFurnace.item.ItemEntrophicOre2;
@@ -159,11 +163,6 @@ public class EntrophicFurnace
      * 
      */
     public static Item entrophicTeleporter;
-    
-    /**
-     * 
-     */
-    public static Item itemDarkWater;
 
     /**
      * 
@@ -178,7 +177,7 @@ public class EntrophicFurnace
     /**
      * 
      */
-    public static Fluid fluidEntrophic;
+    public static Fluid fluidDarkWater;
     
     /**
      * 
@@ -233,9 +232,9 @@ public class EntrophicFurnace
         int qPaxel = EntrophicFurnace.CONFIGURATION.getItem("EntrophicPaxel", 413).getInt();
         int seedEntrophic = EntrophicFurnace.CONFIGURATION.getItem("EntrophicSeed", 422).getInt();
         int entTeleporter = EntrophicFurnace.CONFIGURATION.getItem("EntrophicTeleporter", 423).getInt();
-        int darkWaterId = EntrophicFurnace.CONFIGURATION.getItem("DarkWater", 424).getInt();
-        int darkWaterBucketId = EntrophicFurnace.CONFIGURATION.getItem("DarkWaterBucket", 425).getInt();
+        int bucketDarkWaterId = EntrophicFurnace.CONFIGURATION.getItem("DarkWaterBucket", 424).getInt();
         int cropEntrophic = EntrophicFurnace.CONFIGURATION.getBlock("EntrophicCrop", 423).getInt();
+        int blockDarkWaterId = EntrophicFurnace.CONFIGURATION.getItem("BlockDarkWater", 424).getInt();
         
         entrophicFurnace1 = new BlockEntrophicFurnace1(qFurnace1, UniversalElectricity.machine)
                 .setHardness(0.5F).setStepSound(Block.soundWoodFootstep).setCreativeTab(CreativeTabs.tabMaterials);
@@ -257,15 +256,18 @@ public class EntrophicFurnace
         entrophicTeleporter = new ItemEntrophicTeleporter(entTeleporter);
         efFluidEntrophic = new Fluid("darkWater");
         FluidRegistry.registerFluid(efFluidEntrophic);
-        fluidEntrophic = FluidRegistry.getFluid("darkWater");
-        blockDarkWater = new blockDarkWater(blockDarkWaterId, fluidEntrophic);
-        //darkWater = new ItemDarkWater(darkWaterId);
-        //darkWaterBucket = new ItemDarkWaterBucket(darkWaterBucketId);
+        fluidDarkWater = FluidRegistry.getFluid("darkWater");
+        blockDarkWater = new BlockDarkWater(blockDarkWaterId, fluidDarkWater, Material.water).setFlammable(true).setFlammability(5).setParticleColor(0.7F, 0.7F, 0.0F);
+        blockDarkWater.setUnlocalizedName("blockDarkWater");
+        fluidDarkWater.setBlockID(blockDarkWater);
+        bucketDarkWater = new ItemDarkWaterBucket(bucketDarkWaterId, blockDarkWater.blockID);
+        bucketDarkWater.setUnlocalizedName("bucketFuel").setContainerItem(Item.bucketEmpty);
         
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace1, "EntrophicFurnace1");
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace2, "EntrophicFurnace2");
         GameRegistry.registerBlock(EntrophicFurnace.entrophicFurnace3, "EntrophicFurnace3");
         GameRegistry.registerBlock(EntrophicFurnace.entrophicCrop, "EntrophicCrop");
+        GameRegistry.registerBlock(blockDarkWater, "DarkWater");
         GameRegistry.registerTileEntity(TileEntrophicFurnace.class, "EntrophicFurnace1");
         GameRegistry.registerTileEntity(TileEntrophicFurnace.class, "EntrophicFurnace2");
         GameRegistry.registerTileEntity(TileEntrophicFurnace.class, "EntrophicFurnace3");
@@ -285,22 +287,10 @@ public class EntrophicFurnace
         LanguageRegistry.addName(EntrophicFurnace.entrophicPaxel, "Entrophic Paxel");
         LanguageRegistry.addName(EntrophicFurnace.entrophicSeed, "Entrophic Seed");
         LanguageRegistry.addName(EntrophicFurnace.entrophicTeleporter, "Entrophic Teleporter");
-        /*LanguageRegistry.addName(EntrophicFurnace.darkWater, "Dark Water");
-        LanguageRegistry.addName(EntrophicFurnace.darkWaterBucket, "Dark Water Bucket");
-        
-        if (Loader.isModLoaded("BuildCraft|Energy"))
-        {
-            IronEngineFuel.fuels.add(new IronEngineFuel(LiquidDictionary.getLiquid("Dark Water", LiquidContainerRegistry.BUCKET_VOLUME), 6, 100000));
-        }
-        
-        if (Loader.isModLoaded("Forestry"))
-        {
-            EngineBronzeFuel bronzeFuel = new EngineBronzeFuel(new ItemStack(darkWater), 6, 100000, 1);
-            FuelManager.bronzeEngineFuel.put(new ItemStack(darkWater), bronzeFuel);
-        }*/
-        
-        //LiquidContainerRegistry.registerLiquid(new LiquidContainerData(LiquidDictionary.getLiquid("Dark Water", LiquidContainerRegistry.BUCKET_VOLUME), new ItemStack(darkWaterBucket), new ItemStack(Item.bucketEmpty)));
-        
+        LanguageRegistry.addName(EntrophicFurnace.blockDarkWater, "Dark Water");
+        LanguageRegistry.addName(EntrophicFurnace.bucketDarkWater, "Dark Water Bucket");
+        FluidContainerRegistry.registerFluidContainer(FluidRegistry.getFluidStack("darkWater", FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(bucketDarkWater), new ItemStack(Item.bucketEmpty));
+        EfBucketHandler.INSTANCE.buckets.put(blockDarkWater, bucketDarkWater);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -308,12 +298,13 @@ public class EntrophicFurnace
      * 
      * @param event
      */
+    @SuppressWarnings("static-method")
     @ForgeSubscribe
     @SideOnly(Side.CLIENT)
     public void textureHook(TextureStitchEvent.Post event) {
-        /*if (event.map == Minecraft.getMinecraft().renderEngine.textureMapItems) {
-            LiquidDictionary.getCanonicalLiquid("Dark Water").setRenderingIcon(darkWater.getIconFromDamage(0)).setTextureSheet("/gui/items.png");
-        }*/
+        if (event.map.textureType == 0) {
+            fluidDarkWater.setIcons(blockDarkWater.getBlockTextureFromSide(1), blockDarkWater.getBlockTextureFromSide(2));
+        }
     }
     
     /**
@@ -363,8 +354,6 @@ public class EntrophicFurnace
                 'o', EntrophicFurnace.entrophicOre4 }));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(EntrophicFurnace.entrophicOre4, 8), new Object[] { "o  ", "   ", "   ",
                 'o', EntrophicFurnace.entrophicOre5 }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(EntrophicFurnace.darkWaterBucket), new Object[] { "   ", "o o", " o ",
-            'o', EntrophicFurnace.entrophicOre4 }));
         ItemStack paxelStack = new ItemStack(EntrophicFurnace.entrophicPaxel, 1);
         paxelStack.addEnchantment(Enchantment.silkTouch, 1);
         paxelStack.addEnchantment(Enchantment.unbreaking, 3);

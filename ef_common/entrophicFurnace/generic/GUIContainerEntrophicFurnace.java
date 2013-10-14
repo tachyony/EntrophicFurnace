@@ -41,7 +41,7 @@ public class GUIContainerEntrophicFurnace extends GuiContainer
         this.fontRenderer.drawString("Smelting:", 10, 28, 4210752);
         this.fontRenderer.drawString("Battery:", 10, 53, 4210752);
         this.fontRenderer.drawString(String.format("Charge: %s",
-            Integer.valueOf((int)(this.tileEntity.getJoules() / this.tileEntity.getVoltage()))), 82, 45, 4210752);
+            Integer.valueOf((int)(this.tileEntity.getEnergyStored() / this.tileEntity.getVoltage()))), 82, 45, 4210752);
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 96 + 2,
                 4210752);
     }

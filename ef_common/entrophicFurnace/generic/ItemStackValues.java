@@ -137,7 +137,6 @@ public class ItemStackValues {
         this.addStack(new ItemStack(EntrophicFurnace.entrophicOre3), 64, true);
         this.addStack(new ItemStack(EntrophicFurnace.entrophicOre4), 512, true);
         this.addStack(new ItemStack(EntrophicFurnace.entrophicOre5), 4096, true);
-        this.addStack(new ItemStack(EntrophicFurnace.darkWaterBucket), 1536, true);
         this.addStack(new ItemStack(EntrophicFurnace.ingotCopper), 256, true);
         this.addStack(new ItemStack(EntrophicFurnace.ingotTin), 256, true);
         this.addStack(new ItemStack(EntrophicFurnace.entrophicTeleporter), 5, true);
